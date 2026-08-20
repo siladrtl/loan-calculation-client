@@ -1,0 +1,77 @@
+<div
+  class="mt-5"
+  *ngIf="results.length > 0">
+
+  <h4 class="mb-3">
+    Uygun Kredi Ürünleri
+  </h4>
+
+
+  <table class="table theme-table">
+
+    <thead>
+
+      <tr>
+
+        <th>Banka</th>
+
+        <th>Ürün</th>
+
+        <th>Faiz Oranı</th>
+
+        <th>Aylık Taksit</th>
+
+        <th>Toplam Ödeme</th>
+
+        <th></th>
+
+      </tr>
+
+    </thead>
+
+
+    <tbody>
+
+      <tr
+        *ngFor="let r of results">
+
+        <td>
+          {{ r.bankName }}
+        </td>
+
+        <td>
+          {{ r.loanTypeName }}
+        </td>
+
+        <td>
+          %{{ r.interestRate }}
+        </td>
+
+        <td>
+          {{ r.monthlyInstallment | number:'1.2-2' }}
+        </td>
+
+        <td>
+          {{ r.totalPayment | number:'1.2-2' }}
+        </td>
+
+        <td>
+
+          <button
+            type="button"
+            class="btn btn-sm btn-theme-outline"
+            (click)="selectProduct(r)">
+
+            Ödeme Planı
+
+          </button>
+
+        </td>
+
+      </tr>
+
+    </tbody>
+
+  </table>
+
+</div>

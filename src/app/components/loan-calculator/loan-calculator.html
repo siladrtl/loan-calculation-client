@@ -1,0 +1,111 @@
+<div class="container-fluid mt-5 theme-page">
+
+  <!-- BAŞLIK -->
+
+  <div class="text-center mb-5">
+
+    <h2>
+      Kredi Hesaplama
+    </h2>
+
+    <p class="text-muted">
+      Hesaplamak istediğiniz kredi türünü seçiniz.
+    </p>
+
+  </div>
+
+
+  <!-- FİLTRELER + ARAMA -->
+
+  <div class="row align-items-start">
+
+    <!-- SOL TARAF -->
+
+    <div class="col-md-3 mb-4 filters-column">
+
+      <app-bank-filter
+        (bankSelectionChange)="
+          onBankSelectionChange($event)
+        ">
+      </app-bank-filter>
+
+
+      <app-customer-type-filter
+        (customerTypeSelectionChange)="
+          onCustomerTypeSelectionChange($event)
+        ">
+      </app-customer-type-filter>
+
+    </div>
+
+
+    <!-- SAĞ TARAF -->
+
+    <div class="col-md-9">
+
+      <app-loan-search
+        (searchChange)="
+          searchLoanProducts($event)
+        ">
+      </app-loan-search>
+
+
+      <!-- HATA -->
+
+      <div
+        class="alert alert-danger mt-3"
+        *ngIf="errorMessage()">
+
+        {{ errorMessage() }}
+
+      </div>
+
+
+      <!-- YÜKLENİYOR -->
+
+      <div
+        class="text-center mt-3"
+        *ngIf="isLoading()">
+
+        Kredi ürünleri yükleniyor...
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- KREDİ SONUÇLARI -->
+
+  <app-loan-results
+    [results]="results()"
+    (productSelected)="selectProduct($event)">
+  </app-loan-results>
+
+
+  <!-- HESAPLAMA YAPILIYOR -->
+
+  <div
+    class="text-center mt-3"
+    *ngIf="isCalculating()">
+
+    Ödeme planı hesaplanıyor...
+
+  </div>
+
+
+</div>
+
+
+<!-- ====================================== -->
+<!-- ÖDEME PLANI MODAL -->
+<!-- ====================================== -->
+
+<app-payment-plan
+  *ngIf="isPaymentPlanOpen()"
+  [calculationResult]="calculationResult()"
+  [bankName]="selectedProduct()?.bankName ?? ''"
+  (close)="closePaymentPlan()"
+  (apply)="applyForLoan()">
+</app-payment-plan>

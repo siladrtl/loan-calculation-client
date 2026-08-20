@@ -1,0 +1,49 @@
+<div class="bank-filter-panel">
+
+  <h6 class="filter-title">
+    Bankalar
+  </h6>
+
+
+  <!-- TEMİZLE -->
+  <div
+    class="filter-actions"
+    *ngIf="selectedBankIds().size > 0">
+
+    <button
+      class="clear-filter-btn"
+      type="button"
+      (click)="clearBankFilter()">
+
+      Temizle
+
+    </button>
+
+  </div>
+
+
+  <div class="divider"></div>
+
+
+  <!-- BANKA LİSTESİ -->
+  <div class="bank-scroll-list">
+
+    <label
+      class="bank-item"
+      *ngFor="let bank of banks()">
+
+      <input
+        type="checkbox"
+        [checked]="isBankSelected(bank.id)"
+        (change)="toggleBank(bank.id)"
+      >
+
+      <span>
+        {{ bank.name }}
+      </span>
+
+    </label>
+
+  </div>
+
+</div>

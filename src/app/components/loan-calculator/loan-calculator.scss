@@ -1,0 +1,98 @@
+.theme-page {
+  --color-primary: #facc15;
+  --color-primary-hover: #eab308;
+  --color-dark: #111827;
+  --color-light: #ffffff;
+  --color-gray: #6b7280;
+  --color-border: #e5e7eb;
+
+  h2 {
+    color: var(--color-dark);
+    font-weight: 700;
+  }
+}
+
+
+// SOL FİLTRELER
+
+.filters-column {
+  position: sticky;
+  top: 16px;
+  align-self: flex-start;
+  height: fit-content;
+}
+
+
+// KREDİ TÜRÜ KARTLARI
+
+.loan-card {
+  border: 2px solid var(--color-dark);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  background: var(--color-light);
+
+  h4 {
+    color: var(--color-dark);
+    font-size: 18px;
+    margin: 0;
+  }
+
+  &:hover {
+    box-shadow: 0 0 0 2px rgba(250, 204, 21, 0.5);
+  }
+
+  &.selected {
+    border-color: var(--color-primary);
+    background-color: #fffbeb;
+    box-shadow: 0 0 0 2px var(--color-primary);
+  }
+}
+
+
+// FORM ELEMANLARI
+
+.theme-input {
+  border: 1px solid var(--color-dark);
+  border-radius: 6px;
+
+  &:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(250, 204, 21, 0.3);
+  }
+}
+
+
+// BUTONLAR
+
+.btn-theme-primary {
+  background-color: var(--color-primary);
+  color: var(--color-dark);
+  border: none;
+  font-weight: 700;
+  padding: 12px;
+  border-radius: 6px;
+
+  &:hover:not(:disabled) {
+    background-color: var(--color-primary-hover);
+    color: var(--color-dark);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+  }
+}
+
+
+.btn-theme-outline {
+  border: 2px solid var(--color-dark);
+  color: var(--color-dark);
+  background: transparent;
+  font-weight: 600;
+
+  &:hover:not(:disabled) {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+    color: var(--color-dark);
+  }
+}

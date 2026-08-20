@@ -1,0 +1,38 @@
+:host {
+  --color-primary: #facc15;
+  --color-dark: #111827;
+  --color-light: #ffffff;
+}
+
+
+.theme-table {
+
+  thead {
+    background-color: var(--color-dark);
+
+    th {
+      color: var(--color-light);
+      font-weight: 600;
+      white-space: nowrap;
+    }
+  }
+
+  tbody tr:hover {
+    background-color: #fffbeb;
+  }
+
+}
+
+
+.btn-theme-outline {
+  border: 2px solid var(--color-dark);
+  color: var(--color-dark);
+  background: transparent;
+  font-weight: 600;
+
+  &:hover {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+    color: var(--color-dark);
+  }
+}

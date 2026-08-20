@@ -1,0 +1,70 @@
+:host {
+  --color-primary: #facc15;
+  --color-primary-hover: #eab308;
+  --color-dark: #111827;
+  --color-light: #ffffff;
+  --color-border: #e5e7eb;
+}
+
+
+.bank-filter-panel {
+  background: var(--color-light);
+  border: 1px solid var(--color-dark);
+  border-radius: 10px;
+  padding: 16px;
+}
+
+
+.filter-title {
+  font-weight: 700;
+  color: var(--color-dark);
+  margin-bottom: 8px;
+}
+
+
+.divider {
+  border-top: 1px dashed var(--color-border);
+  margin-bottom: 12px;
+}
+
+
+.bank-scroll-list {
+  max-height: 420px;
+  overflow-y: auto;
+
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  padding-right: 6px;
+}
+
+
+.bank-item {
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  font-size: 14px;
+  color: var(--color-dark);
+
+  cursor: pointer;
+  margin: 0;
+
+
+  input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+
+    accent-color: var(--color-primary);
+
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+
+  &:hover span {
+    color: var(--color-primary-hover);
+  }
+}

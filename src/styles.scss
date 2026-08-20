@@ -1,1 +1,61 @@
 /* You can add global styles to this file, and also import other style files */
+:root {
+  // Ana renkler
+  --color-primary: #facc15;      // sarı (butonlar, vurgular)
+  --color-primary-hover: #eab308; // koyu sarı (hover)
+  --color-dark: #111827;          // siyah/koyu (header, navbar, metin)
+  --color-dark-secondary: #1f2937; // ikincil koyu ton
+  --color-light: #ffffff;         // beyaz (arka planlar, kartlar)
+  --color-gray: #6b7280;          // yardımcı metin
+  --color-border: #e5e7eb;        // ince çizgiler
+
+  // Tipografi
+  --font-family: 'Segoe UI', system-ui, sans-serif;
+
+  // Boşluk / köşe yuvarlama
+  --radius-sm: 6px;
+  --radius-md: 10px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-family);
+  background-color: var(--color-light);
+  color: var(--color-dark);
+}
+
+// Genel buton stili — tüm uygulamada tekrar kullanılabilir
+.btn-primary {
+  background-color: var(--color-primary);
+  color: var(--color-dark);
+  border: none;
+  padding: 10px 20px;
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+
+  &:hover {
+    background-color: var(--color-primary-hover);
+  }
+}
+
+// Genel kart stili
+.card {
+  background: var(--color-light);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+a {
+  color: var(--color-dark);
+  text-decoration: none;
+
+  &:hover {
+    color: var(--color-primary-hover);
+  }
+}
