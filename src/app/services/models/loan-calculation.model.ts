@@ -1,27 +1,51 @@
 export interface LoanCalculationRequestDto {
-  loanProductId: string;
+  loanProductId: number;
+
   amount: number;
+
   term: number;
 }
 
 export interface PaymentPlanItemDto {
   installmentNumber: number;
+
   dueDate: string;
+
   installmentAmount: number;
+
   interestAmount: number;
+
+  kkdfAmount: number;
+
+  bsmvAmount: number;
+
   principalAmount: number;
+
   remainingPrincipal: number;
 }
 
 export interface LoanCalculationResponseDto {
-  id: string;
+  id: number;
+
   amount: number;
+
   term: number;
+
   interestRate: number;
-  loanProductId: string;
+
+  loanProductId: number;
+
   loanProductName: string;
+
   monthlyInstallment: number;
-  totalPayment: number;
+
   totalInterest: number;
+
+  totalKkdf: number;
+
+  totalBsmv: number;
+
+  totalPayment: number;
+
   paymentPlans: PaymentPlanItemDto[];
 }

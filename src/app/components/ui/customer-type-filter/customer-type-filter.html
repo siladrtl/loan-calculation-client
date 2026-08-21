@@ -1,0 +1,53 @@
+<div class="bank-filter-panel">
+
+  <h6 class="filter-title">
+    Müşteri Tipi
+  </h6>
+
+
+  @if (selectedCustomerType() !== null) {
+
+    <div class="filter-actions">
+
+      <button
+        class="clear-filter-btn"
+        type="button"
+        (click)="clearCustomerType()">
+
+        Temizle
+
+      </button>
+
+    </div>
+
+  }
+
+
+  <div class="divider"></div>
+
+
+  <div class="bank-scroll-list">
+
+    <label
+      class="bank-item"
+      *ngFor="let ct of customerTypes">
+
+      <input
+        type="checkbox"
+        [checked]="
+          selectedCustomerType() === ct.id
+        "
+        (change)="
+          selectCustomerType(ct.id)
+        "
+      >
+
+      <span>
+        {{ ct.name }}
+      </span>
+
+    </label>
+
+  </div>
+
+</div>

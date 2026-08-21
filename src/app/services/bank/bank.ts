@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
 
+import { environment } from '../../../environments/environment';
 import { Bank } from '../models/bank.model';
 
 @Injectable({
@@ -9,11 +9,14 @@ import { Bank } from '../models/bank.model';
 })
 export class BankService {
 
-  private apiUrl = 'https://localhost:7017/api/Banks';
+  private http = inject(HttpClient);
 
-  constructor(private http: HttpClient) {}
+  private baseUrl =
+    `${environment.apiUrl}/Banks`;
 
-  getAll(): Observable<Bank[]> {
-    return this.http.get<Bank[]>(this.apiUrl);
+  getAll() {
+    return this.http.get<Bank[]>(
+      this.baseUrl
+    );
   }
 }

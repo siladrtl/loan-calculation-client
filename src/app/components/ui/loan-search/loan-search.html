@@ -1,0 +1,236 @@
+<div class="loan-search-card">
+
+  <!-- ====================================== -->
+  <!-- 1 - KREDİ TÜRÜ -->
+  <!-- ====================================== -->
+
+  <section class="form-section">
+
+    <div class="section-header">
+
+      <div class="step">
+        1
+      </div>
+
+      <div>
+        <h3>Kredi Türü</h3>
+
+        <p>
+          Hesaplamak istediğiniz kredi türünü seçin.
+        </p>
+      </div>
+
+    </div>
+
+
+    <div class="loan-type-grid">
+
+      @for (type of loanTypes(); track type.id) {
+
+        <button
+          type="button"
+          class="loan-type-option"
+          [class.selected]="selectedLoanTypeId() === type.id"
+          (click)="selectLoanType(type.id)">
+
+          <span class="option-indicator"></span>
+
+          <span>
+            {{ type.name }}
+          </span>
+
+        </button>
+
+      }
+
+    </div>
+
+  </section>
+
+
+  <!-- ====================================== -->
+  <!-- 2 - KREDİ TUTARI -->
+  <!-- ====================================== -->
+
+  <section class="form-section">
+
+    <div class="section-header">
+
+      <div class="step">
+        2
+      </div>
+
+      <div>
+        <h3>Kredi Tutarı</h3>
+
+        <p>
+          Kullanmak istediğiniz kredi tutarını belirleyin.
+        </p>
+      </div>
+
+    </div>
+
+
+    <div class="amount-area">
+
+      <!-- SADECE GÖSTERİM -->
+      <!-- Kullanıcı buraya elle değer yazamaz -->
+
+      <div class="amount-display">
+
+        <strong>
+          {{ loanAmount | number:'1.0-0' }}
+        </strong>
+
+        <span>
+          TL
+        </span>
+
+      </div>
+
+
+      <!-- SLIDER -->
+
+      <input
+        type="range"
+        class="amount-slider"
+        [(ngModel)]="loanAmount"
+        [min]="
+          selectedLoanTypeId() !== null
+            ? minAmount()
+            : 1000
+        "
+        [max]="
+          selectedLoanTypeId() !== null
+            ? maxAmount()
+            : 1000000
+        "
+        step="1000"
+      >
+
+
+      <!-- MIN / MAX -->
+
+      <div class="range-labels">
+
+        <span>
+          {{
+            selectedLoanTypeId() !== null
+              ? (minAmount() | number:'1.0-0')
+              : '1.000'
+          }}
+          TL
+        </span>
+
+        <span>
+          {{
+            selectedLoanTypeId() !== null
+              ? (maxAmount() | number:'1.0-0')
+              : '1.000.000'
+          }}
+          TL
+        </span>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ====================================== -->
+  <!-- 3 - VADE -->
+  <!-- ====================================== -->
+
+  <section class="form-section">
+
+    <div class="section-header">
+
+      <div class="step">
+        3
+      </div>
+
+      <div>
+        <h3>Vade</h3>
+
+        <p>
+          Size uygun ödeme süresini seçin.
+        </p>
+      </div>
+
+    </div>
+
+
+    <div class="term-grid">
+
+      <!-- KREDİ TÜRÜ SEÇİLDİ -->
+
+      @if (selectedLoanTypeId() !== null) {
+
+        @for (term of termOptions(); track term) {
+
+          <button
+            type="button"
+            class="term-option"
+            [class.selected]="maturity === term"
+            (click)="maturity = term">
+
+            {{ term }} Ay
+
+          </button>
+
+        }
+
+      }
+
+      <!-- KREDİ TÜRÜ HENÜZ SEÇİLMEDİ -->
+
+      @else {
+
+        @for (
+          term of [3, 6, 9, 12, 18, 24, 36];
+          track term
+        ) {
+
+          <button
+            type="button"
+            class="term-option"
+            [class.selected]="maturity === term"
+            (click)="maturity = term">
+
+            {{ term }} Ay
+
+          </button>
+
+        }
+
+      }
+
+    </div>
+
+  </section>
+
+
+  <!-- ====================================== -->
+  <!-- ARAMA BUTONU -->
+  <!-- ====================================== -->
+
+  <div class="search-action">
+
+    <button
+      type="button"
+      class="search-button"
+      [disabled]="selectedLoanTypeId() === null"
+      (click)="search()">
+
+      Uygun Kredileri Gör
+
+      <span class="arrow">
+        →
+      </span>
+
+    </button>
+
+  </div>
+
+</div>

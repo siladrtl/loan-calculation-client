@@ -1,0 +1,401 @@
+<div class="payment-overlay">
+
+  <div class="payment-modal">
+
+    <!-- ============================= -->
+    <!-- HEADER -->
+    <!-- ============================= -->
+
+    <header class="payment-modal-header">
+
+      <div class="header-content">
+
+        <span class="header-eyebrow">
+          KREDİ ÖDEME PLANI
+        </span>
+
+        <h2>
+          {{ bankName() }}
+        </h2>
+
+        @if (calculationResult(); as calc) {
+
+          <p>
+            {{ calc.loanProductName }}
+          </p>
+
+        }
+
+      </div>
+
+
+      <button
+        type="button"
+        class="close-button"
+        aria-label="Ödeme planını kapat"
+        (click)="close.emit()">
+
+        ×
+
+      </button>
+
+    </header>
+
+
+    <!-- ============================= -->
+    <!-- BODY -->
+    <!-- ============================= -->
+
+    @if (calculationResult(); as calc) {
+
+      <div class="payment-modal-body">
+
+
+        <!-- KREDİ BİLGİLERİ -->
+
+        <section class="loan-info">
+
+          <div class="loan-info-item">
+
+            <span>
+              Kredi Tutarı
+            </span>
+
+            <strong>
+              {{ calc.amount | number:'1.2-2' }} TL
+            </strong>
+
+          </div>
+
+
+          <div class="loan-info-item">
+
+            <span>
+              Vade
+            </span>
+
+            <strong>
+              {{ calc.term }} Ay
+            </strong>
+
+          </div>
+
+
+          <div class="loan-info-item">
+
+            <span>
+              Aylık Faiz Oranı
+            </span>
+
+            <strong>
+              %{{ calc.interestRate | number:'1.2-2' }}
+            </strong>
+
+          </div>
+
+        </section>
+
+
+        <!-- ============================= -->
+        <!-- ÖZET -->
+        <!-- ============================= -->
+
+        <section class="summary-section">
+
+          <div class="section-heading">
+
+            <div>
+
+              <span class="section-eyebrow">
+                ÖZET
+              </span>
+
+              <h3>
+                Ödeme Bilgileri
+              </h3>
+
+            </div>
+
+          </div>
+
+
+          <div class="summary-grid">
+
+            <div class="summary-card primary">
+
+              <span>
+                Aylık Taksit
+              </span>
+
+              <strong>
+                {{ calc.monthlyInstallment | number:'1.2-2' }}
+              </strong>
+
+              <small>
+                TL
+              </small>
+
+            </div>
+
+
+            <div class="summary-card">
+
+              <span>
+                Toplam Ödeme
+              </span>
+
+              <strong>
+                {{ calc.totalPayment | number:'1.2-2' }}
+              </strong>
+
+              <small>
+                TL
+              </small>
+
+            </div>
+
+
+            <div class="summary-card">
+
+              <span>
+                Toplam Faiz
+              </span>
+
+              <strong>
+                {{ calc.totalInterest | number:'1.2-2' }}
+              </strong>
+
+              <small>
+                TL
+              </small>
+
+            </div>
+
+
+            <div class="summary-card">
+
+              <span>
+                Toplam KKDF
+              </span>
+
+              <strong>
+                {{ calc.totalKkdf | number:'1.2-2' }}
+              </strong>
+
+              <small>
+                TL
+              </small>
+
+            </div>
+
+
+            <div class="summary-card">
+
+              <span>
+                Toplam BSMV
+              </span>
+
+              <strong>
+                {{ calc.totalBsmv | number:'1.2-2' }}
+              </strong>
+
+              <small>
+                TL
+              </small>
+
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <!-- ============================= -->
+        <!-- TAKSİT DETAYLARI -->
+        <!-- ============================= -->
+
+        <section class="installment-section">
+
+          <div class="section-heading">
+
+            <div>
+
+              <span class="section-eyebrow">
+                DETAY
+              </span>
+
+              <h3>
+                Taksit Detayları
+              </h3>
+
+            </div>
+
+
+            <span class="installment-count">
+              {{ calc.term }} Taksit
+            </span>
+
+          </div>
+
+
+          <div class="table-wrapper">
+
+            <table class="payment-table">
+
+              <thead>
+
+                <tr>
+
+                  <th>
+                    Taksit
+                  </th>
+
+                  <th>
+                    Tarih
+                  </th>
+
+                  <th>
+                    Taksit Tutarı
+                  </th>
+
+                  <th>
+                    Faiz
+                  </th>
+
+                  <th>
+                    KKDF
+                  </th>
+
+                  <th>
+                    BSMV
+                  </th>
+
+                  <th>
+                    Anapara
+                  </th>
+
+                  <th>
+                    Kalan Anapara
+                  </th>
+
+                </tr>
+
+              </thead>
+
+
+              <tbody>
+
+                @for (
+                  item of calc.paymentPlans;
+                  track item.installmentNumber
+                ) {
+
+                  <tr>
+
+                    <td>
+
+                      <span class="installment-number">
+                        {{ item.installmentNumber }}
+                      </span>
+
+                    </td>
+
+
+                    <td>
+                      {{ item.dueDate | date:'dd.MM.yyyy' }}
+                    </td>
+
+
+                    <td class="money-cell strong">
+                      {{ item.installmentAmount | number:'1.2-2' }} TL
+                    </td>
+
+
+                    <td class="money-cell">
+                      {{ item.interestAmount | number:'1.2-2' }} TL
+                    </td>
+
+
+                    <td class="money-cell">
+                      {{ item.kkdfAmount | number:'1.2-2' }} TL
+                    </td>
+
+
+                    <td class="money-cell">
+                      {{ item.bsmvAmount | number:'1.2-2' }} TL
+                    </td>
+
+
+                    <td class="money-cell">
+                      {{ item.principalAmount | number:'1.2-2' }} TL
+                    </td>
+
+
+                    <td class="money-cell">
+                      {{ item.remainingPrincipal | number:'1.2-2' }} TL
+                    </td>
+
+                  </tr>
+
+                }
+
+              </tbody>
+
+            </table>
+
+          </div>
+
+        </section>
+
+      </div>
+
+    }
+
+
+    <!-- ============================= -->
+    <!-- FOOTER -->
+    <!-- ============================= -->
+
+    <footer class="payment-modal-footer">
+
+      <div class="footer-info">
+
+        <span class="secure-dot"></span>
+
+        Başvuru sırasında müşteri uygunluğunuz kontrol edilir.
+
+      </div>
+
+
+      <div class="footer-actions">
+
+        <button
+          type="button"
+          class="secondary-button"
+          (click)="close.emit()">
+
+          Kapat
+
+        </button>
+
+
+        <button
+          type="button"
+          class="apply-button"
+          (click)="apply.emit()">
+
+          Başvur
+
+          <span>
+            →
+          </span>
+
+        </button>
+
+      </div>
+
+    </footer>
+
+  </div>
+
+</div>

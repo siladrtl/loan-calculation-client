@@ -1,0 +1,766 @@
+:host {
+  display: block;
+
+  --yellow: #ffcc00;
+  --yellow-hover: #efbe00;
+
+  --text: #26272b;
+  --text-soft: #666970;
+
+  --border: #e3e4e6;
+
+  --surface: #ffffff;
+  --surface-soft: #f7f7f5;
+  --surface-muted: #f0f0ee;
+}
+
+
+/* ======================================
+   OVERLAY
+====================================== */
+
+.payment-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 28px;
+
+  background: rgba(37, 38, 40, 0.58);
+
+  backdrop-filter: blur(4px);
+}
+
+
+/* ======================================
+   MODAL
+====================================== */
+
+.payment-modal {
+  width: 100%;
+  max-width: 1250px;
+  max-height: 92vh;
+
+  display: flex;
+  flex-direction: column;
+
+  overflow: hidden;
+
+  border: 1px solid rgba(0, 0, 0, 0.06);
+
+  border-radius: 20px;
+
+  background: var(--surface);
+
+  box-shadow:
+    0 28px 80px
+    rgba(0, 0, 0, 0.25);
+}
+
+
+/* ======================================
+   HEADER
+====================================== */
+
+.payment-modal-header {
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  padding: 24px 30px;
+
+  background: #ffffff;
+
+  border-bottom: 3px solid var(--yellow);
+}
+
+
+.header-content {
+  display: flex;
+  flex-direction: column;
+}
+
+
+.header-eyebrow {
+  margin-bottom: 5px;
+
+  color: #9b7900;
+
+  font-size: 12px;
+  font-weight: 850;
+
+  letter-spacing: 1.5px;
+}
+
+
+.payment-modal-header h2 {
+  margin: 0;
+
+  color: var(--text);
+
+  font-size: 27px;
+  font-weight: 850;
+
+  letter-spacing: -0.5px;
+}
+
+
+.payment-modal-header p {
+  margin: 5px 0 0;
+
+  color: var(--text-soft);
+
+  font-size: 15px;
+}
+
+
+/* ======================================
+   CLOSE BUTTON
+====================================== */
+
+.close-button {
+  flex-shrink: 0;
+
+  width: 40px;
+  height: 40px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid #dddddd;
+
+  border-radius: 50%;
+
+  background: #f5f5f3;
+
+  color: #444444;
+
+  font-size: 24px;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+
+.close-button:hover {
+  border-color: var(--yellow);
+
+  background: #fff8d7;
+
+  color: #111111;
+}
+
+
+/* ======================================
+   BODY
+====================================== */
+
+.payment-modal-body {
+  flex: 1;
+
+  overflow-y: auto;
+
+  padding: 25px 30px 30px;
+
+  background: #fafaf8;
+}
+
+
+/* ======================================
+   KREDİ BİLGİLERİ
+====================================== */
+
+.loan-info {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  overflow: hidden;
+
+  margin-bottom: 30px;
+
+  border: 1px solid var(--border);
+
+  border-radius: 12px;
+
+  background: #ffffff;
+}
+
+
+.loan-info-item {
+  padding: 18px 20px;
+
+  border-right: 1px solid #eeeeec;
+}
+
+
+.loan-info-item:last-child {
+  border-right: none;
+}
+
+
+.loan-info-item span {
+  display: block;
+
+  margin-bottom: 6px;
+
+  color: var(--text-soft);
+
+  font-size: 12px;
+  font-weight: 750;
+
+  text-transform: uppercase;
+
+  letter-spacing: 0.5px;
+}
+
+
+.loan-info-item strong {
+  color: var(--text);
+
+  font-size: 16px;
+  font-weight: 800;
+}
+
+
+/* ======================================
+   SECTION HEADINGS
+====================================== */
+
+.summary-section {
+  margin-bottom: 32px;
+}
+
+
+.section-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+
+  gap: 15px;
+
+  margin-bottom: 15px;
+}
+
+
+.section-eyebrow {
+  display: block;
+
+  margin-bottom: 4px;
+
+  color: #9b7900;
+
+  font-size: 11px;
+  font-weight: 850;
+
+  letter-spacing: 1.3px;
+}
+
+
+.section-heading h3 {
+  margin: 0;
+
+  color: var(--text);
+
+  font-size: 19px;
+  font-weight: 850;
+}
+
+
+/* ======================================
+   SUMMARY CARDS
+====================================== */
+
+.summary-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(5, minmax(0, 1fr));
+
+  gap: 12px;
+}
+
+
+.summary-card {
+  min-width: 0;
+
+  padding: 19px;
+
+  border: 1px solid var(--border);
+
+  border-radius: 12px;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 4px 13px
+    rgba(0, 0, 0, 0.03);
+}
+
+
+.summary-card.primary {
+  border-color: var(--yellow);
+
+  background:
+    linear-gradient(
+      145deg,
+      #fff9dc,
+      #ffffff
+    );
+}
+
+
+.summary-card span {
+  display: block;
+
+  margin-bottom: 8px;
+
+  color: var(--text-soft);
+
+  font-size: 13px;
+  font-weight: 700;
+}
+
+
+.summary-card strong {
+  color: var(--text);
+
+  font-size: 22px;
+  font-weight: 850;
+
+  letter-spacing: -0.3px;
+}
+
+
+.summary-card small {
+  margin-left: 3px;
+
+  color: #777a80;
+
+  font-size: 12px;
+}
+
+
+/* ======================================
+   INSTALLMENT COUNT
+====================================== */
+
+.installment-count {
+  padding: 6px 11px;
+
+  border: 1px solid #dedede;
+
+  border-radius: 20px;
+
+  background: #ffffff;
+
+  color: #55575c;
+
+  font-size: 12px;
+  font-weight: 800;
+}
+
+
+/* ======================================
+   TABLE
+====================================== */
+
+.table-wrapper {
+  width: 100%;
+
+  overflow-x: auto;
+
+  border: 1px solid var(--border);
+
+  border-radius: 12px;
+
+  background: #ffffff;
+}
+
+
+.payment-table {
+  width: 100%;
+
+  min-width: 1050px;
+
+  border-collapse: collapse;
+}
+
+
+/* TABLE HEADER */
+
+.payment-table thead,
+.payment-table thead tr {
+  background: var(--surface-muted);
+}
+
+
+.payment-table thead th {
+  padding: 15px 16px;
+
+  background: var(--surface-muted);
+
+  color: #44464a;
+
+  border-bottom: 2px solid var(--yellow);
+
+  text-align: left;
+
+  white-space: nowrap;
+
+  font-size: 13px;
+  font-weight: 800;
+
+  letter-spacing: 0.2px;
+}
+
+
+/* TABLE BODY */
+
+.payment-table tbody tr {
+  background: #ffffff;
+
+  transition: background 0.15s ease;
+}
+
+
+.payment-table tbody tr:nth-child(even) {
+  background: #fbfbfa;
+}
+
+
+.payment-table tbody tr:hover {
+  background: #fff9dd;
+}
+
+
+.payment-table tbody td {
+  padding: 14px 16px;
+
+  border-bottom: 1px solid #eeeeec;
+
+  color: #393b40;
+
+  white-space: nowrap;
+
+  font-size: 13px;
+}
+
+
+.payment-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+
+.money-cell {
+  font-variant-numeric: tabular-nums;
+}
+
+
+.money-cell.strong {
+  color: #222327;
+
+  font-weight: 800;
+}
+
+
+/* ======================================
+   TAKSİT NO
+====================================== */
+
+.installment-number {
+  width: 30px;
+  height: 30px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid #e2e2e0;
+
+  border-radius: 50%;
+
+  background: #f6f6f4;
+
+  color: #33353a;
+
+  font-size: 12px;
+  font-weight: 800;
+}
+
+
+/* ======================================
+   FOOTER
+====================================== */
+
+.payment-modal-footer {
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  padding: 17px 30px;
+
+  border-top: 1px solid var(--border);
+
+  background: #ffffff;
+}
+
+
+.footer-info {
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  color: var(--text-soft);
+
+  font-size: 12px;
+}
+
+
+.secure-dot {
+  width: 8px;
+  height: 8px;
+
+  border-radius: 50%;
+
+  background: var(--yellow);
+}
+
+
+.footer-actions {
+  display: flex;
+
+  gap: 10px;
+}
+
+
+/* ======================================
+   SECONDARY BUTTON
+====================================== */
+
+.secondary-button {
+  padding: 11px 20px;
+
+  border: 1px solid #d6d6d4;
+
+  border-radius: 9px;
+
+  background: #ffffff;
+
+  color: #44464a;
+
+  font-size: 13px;
+  font-weight: 750;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+
+.secondary-button:hover {
+  border-color: #bdbdbb;
+
+  background: #f5f5f3;
+}
+
+
+/* ======================================
+   APPLY BUTTON
+====================================== */
+
+.apply-button {
+  display: flex;
+  align-items: center;
+
+  gap: 9px;
+
+  padding: 11px 24px;
+
+  border: none;
+
+  border-radius: 9px;
+
+  background: var(--yellow);
+
+  color: #1f2023;
+
+  font-size: 13px;
+  font-weight: 850;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+
+.apply-button:hover {
+  transform: translateY(-1px);
+
+  background: var(--yellow-hover);
+
+  box-shadow:
+    0 8px 20px
+    rgba(255, 196, 0, 0.22);
+}
+
+
+.apply-button span {
+  font-size: 16px;
+}
+
+
+/* ======================================
+   SCROLLBAR
+====================================== */
+
+.payment-modal-body::-webkit-scrollbar {
+  width: 9px;
+}
+
+
+.payment-modal-body::-webkit-scrollbar-track {
+  background: #f0f0ee;
+}
+
+
+.payment-modal-body::-webkit-scrollbar-thumb {
+  border: 2px solid #f0f0ee;
+
+  border-radius: 10px;
+
+  background: #c7c7c4;
+}
+
+
+.payment-modal-body::-webkit-scrollbar-thumb:hover {
+  background: #adadaa;
+}
+
+
+/* ======================================
+   RESPONSIVE
+====================================== */
+
+@media (max-width: 1050px) {
+
+  .summary-grid {
+    grid-template-columns:
+      repeat(3, 1fr);
+  }
+
+}
+
+
+@media (max-width: 768px) {
+
+  .payment-overlay {
+    padding: 12px;
+  }
+
+
+  .payment-modal {
+    max-height: 96vh;
+
+    border-radius: 15px;
+  }
+
+
+  .payment-modal-header {
+    padding: 19px 18px;
+  }
+
+
+  .payment-modal-body {
+    padding: 18px;
+  }
+
+
+  .loan-info {
+    grid-template-columns: 1fr;
+  }
+
+
+  .loan-info-item {
+    border-right: none;
+
+    border-bottom: 1px solid #eeeeec;
+  }
+
+
+  .loan-info-item:last-child {
+    border-bottom: none;
+  }
+
+
+  .summary-grid {
+    grid-template-columns:
+      repeat(2, 1fr);
+  }
+
+
+  .payment-modal-footer {
+    align-items: stretch;
+
+    flex-direction: column;
+
+    padding: 15px 18px;
+  }
+
+
+  .footer-actions {
+    width: 100%;
+  }
+
+
+  .secondary-button,
+  .apply-button {
+    flex: 1;
+
+    justify-content: center;
+  }
+
+}
+
+
+@media (max-width: 480px) {
+
+  .summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+
+  .payment-modal-header h2 {
+    font-size: 22px;
+  }
+
+
+  .footer-info {
+    display: none;
+  }
+
+}

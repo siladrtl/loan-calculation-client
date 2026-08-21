@@ -1,0 +1,156 @@
+<div class="container-fluid mt-5 theme-page">
+
+  <!-- ====================================== -->
+  <!-- BAŞLIK -->
+  <!-- ====================================== -->
+
+  <div class="text-center mb-5">
+
+    <h2>
+      Kredi Hesaplama
+    </h2>
+
+    <p class="text-muted">
+      Kredi türünü, tutarı ve vadeyi belirleyerek
+      size uygun kredi ürünlerini karşılaştırın.
+    </p>
+
+  </div>
+
+
+  <!-- ====================================== -->
+  <!-- FİLTRELER + ARAMA -->
+  <!-- ====================================== -->
+
+  <div class="row align-items-start">
+
+
+    <!-- SOL TARAF - BANKA FİLTRESİ -->
+
+    <div class="col-md-3 mb-4 filters-column">
+
+      <app-bank-filter
+        (bankSelectionChange)="onBankSelectionChange($event)">
+      </app-bank-filter>
+
+    </div>
+
+
+    <!-- SAĞ TARAF - KREDİ ARAMA -->
+
+    <div class="col-md-9">
+
+      <app-loan-search
+        (searchChange)="searchLoanProducts($event)">
+      </app-loan-search>
+
+
+      <!-- HATA MESAJI -->
+
+      <div
+        class="alert alert-danger mt-3"
+        *ngIf="errorMessage()">
+
+        {{ errorMessage() }}
+
+      </div>
+
+
+      <!-- BAŞARI MESAJI -->
+
+      <div
+        class="alert alert-success mt-3"
+        *ngIf="successMessage()">
+
+        {{ successMessage() }}
+
+      </div>
+
+
+      <!-- ÜRÜNLER YÜKLENİYOR -->
+
+      <div
+        class="loading-box"
+        *ngIf="isLoading()">
+
+        <div class="loading-spinner"></div>
+
+        <span>
+          Kredi ürünleri yükleniyor...
+        </span>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- ====================================== -->
+  <!-- KREDİ SONUÇLARI -->
+  <!-- ====================================== -->
+
+  <section
+    class="results-section"
+    *ngIf="!isLoading() && results().length > 0">
+
+    <div class="results-heading">
+
+      <div>
+
+        <span class="section-label">
+          SONUÇLAR
+        </span>
+
+        <h3>
+          Uygun Kredi Ürünleri
+        </h3>
+
+      </div>
+
+
+      <span class="result-count">
+        {{ results().length }} ürün bulundu
+      </span>
+
+    </div>
+
+
+    <app-loan-results
+      [results]="results()"
+      (productSelected)="selectProduct($event)">
+    </app-loan-results>
+
+  </section>
+
+
+  <!-- ====================================== -->
+  <!-- HESAPLAMA YAPILIYOR -->
+  <!-- ====================================== -->
+
+  <div
+    class="loading-box calculation-loading"
+    *ngIf="isCalculating()">
+
+    <div class="loading-spinner"></div>
+
+    <span>
+      Ödeme planı hesaplanıyor...
+    </span>
+
+  </div>
+
+</div>
+
+
+<!-- ====================================== -->
+<!-- ÖDEME PLANI MODAL -->
+<!-- ====================================== -->
+
+<app-payment-plan
+  *ngIf="isPaymentPlanOpen()"
+  [calculationResult]="calculationResult()"
+  [bankName]="selectedProduct()?.bankName ?? ''"
+  (close)="closePaymentPlan()"
+  (apply)="applyForLoan()">
+</app-payment-plan>

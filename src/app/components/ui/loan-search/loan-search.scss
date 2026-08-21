@@ -1,0 +1,453 @@
+:host {
+  display: block;
+}
+
+
+/* ======================================
+   ANA KART
+====================================== */
+
+.loan-search-card {
+  width: 100%;
+
+  padding: 28px 30px;
+
+  border: 1px solid #e5e5e5;
+
+  border-radius: 16px;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 8px 28px
+    rgba(0, 0, 0, 0.045);
+}
+
+
+/* ======================================
+   BÖLÜMLER
+====================================== */
+
+.form-section {
+  padding: 26px 0;
+
+  border-bottom: 1px solid #eeeeee;
+}
+
+
+.form-section:first-child {
+  padding-top: 0;
+}
+
+
+.form-section:last-of-type {
+  border-bottom: none;
+}
+
+
+/* ======================================
+   BÖLÜM BAŞLIKLARI
+====================================== */
+
+.section-header {
+  display: flex;
+  align-items: flex-start;
+
+  gap: 13px;
+
+  margin-bottom: 20px;
+}
+
+
+.step {
+  flex-shrink: 0;
+
+  width: 32px;
+  height: 32px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #ffcc00;
+
+  color: #111111;
+
+  font-size: 13px;
+  font-weight: 900;
+}
+
+
+.section-header h3 {
+  margin: 0;
+
+  color: #111111;
+
+  font-size: 19px;
+  font-weight: 800;
+}
+
+
+.section-header p {
+  margin: 4px 0 0;
+
+  color: #737373;
+
+  font-size: 12px;
+}
+
+
+/* ======================================
+   KREDİ TÜRLERİ
+====================================== */
+
+.loan-type-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, minmax(0, 1fr));
+
+  gap: 11px;
+}
+
+
+.loan-type-option {
+  min-height: 54px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  padding: 12px 14px;
+
+  border: 1px solid #d8d8d8;
+
+  border-radius: 9px;
+
+  background: #ffffff;
+
+  color: #222222;
+
+  text-align: left;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+
+.loan-type-option:hover {
+  border-color: #d6b000;
+
+  background: #fffdf3;
+
+  transform: translateY(-1px);
+}
+
+
+.loan-type-option.selected {
+  border-color: #ffcc00;
+
+  background: #fff9d9;
+
+  box-shadow:
+    0 0 0 2px
+    rgba(255, 204, 0, 0.16);
+}
+
+
+/* SEÇİM NOKTASI */
+
+.option-indicator {
+  width: 13px;
+  height: 13px;
+
+  flex-shrink: 0;
+
+  border: 2px solid #bcbcbc;
+
+  border-radius: 50%;
+
+  background: #ffffff;
+}
+
+
+.loan-type-option.selected
+.option-indicator {
+  border-color: #111111;
+
+  background: #ffcc00;
+
+  box-shadow:
+    inset 0 0 0 2px
+    #ffffff;
+}
+
+
+/* ======================================
+   KREDİ TUTARI
+====================================== */
+
+.amount-area {
+  width: 100%;
+  max-width: 760px;
+}
+
+
+/* Kullanıcı buraya yazamaz.
+   Sadece seçilen tutarı gösterir. */
+
+.amount-display {
+  width: fit-content;
+
+  min-width: 240px;
+
+  display: flex;
+  align-items: baseline;
+
+  gap: 7px;
+
+  padding: 14px 18px;
+
+  border: 1px solid #ffcc00;
+
+  border-radius: 10px;
+
+  background: #fffdf3;
+}
+
+
+.amount-display strong {
+  color: #111111;
+
+  font-size: 23px;
+  font-weight: 850;
+
+  letter-spacing: -0.5px;
+}
+
+
+.amount-display span {
+  color: #737373;
+
+  font-size: 13px;
+  font-weight: 700;
+}
+
+
+/* ======================================
+   SLIDER
+====================================== */
+
+.amount-slider {
+  width: 100%;
+
+  margin-top: 23px;
+
+  cursor: pointer;
+
+  accent-color: #ffcc00;
+}
+
+
+.range-labels {
+  display: flex;
+  justify-content: space-between;
+
+  margin-top: 7px;
+
+  color: #8c8c8c;
+
+  font-size: 11px;
+  font-weight: 500;
+}
+
+
+/* ======================================
+   VADE
+====================================== */
+
+.term-grid {
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 9px;
+}
+
+
+.term-option {
+  min-width: 68px;
+
+  padding: 10px 14px;
+
+  border: 1px solid #d8d8d8;
+
+  border-radius: 8px;
+
+  background: #ffffff;
+
+  color: #333333;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+
+.term-option:hover {
+  border-color: #d2ae00;
+
+  background: #fffdf3;
+
+  transform: translateY(-1px);
+}
+
+
+.term-option.selected {
+  border-color: #ffcc00;
+
+  background: #ffcc00;
+
+  color: #111111;
+}
+
+
+/* ======================================
+   ARAMA BUTONU
+====================================== */
+
+.search-action {
+  display: flex;
+
+  justify-content: flex-end;
+
+  padding-top: 26px;
+}
+
+
+.search-button {
+  min-width: 225px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 11px;
+
+  padding: 13px 22px;
+
+  border: none;
+
+  border-radius: 9px;
+
+  background: #ffcc00;
+
+  color: #111111;
+
+  font-size: 13px;
+  font-weight: 850;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+
+.search-button:hover:not(:disabled) {
+  transform: translateY(-1px);
+
+  background: #f2c200;
+
+  box-shadow:
+    0 8px 18px
+    rgba(255, 196, 0, 0.25);
+}
+
+
+.search-button:disabled {
+  background: #eeeeee;
+
+  color: #999999;
+
+  cursor: not-allowed;
+
+  box-shadow: none;
+}
+
+
+.arrow {
+  font-size: 18px;
+
+  line-height: 1;
+}
+
+
+/* ======================================
+   RESPONSIVE
+====================================== */
+
+@media (max-width: 1050px) {
+
+  .loan-type-grid {
+    grid-template-columns:
+      repeat(2, 1fr);
+  }
+
+}
+
+
+@media (max-width: 600px) {
+
+  .loan-search-card {
+    padding: 22px 18px;
+  }
+
+
+  .loan-type-grid {
+    grid-template-columns: 1fr;
+  }
+
+
+  .amount-area {
+    max-width: 100%;
+  }
+
+
+  .amount-display {
+    width: 100%;
+
+    min-width: 0;
+  }
+
+
+  .search-action {
+    padding-top: 20px;
+  }
+
+
+  .search-button {
+    width: 100%;
+  }
+
+}

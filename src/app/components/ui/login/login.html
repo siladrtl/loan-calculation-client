@@ -1,0 +1,201 @@
+<div class="login-page">
+
+  <div class="login-shell">
+
+    <!-- SOL ALAN -->
+    <section class="login-info">
+
+      <button
+        type="button"
+        class="back-button"
+        (click)="goHome()">
+
+        ← Kredi Hesaplamaya Dön
+
+      </button>
+
+      <div class="brand">
+
+        <div class="brand-mark">
+          ₺
+        </div>
+
+        <span>
+          Kredi Hesaplama
+        </span>
+
+      </div>
+
+      <div class="info-content">
+
+        <span class="eyebrow">
+          GÜVENLİ BAŞVURU
+        </span>
+
+        <h1>
+          Başvurunuza
+          <strong>kaldığınız yerden</strong>
+          devam edin.
+        </h1>
+
+        <p>
+          Hesabınıza giriş yaptıktan sonra seçtiğiniz
+          kredi ürünü için başvurunuz otomatik olarak
+          devam edecektir.
+        </p>
+
+        <div class="info-list">
+
+          <div class="info-item">
+            <span class="check">✓</span>
+
+            <div>
+              <strong>Seçiminiz korunur</strong>
+              <p>
+                Hesapladığınız kredi ürünü kaybolmaz.
+              </p>
+            </div>
+          </div>
+
+          <div class="info-item">
+            <span class="check">✓</span>
+
+            <div>
+              <strong>Güvenli işlem</strong>
+              <p>
+                Başvurunuz hesabınızla ilişkilendirilir.
+              </p>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- FORM -->
+    <section class="login-form-panel">
+
+      <div class="form-heading">
+
+        <span class="small-title">
+          HOŞ GELDİNİZ
+        </span>
+
+        <h2>
+          Giriş Yap
+        </h2>
+
+        <p>
+          Başvurunuza devam etmek için hesabınıza giriş yapın.
+        </p>
+
+      </div>
+
+
+      <form
+        class="login-form"
+        (ngSubmit)="login()">
+
+        <div class="form-group">
+
+          <label for="email">
+            E-posta
+          </label>
+
+          <input
+            id="email"
+            type="email"
+            name="email"
+            [(ngModel)]="email"
+            placeholder="ornek@mail.com"
+            autocomplete="email"
+            required
+          >
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label for="password">
+            Şifre
+          </label>
+
+          <input
+            id="password"
+            type="password"
+            name="password"
+            [(ngModel)]="password"
+            placeholder="Şifrenizi girin"
+            autocomplete="current-password"
+            required
+          >
+
+        </div>
+
+
+        @if (errorMessage) {
+
+          <div class="error-message">
+
+            <span>
+              !
+            </span>
+
+            {{ errorMessage }}
+
+          </div>
+
+        }
+
+
+        <button
+          type="submit"
+          class="login-button"
+          [disabled]="isLoading">
+
+          @if (isLoading) {
+
+            <span class="spinner"></span>
+
+            Giriş yapılıyor...
+
+          } @else {
+
+            Giriş Yap
+
+            <span>
+              →
+            </span>
+
+          }
+
+        </button>
+
+      </form>
+
+
+      <div class="register-link">
+
+        <span>
+          Henüz hesabınız yok mu?
+        </span>
+
+        <button
+          type="button"
+          (click)="goToRegister()">
+
+          Kayıt Ol
+
+        </button>
+
+      </div>
+
+    </section>
+
+  </div>
+
+</div>
