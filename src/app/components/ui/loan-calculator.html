@@ -1,142 +1,251 @@
-<div class="container-fluid mt-5 theme-page">
+<div class="loan-page">
 
-  <!-- ====================================== -->
-  <!-- BAŞLIK -->
-  <!-- ====================================== -->
+  <div class="loan-container">
 
-  <div class="text-center mb-5">
+    <!-- ====================================== -->
+    <!-- SAYFA BAŞLIĞI -->
+    <!-- ====================================== -->
 
-    <h2>
-      Kredi Hesaplama
-    </h2>
+    <header class="page-header">
 
-    <p class="text-muted">
-      Kredi türünü, tutarı ve vadeyi belirleyerek
-      size uygun kredi ürünlerini karşılaştırın.
-    </p>
+      <span class="page-label">
+        KREDİ HESAPLAMA
+      </span>
 
-  </div>
+      <h1>
+        Size Uygun Krediyi Bulun
+      </h1>
+
+      <p>
+        Kredi türünü, tutarı ve vadeyi belirleyerek
+        size uygun kredi ürünlerini karşılaştırın.
+      </p>
+
+    </header>
 
 
-  <!-- ====================================== -->
-  <!-- FİLTRELER + ARAMA -->
-  <!-- ====================================== -->
+    <!-- ====================================== -->
+    <!-- ANA ALAN -->
+    <!-- ====================================== -->
 
-  <div class="row align-items-start">
+    <div class="calculator-layout">
+
+      <!-- SOL: BANKA -->
+
+      <aside class="filters-column">
+
+        <div class="filter-intro">
+
+          <span class="filter-label">
+            FİLTRELE
+          </span>
+
+          <h3>
+            Banka Seçimi
+          </h3>
+
+          <p>
+            İsterseniz kredi sonuçlarını belirli
+            bankalara göre filtreleyebilirsiniz.
+          </p>
+
+        </div>
 
 
-    <!-- SOL TARAF - BANKA FİLTRESİ -->
+        <app-bank-filter
+          (bankSelectionChange)="onBankSelectionChange($event)">
+        </app-bank-filter>
 
-    <div class="col-md-3 mb-4 filters-column">
+      </aside>
 
-      <app-bank-filter
-        (bankSelectionChange)="onBankSelectionChange($event)">
-      </app-bank-filter>
+
+      <!-- SAĞ: KREDİ ARAMA -->
+
+      <main class="calculator-column">
+
+        <app-loan-search
+          (searchChange)="searchLoanProducts($event)">
+        </app-loan-search>
+
+
+        <!-- HATA -->
+
+        <div
+          class="message-box error-message"
+          *ngIf="errorMessage()">
+
+          <span class="message-dot"></span>
+
+          {{ errorMessage() }}
+
+        </div>
+
+
+        <!-- LOADING -->
+
+        <div
+          class="loading-box"
+          *ngIf="isLoading()">
+
+          <div class="loading-spinner"></div>
+
+          <div>
+
+            <strong>
+              Krediler aranıyor
+            </strong>
+
+            <span>
+              Size uygun kredi ürünleri getiriliyor...
+            </span>
+
+          </div>
+
+        </div>
+
+      </main>
 
     </div>
 
 
-    <!-- SAĞ TARAF - KREDİ ARAMA -->
+    <!-- ====================================== -->
+    <!-- HİÇ ÜRÜN BULUNAMADI -->
+    <!-- ====================================== -->
 
-    <div class="col-md-9">
+    <div
+      #emptyResultSection
+      class="empty-result"
+      *ngIf="
+        !isLoading() &&
+        hasSearched() &&
+        results().length === 0
+      ">
 
-      <app-loan-search
-        (searchChange)="searchLoanProducts($event)">
-      </app-loan-search>
-
-
-      <!-- HATA MESAJI -->
-
-      <div
-        class="alert alert-danger mt-3"
-        *ngIf="errorMessage()">
-
-        {{ errorMessage() }}
-
+      <div class="empty-icon">
+        i
       </div>
 
 
-      <!-- BAŞARI MESAJI -->
+      <div class="empty-content">
 
-      <div
-        class="alert alert-success mt-3"
-        *ngIf="successMessage()">
-
-        {{ successMessage() }}
-
-      </div>
+        <strong>
+          Uygun kredi ürünü bulunamadı
+        </strong>
 
 
-      <!-- ÜRÜNLER YÜKLENİYOR -->
+        <ng-container
+          *ngIf="
+            selectedBanks().length > 0;
+            else noBankSelected
+          ">
 
-      <div
-        class="loading-box"
-        *ngIf="isLoading()">
+          <p>
+            Seçtiğiniz bankalarda bu kredi türü,
+            tutar ve vade kriterlerine uygun
+            kredi ürünü bulunamadı.
+          </p>
 
-        <div class="loading-spinner"></div>
 
-        <span>
-          Kredi ürünleri yükleniyor...
-        </span>
+          <div class="selected-bank-list">
+
+            <span
+              class="selected-bank-badge"
+              *ngFor="let bank of selectedBanks()">
+
+              {{ bank.name }}
+
+            </span>
+
+          </div>
+
+
+          <small>
+            Tutar, vade veya banka seçiminizi değiştirerek
+            tekrar arama yapabilirsiniz.
+          </small>
+
+        </ng-container>
+
+
+        <ng-template #noBankSelected>
+
+          <p>
+            Seçtiğiniz kredi türü, tutar ve vade
+            kriterlerine uygun kredi ürünü bulunamadı.
+          </p>
+
+          <small>
+            Kriterlerinizi değiştirerek tekrar
+            arama yapabilirsiniz.
+          </small>
+
+        </ng-template>
 
       </div>
 
     </div>
 
-  </div>
+
+    <!-- ====================================== -->
+    <!-- SONUÇLAR -->
+    <!-- ====================================== -->
+
+    <section
+      #resultsSection
+      class="results-section"
+      *ngIf="
+        !isLoading() &&
+        results().length > 0
+      ">
+
+      <div class="results-heading">
+
+        <div>
+
+          <span class="section-label">
+            SONUÇLAR
+          </span>
+
+          <h2>
+            Uygun Kredi Ürünleri
+          </h2>
+
+        </div>
 
 
-  <!-- ====================================== -->
-  <!-- KREDİ SONUÇLARI -->
-  <!-- ====================================== -->
+        <span class="results-count">
 
-  <section
-    class="results-section"
-    *ngIf="!isLoading() && results().length > 0">
+          {{ results().length }}
+          ürün bulundu
 
-    <div class="results-heading">
-
-      <div>
-
-        <span class="section-label">
-          SONUÇLAR
         </span>
-
-        <h3>
-          Uygun Kredi Ürünleri
-        </h3>
 
       </div>
 
 
-      <span class="result-count">
-        {{ results().length }} ürün bulundu
+      <app-loan-results
+        [results]="results()"
+        (productSelected)="selectProduct($event)">
+      </app-loan-results>
+
+    </section>
+
+
+    <!-- ====================================== -->
+    <!-- HESAPLAMA -->
+    <!-- ====================================== -->
+
+    <div
+      class="calculation-loading"
+      *ngIf="isCalculating()">
+
+      <div class="loading-spinner"></div>
+
+      <span>
+        Ödeme planı hesaplanıyor...
       </span>
 
     </div>
-
-
-    <app-loan-results
-      [results]="results()"
-      (productSelected)="selectProduct($event)">
-    </app-loan-results>
-
-  </section>
-
-
-  <!-- ====================================== -->
-  <!-- HESAPLAMA YAPILIYOR -->
-  <!-- ====================================== -->
-
-  <div
-    class="loading-box calculation-loading"
-    *ngIf="isCalculating()">
-
-    <div class="loading-spinner"></div>
-
-    <span>
-      Ödeme planı hesaplanıyor...
-    </span>
 
   </div>
 
@@ -144,7 +253,41 @@
 
 
 <!-- ====================================== -->
-<!-- ÖDEME PLANI MODAL -->
+<!-- BANKA BİLDİRİMİ -->
+<!-- ====================================== -->
+
+<div
+  class="toast-container"
+  *ngIf="missingBanks().length > 0">
+
+  <div
+    class="bank-toast"
+    *ngFor="let bank of missingBanks()">
+
+    <div class="toast-icon">
+      !
+    </div>
+
+
+    <div class="toast-content">
+
+      <strong>
+        {{ bank.name }}
+      </strong>
+
+      <span>
+        Seçtiğiniz kriterlere uygun kredi ürünü bulunamadı.
+      </span>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- ====================================== -->
+<!-- ÖDEME PLANI -->
 <!-- ====================================== -->
 
 <app-payment-plan

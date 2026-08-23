@@ -1,10 +1,10 @@
 import {
   Component,
+  computed,
   inject,
   OnInit,
   output,
-  signal,
-  computed
+  signal
 } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
@@ -15,6 +15,7 @@ import { LoanProduct } from '../../../services/loan-product/loan-product';
 
 import { LoanTypeDto } from '../../../services/models/loan-type.model';
 import { LoanProductDto } from '../../../services/models/loan-product.model';
+
 
 @Component({
   selector: 'app-loan-search',
@@ -29,6 +30,10 @@ import { LoanProductDto } from '../../../services/models/loan-product.model';
 })
 export class LoanSearch implements OnInit {
 
+  // ==========================================
+  // SERVICES
+  // ==========================================
+
   private loanTypeService =
     inject(LoanType);
 
@@ -36,167 +41,176 @@ export class LoanSearch implements OnInit {
     inject(LoanProduct);
 
 
-  // -----------------------------
+  // ==========================================
   // KREDİ TÜRLERİ
-  // -----------------------------
+  // ==========================================
 
   loanTypes =
     signal<LoanTypeDto[]>([]);
+
 
   selectedLoanTypeId =
     signal<number | null>(null);
 
 
-  // -----------------------------
-  // ÜRÜNLER
-  // -----------------------------
+  // ==========================================
+  // KREDİ ÜRÜNLERİ
+  // ==========================================
 
   loanProducts =
     signal<LoanProductDto[]>([]);
 
 
-  // Seçilen kredi türüne ait bütün ürünler
-  selectedTypeProducts = computed(() => {
+  selectedTypeProducts =
+    computed(() => {
 
-    const loanTypeId =
-      this.selectedLoanTypeId();
-
-    if (loanTypeId === null) {
-      return [];
-    }
-
-    return this.loanProducts().filter(
-      product =>
-        product.loanTypeId === loanTypeId &&
-        product.isActive
-    );
-
-  });
+      const loanTypeId =
+        this.selectedLoanTypeId();
 
 
-  // -----------------------------
+      if (loanTypeId === null) {
+        return [];
+      }
+
+
+      return this.loanProducts()
+        .filter(
+          product =>
+            product.loanTypeId === loanTypeId &&
+            product.isActive
+        );
+
+    });
+
+
+  // ==========================================
   // TUTAR SINIRLARI
-  // -----------------------------
+  // ==========================================
 
-  minAmount = computed(() => {
+  minAmount =
+    computed(() => {
 
-    const products =
-      this.selectedTypeProducts();
-
-    if (products.length === 0) {
-      return 0;
-    }
-
-    return Math.min(
-      ...products.map(x => x.minAmount)
-    );
-
-  });
+      const products =
+        this.selectedTypeProducts();
 
 
-  maxAmount = computed(() => {
-
-    const products =
-      this.selectedTypeProducts();
-
-    if (products.length === 0) {
-      return 0;
-    }
-
-    return Math.max(
-      ...products.map(x => x.maxAmount)
-    );
-
-  });
+      if (products.length === 0) {
+        return 1000;
+      }
 
 
-  // -----------------------------
+      return Math.min(
+        ...products.map(
+          product =>
+            product.minAmount
+        )
+      );
+
+    });
+
+
+  maxAmount =
+    computed(() => {
+
+      const products =
+        this.selectedTypeProducts();
+
+
+      if (products.length === 0) {
+        return 1000000;
+      }
+
+
+      return Math.max(
+        ...products.map(
+          product =>
+            product.maxAmount
+        )
+      );
+
+    });
+
+
+  // ==========================================
   // VADE SINIRLARI
-  // -----------------------------
+  // ==========================================
 
-  minTerm = computed(() => {
+  minTerm =
+    computed(() => {
 
-    const products =
-      this.selectedTypeProducts();
-
-    if (products.length === 0) {
-      return 0;
-    }
-
-    return Math.min(
-      ...products.map(x => x.minTerm)
-    );
-
-  });
+      const products =
+        this.selectedTypeProducts();
 
 
-  maxTerm = computed(() => {
-
-    const products =
-      this.selectedTypeProducts();
-
-    if (products.length === 0) {
-      return 0;
-    }
-
-    return Math.max(
-      ...products.map(x => x.maxTerm)
-    );
-
-  });
+      if (products.length === 0) {
+        return 3;
+      }
 
 
-  // Kullanıcının seçebileceği vadeler
-  termOptions = computed(() => {
+      return Math.min(
+        ...products.map(
+          product =>
+            product.minTerm
+        )
+      );
 
-    const min =
-      this.minTerm();
-
-    const max =
-      this.maxTerm();
-
-    if (min === 0 || max === 0) {
-      return [];
-    }
-
-    const terms: number[] = [];
-
-    for (
-      let term = min;
-      term <= max;
-      term++
-    ) {
-      terms.push(term);
-    }
-
-    return terms;
-
-  });
+    });
 
 
-  // -----------------------------
+  maxTerm =
+    computed(() => {
+
+      const products =
+        this.selectedTypeProducts();
+
+
+      if (products.length === 0) {
+        return 36;
+      }
+
+
+      return Math.max(
+        ...products.map(
+          product =>
+            product.maxTerm
+        )
+      );
+
+    });
+
+
+  // ==========================================
   // FORM
-  // -----------------------------
+  // ==========================================
 
-  loanAmount = 0;
+  loanAmount =
+    25000;
 
-  maturity = 0;
+
+  maturity =
+    12;
 
 
-  // -----------------------------
+  // İlk arama yapıldı mı?
+  private hasPerformedInitialSearch =
+    false;
+
+
+  // ==========================================
   // OUTPUT
-  // -----------------------------
+  // ==========================================
 
-  searchChange = output<{
-    loanTypeId: number;
-    amount: number;
-    term: number;
-  }>();
+  searchChange =
+    output<{
+      loanTypeId: number;
+      amount: number;
+      term: number;
+    }>();
 
 
-  // -----------------------------
+  // ==========================================
   // INIT
-  // -----------------------------
+  // ==========================================
 
   ngOnInit(): void {
 
@@ -207,9 +221,9 @@ export class LoanSearch implements OnInit {
   }
 
 
-  // -----------------------------
+  // ==========================================
   // KREDİ TÜRLERİNİ GETİR
-  // -----------------------------
+  // ==========================================
 
   private loadLoanTypes(): void {
 
@@ -219,7 +233,9 @@ export class LoanSearch implements OnInit {
 
         next: (data) => {
 
-          this.loanTypes.set(data);
+          this.loanTypes.set(
+            data
+          );
 
         },
 
@@ -237,9 +253,9 @@ export class LoanSearch implements OnInit {
   }
 
 
-  // -----------------------------
-  // ÜRÜNLERİ GETİR
-  // -----------------------------
+  // ==========================================
+  // KREDİ ÜRÜNLERİNİ GETİR
+  // ==========================================
 
   private loadLoanProducts(): void {
 
@@ -249,7 +265,9 @@ export class LoanSearch implements OnInit {
 
         next: (data) => {
 
-          this.loanProducts.set(data);
+          this.loanProducts.set(
+            data
+          );
 
         },
 
@@ -267,73 +285,341 @@ export class LoanSearch implements OnInit {
   }
 
 
-  // -----------------------------
+  // ==========================================
   // KREDİ TÜRÜ SEÇ
-  // -----------------------------
+  // ==========================================
 
   selectLoanType(
     id: number
   ): void {
 
-    this.selectedLoanTypeId.set(id);
+    this.selectedLoanTypeId.set(
+      id
+    );
 
-    // Kredi türü değiştiğinde
-    // formu geçerli başlangıç değerlerine çekiyoruz.
 
-    setTimeout(() => {
+    const products =
+      this.loanProducts()
+        .filter(
+          product =>
+            product.loanTypeId === id &&
+            product.isActive
+        );
+
+
+    if (products.length === 0) {
+      return;
+    }
+
+
+    const minAmount =
+      Math.min(
+        ...products.map(
+          product =>
+            product.minAmount
+        )
+      );
+
+
+    const maxAmount =
+      Math.max(
+        ...products.map(
+          product =>
+            product.maxAmount
+        )
+      );
+
+
+    const minTerm =
+      Math.min(
+        ...products.map(
+          product =>
+            product.minTerm
+        )
+      );
+
+
+    const maxTerm =
+      Math.max(
+        ...products.map(
+          product =>
+            product.maxTerm
+        )
+      );
+
+
+    // Tutar yeni kredi türünün aralığında değilse düzelt
+    if (
+      this.loanAmount < minAmount ||
+      this.loanAmount > maxAmount
+    ) {
 
       this.loanAmount =
-        this.minAmount();
+        minAmount;
+
+    }
+
+
+    // Vade yeni kredi türünün aralığında değilse düzelt
+    if (
+      this.maturity < minTerm ||
+      this.maturity > maxTerm
+    ) {
 
       this.maturity =
-        this.minTerm();
+        minTerm;
 
-    });
+    }
+
+
+    // İlk arama daha önce yapılmışsa
+    // kredi türü değişince otomatik yenile
+    if (
+      this.hasPerformedInitialSearch
+    ) {
+
+      this.emitCurrentSearch();
+
+    }
 
   }
 
 
-  // -----------------------------
+  // ==========================================
   // TUTAR SINIRLA
-  // -----------------------------
+  // ==========================================
 
   normalizeAmount(): void {
 
-    if (this.loanAmount < this.minAmount()) {
+    const min =
+      this.minAmount();
+
+    const max =
+      this.maxAmount();
+
+
+    if (
+      this.loanAmount === null ||
+      Number.isNaN(this.loanAmount)
+    ) {
 
       this.loanAmount =
-        this.minAmount();
+        min;
+
+      return;
+    }
+
+
+    if (
+      this.loanAmount < min
+    ) {
+
+      this.loanAmount =
+        min;
 
     }
 
-    if (this.loanAmount > this.maxAmount()) {
+
+    if (
+      this.loanAmount > max
+    ) {
 
       this.loanAmount =
-        this.maxAmount();
+        max;
 
     }
 
   }
 
 
-  // -----------------------------
-  // ARA
-  // -----------------------------
+  // ==========================================
+  // VADE SINIRLA
+  // ==========================================
+
+  normalizeTerm(): void {
+
+    const min =
+      this.minTerm();
+
+    const max =
+      this.maxTerm();
+
+
+    if (
+      this.maturity === null ||
+      Number.isNaN(this.maturity)
+    ) {
+
+      this.maturity =
+        min;
+
+      return;
+    }
+
+
+    if (
+      this.maturity < min
+    ) {
+
+      this.maturity =
+        min;
+
+    }
+
+
+    if (
+      this.maturity > max
+    ) {
+
+      this.maturity =
+        max;
+
+    }
+
+
+    this.maturity =
+      Math.round(
+        this.maturity
+      );
+
+  }
+
+
+  // ==========================================
+  // TUTAR INPUT BLUR
+  // ==========================================
+
+  onAmountBlur(): void {
+
+    this.normalizeAmount();
+
+
+    if (
+      this.hasPerformedInitialSearch
+    ) {
+
+      this.emitCurrentSearch();
+
+    }
+
+  }
+
+
+  // ==========================================
+  // VADE INPUT BLUR
+  // ==========================================
+
+  onTermBlur(): void {
+
+    this.normalizeTerm();
+
+
+    if (
+      this.hasPerformedInitialSearch
+    ) {
+
+      this.emitCurrentSearch();
+
+    }
+
+  }
+
+
+  // ==========================================
+  // TUTAR SLIDER DEĞİŞTİ
+  // ==========================================
+
+  onAmountSliderChange(): void {
+
+    if (
+      !this.hasPerformedInitialSearch
+    ) {
+      return;
+    }
+
+
+    this.emitCurrentSearch();
+
+  }
+
+
+  // ==========================================
+  // VADE SLIDER DEĞİŞTİ
+  // ==========================================
+
+  onTermSliderChange(): void {
+
+    if (
+      !this.hasPerformedInitialSearch
+    ) {
+      return;
+    }
+
+
+    this.emitCurrentSearch();
+
+  }
+
+
+  // ==========================================
+  // İLK ARAMA BUTONU
+  // ==========================================
 
   search(): void {
 
     const loanTypeId =
       this.selectedLoanTypeId();
 
-    if (loanTypeId === null) {
+
+    if (
+      loanTypeId === null
+    ) {
       return;
     }
 
+
     this.normalizeAmount();
+
+    this.normalizeTerm();
+
+
+    // Artık bundan sonraki değişiklikler
+    // dinamik çalışabilir.
+    this.hasPerformedInitialSearch =
+      true;
+
+
+    this.emitCurrentSearch();
+
+  }
+
+
+  // ==========================================
+  // MEVCUT FORMU PARENT'A GÖNDER
+  // ==========================================
+
+  private emitCurrentSearch(): void {
+
+    const loanTypeId =
+      this.selectedLoanTypeId();
+
+
+    if (
+      loanTypeId === null
+    ) {
+      return;
+    }
+
+
+    this.normalizeAmount();
+
+    this.normalizeTerm();
+
 
     this.searchChange.emit({
 
-      loanTypeId,
+      loanTypeId:
+        loanTypeId,
 
       amount:
         this.loanAmount,

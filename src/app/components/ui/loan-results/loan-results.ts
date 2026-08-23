@@ -1,30 +1,35 @@
 import {
   Component,
-  Input,
-  Output,
-  EventEmitter
+  input,
+  output
 } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
 
-import { ProductSearchResultDto } from '../../../services/models/loan-product.model';
+import {
+  ProductSearchResultDto
+} from '../../../services/models/loan-product.model';
 
 @Component({
   selector: 'app-loan-results',
-  standalone: true,
-  imports: [CommonModule],
+
+  imports: [
+    CommonModule
+  ],
+
   templateUrl: './loan-results.html',
   styleUrl: './loan-results.scss',
 })
 export class LoanResults {
 
-  @Input()
-  results: ProductSearchResultDto[] = [];
+  // Parent componentten gelen kredi ürünleri
+  results =
+    input<ProductSearchResultDto[]>([]);
 
 
-  @Output()
+  // Seçilen ürünü parent componente gönderir
   productSelected =
-    new EventEmitter<ProductSearchResultDto>();
+    output<ProductSearchResultDto>();
 
 
   selectProduct(

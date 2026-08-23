@@ -1,38 +1,414 @@
 :host {
-  --color-primary: #facc15;
-  --color-dark: #111827;
-  --color-light: #ffffff;
+  display: block;
+
+  --yellow: #ffcc00;
+  --yellow-hover: #efbe00;
+  --yellow-soft: #fff9df;
+
+  --text-dark: #292a2e;
+  --text: #45464b;
+  --text-soft: #77797e;
+
+  --border: #e2e3e5;
+
+  --surface: #ffffff;
+  --surface-soft: #f7f7f5;
+  --surface-header: #eeeeec;
 }
 
 
-.theme-table {
+/* ======================================
+   ANA ALAN
+====================================== */
 
-  thead {
-    background-color: var(--color-dark);
+.loan-results {
+  width: 100%;
 
-    th {
-      color: var(--color-light);
-      font-weight: 600;
-      white-space: nowrap;
-    }
-  }
-
-  tbody tr:hover {
-    background-color: #fffbeb;
-  }
-
+  margin-top: 0;
 }
 
 
-.btn-theme-outline {
-  border: 2px solid var(--color-dark);
-  color: var(--color-dark);
-  background: transparent;
+/* ======================================
+   TABLO WRAPPER
+====================================== */
+
+.table-wrapper {
+  width: 100%;
+
+  overflow-x: auto;
+
+  border: 1px solid var(--border);
+
+  border-radius: 12px;
+
+  background: var(--surface);
+
+  box-shadow:
+    0 6px 20px
+    rgba(0, 0, 0, 0.035);
+}
+
+
+/* ======================================
+   TABLO
+====================================== */
+
+.result-table {
+  width: 100%;
+
+  min-width: 1050px;
+
+  margin: 0;
+
+  border-collapse: collapse;
+
+  background: #ffffff;
+}
+
+
+/* ======================================
+   TABLO BAŞLIKLARI
+====================================== */
+
+.result-table thead,
+.result-table thead tr {
+  background: var(--surface-header);
+}
+
+
+.result-table thead th {
+  padding: 15px 16px;
+
+  background: var(--surface-header);
+
+  border: none;
+
+  border-bottom: 2px solid var(--yellow);
+
+  color: #404146;
+
+  text-align: left;
+
+  white-space: nowrap;
+
+  font-size: 13px;
+
+  font-weight: 800;
+
+  letter-spacing: 0.15px;
+}
+
+
+.action-header {
+  width: 165px;
+
+  text-align: center !important;
+}
+
+
+/* ======================================
+   TABLO SATIRLARI
+====================================== */
+
+.result-table tbody tr {
+  background: #ffffff;
+
+  transition:
+    background-color 0.15s ease;
+}
+
+
+.result-table tbody tr:nth-child(even) {
+  background: #fafaf9;
+}
+
+
+.result-table tbody tr:hover {
+  background: #fff9df;
+}
+
+
+/* ======================================
+   TABLO HÜCRELERİ
+====================================== */
+
+.result-table tbody td {
+  padding: 16px;
+
+  border-bottom: 1px solid #ececeb;
+
+  color: var(--text);
+
+  vertical-align: middle;
+
+  white-space: nowrap;
+
+  font-size: 13px;
+}
+
+
+.result-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+
+/* ======================================
+   BANKA
+====================================== */
+
+.bank-cell {
+  color: var(--text-dark) !important;
+
+  font-size: 14px !important;
+
+  font-weight: 800;
+}
+
+
+/* ======================================
+   KREDİ ÜRÜNÜ
+====================================== */
+
+.product-cell {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 4px;
+}
+
+
+.product-cell strong {
+  color: var(--text-dark);
+
+  font-size: 13px;
+
+  font-weight: 800;
+}
+
+
+.product-cell span {
+  color: var(--text-soft);
+
+  font-size: 11px;
+
+  font-weight: 500;
+}
+
+
+/* ======================================
+   MÜŞTERİ TİPİ
+====================================== */
+
+.customer-badge {
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  min-width: 75px;
+
+  padding: 6px 11px;
+
+  border: 1px solid #dedede;
+
+  border-radius: 20px;
+
+  background: #f7f7f5;
+
+  color: #55575c;
+
+  font-size: 11px;
+
+  font-weight: 800;
+}
+
+
+/* ÖĞRENCİ */
+
+.customer-badge.student {
+  border-color: #eadc8d;
+
+  background: #fff9dd;
+
+  color: #776000;
+}
+
+
+/* ESNAF */
+
+.customer-badge.tradesman {
+  border-color: #d9dade;
+
+  background: #f4f4f3;
+
+  color: #55575c;
+}
+
+
+/* EMEKLİ */
+
+.customer-badge.retired {
+  border-color: #e4d69a;
+
+  background: #fff8d8;
+
+  color: #776000;
+}
+
+
+/* ======================================
+   FAİZ
+====================================== */
+
+.rate-cell {
+  color: #8a6b00 !important;
+
+  font-size: 13px !important;
+
+  font-weight: 800;
+}
+
+
+/* ======================================
+   PARA ALANLARI
+====================================== */
+
+.money-cell {
+  color: #4a4b50 !important;
+
+  font-variant-numeric: tabular-nums;
+}
+
+
+.money-cell.strong {
+  color: var(--text-dark) !important;
+
+  font-weight: 800;
+}
+
+
+.currency {
+  margin-left: 2px;
+
+  color: #85868a;
+
+  font-size: 10px;
+
   font-weight: 600;
+}
 
-  &:hover {
-    background-color: var(--color-primary);
-    border-color: var(--color-primary);
-    color: var(--color-dark);
+
+/* ======================================
+   İŞLEM ALANI
+====================================== */
+
+.action-cell {
+  text-align: center;
+}
+
+
+/* ======================================
+   ÖDEME PLANI BUTONU
+====================================== */
+
+.payment-button {
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 8px;
+
+  min-width: 135px;
+
+  padding: 9px 13px;
+
+  border: none;
+
+  border-radius: 8px;
+
+  background: var(--yellow);
+
+  color: #292929;
+
+  font-size: 12px;
+
+  font-weight: 800;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+
+.payment-button:hover {
+  transform: translateY(-1px);
+
+  background: var(--yellow-hover);
+
+  box-shadow:
+    0 7px 16px
+    rgba(239, 190, 0, 0.20);
+}
+
+
+.payment-button:active {
+  transform: translateY(0);
+}
+
+
+.button-arrow {
+  font-size: 15px;
+
+  line-height: 1;
+}
+
+
+/* ======================================
+   TABLET
+====================================== */
+
+@media (max-width: 900px) {
+
+  .result-table {
+    min-width: 980px;
   }
+
+}
+
+
+/* ======================================
+   MOBİL
+====================================== */
+
+@media (max-width: 768px) {
+
+  .result-table {
+    min-width: 950px;
+  }
+
+
+  .result-table thead th,
+  .result-table tbody td {
+    padding: 13px 14px;
+  }
+
+
+  .bank-cell {
+    font-size: 13px !important;
+  }
+
+
+  .payment-button {
+    min-width: 125px;
+
+    padding: 8px 12px;
+  }
+
 }

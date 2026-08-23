@@ -1,41 +1,49 @@
 :host {
   display: block;
+
+  --yellow: #ffcc00;
+  --yellow-hover: #efbe00;
+  --yellow-dark: #d8aa00;
+  --yellow-soft: #fff9dc;
+
+  --text-dark: #292a2e;
+  --text: #48494e;
+  --text-soft: #77797e;
+
+  --background: #f5f5f2;
+  --surface: #ffffff;
+
+  --border: #e2e3e5;
 }
 
 
 /* ======================================
-   ANA SAYFA
+   SAYFA
 ====================================== */
 
-.theme-page {
-  --color-primary: #ffcc00;
-  --color-primary-hover: #f2c200;
-
-  --color-dark: #111111;
-  --color-dark-soft: #1a1a1a;
-
-  --color-light: #ffffff;
-
-  --color-page: #f5f5f2;
-
-  --color-gray: #737373;
-  --color-gray-light: #9a9a9a;
-
-  --color-border: #e5e5e5;
-
-  min-height: calc(100vh - 70px);
+.loan-page {
+  min-height: 100vh;
 
   padding:
-    38px 42px
-    60px;
+    35px 30px
+    70px;
 
   background:
     radial-gradient(
       circle at 90% 5%,
-      rgba(255, 204, 0, 0.08),
+      rgba(255, 204, 0, 0.06),
       transparent 28%
     ),
-    var(--color-page);
+    var(--background);
+}
+
+
+.loan-container {
+  width: 100%;
+
+  max-width: 1500px;
+
+  margin: 0 auto;
 }
 
 
@@ -43,106 +51,172 @@
    SAYFA BAŞLIĞI
 ====================================== */
 
-.theme-page > .text-center {
-  max-width: 760px;
+.page-header {
+  margin-bottom: 32px;
 
-  margin-left: auto;
-  margin-right: auto;
+  text-align: center;
 }
 
-.theme-page h2 {
-  margin-bottom: 10px;
 
-  color: var(--color-dark);
+.page-label {
+  display: block;
 
-  font-size: 34px;
-  font-weight: 850;
+  margin-bottom: 7px;
 
-  letter-spacing: -0.8px;
+  color: #9b7a00;
+
+  font-size: 11px;
+  font-weight: 900;
+
+  letter-spacing: 1.6px;
 }
 
-.theme-page .text-muted {
+
+.page-header h1 {
   margin: 0;
 
-  color: var(--color-gray) !important;
+  color: var(--text-dark);
+
+  font-size: 31px;
+  font-weight: 850;
+
+  letter-spacing: -0.5px;
+}
+
+
+.page-header p {
+  max-width: 650px;
+
+  margin: 9px auto 0;
+
+  color: var(--text-soft);
 
   font-size: 14px;
-  line-height: 1.7;
+  line-height: 1.6;
 }
 
 
 /* ======================================
-   ANA YERLEŞİM
+   ANA LAYOUT
 ====================================== */
 
-.theme-page > .row {
-  max-width: 1350px;
+.calculator-layout {
+  display: grid;
 
-  margin-left: auto;
-  margin-right: auto;
+  grid-template-columns:
+    310px minmax(0, 1fr);
+
+  align-items: start;
+
+  gap: 26px;
 }
 
 
 /* ======================================
-   SOL BANKA FİLTRESİ
+   SOL FİLTRE
 ====================================== */
 
 .filters-column {
-  position: sticky;
+  position: static;
 
-  top: 20px;
-
-  align-self: flex-start;
+  align-self: start;
 
   height: fit-content;
 }
 
 
+.filter-intro {
+  margin-bottom: 14px;
+
+  padding: 0 2px;
+}
+
+
+.filter-label {
+  display: block;
+
+  margin-bottom: 5px;
+
+  color: #9b7a00;
+
+  font-size: 10px;
+  font-weight: 900;
+
+  letter-spacing: 1.5px;
+}
+
+
+.filter-intro h3 {
+  margin: 0;
+
+  color: var(--text-dark);
+
+  font-size: 18px;
+  font-weight: 850;
+}
+
+
+.filter-intro p {
+  max-width: 270px;
+
+  margin: 6px 0 0;
+
+  color: var(--text-soft);
+
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+
 /* ======================================
-   SAĞ ARAMA ALANI
+   SAĞ ALAN
 ====================================== */
 
-.col-md-9 {
+.calculator-column {
   min-width: 0;
 }
 
 
 /* ======================================
-   HATA / BAŞARI MESAJLARI
+   HATA
 ====================================== */
 
-.alert {
-  margin-top: 18px !important;
+.message-box {
+  display: flex;
 
-  padding:
-    13px 15px;
+  align-items: center;
 
-  border: none;
+  gap: 10px;
 
-  border-radius: 11px;
+  margin-top: 18px;
+
+  padding: 13px 15px;
+
+  border-radius: 10px;
 
   font-size: 13px;
   font-weight: 600;
 }
 
 
-.alert-danger {
-  border-left:
-    4px solid #b42318;
+.error-message {
+  border: 1px solid #e4c8c8;
 
-  background: #fff1f0;
+  background: #fff8f8;
 
-  color: #9e1c14;
+  color: #7b3c3c;
 }
 
 
-.alert-success {
-  border-left:
-    4px solid #1b7f4b;
+.message-dot {
+  width: 8px;
+  height: 8px;
 
-  background: #eefaf3;
+  flex-shrink: 0;
 
-  color: #16663d;
+  border-radius: 50%;
+
+  background: #c45b5b;
 }
 
 
@@ -151,68 +225,182 @@
 ====================================== */
 
 .loading-box {
-  min-height: 90px;
-
   display: flex;
+
   align-items: center;
-  justify-content: center;
 
-  gap: 12px;
+  gap: 14px;
 
-  margin-top: 20px;
+  margin-top: 18px;
 
-  padding: 22px;
+  padding: 16px 18px;
 
-  border:
-    1px solid var(--color-border);
+  border: 1px solid #e5e5e3;
 
-  border-radius: 14px;
+  border-radius: 10px;
 
-  background: var(--color-light);
+  background: #ffffff;
+}
 
-  color: var(--color-gray);
+
+.loading-box strong {
+  display: block;
+
+  color: var(--text-dark);
 
   font-size: 13px;
+  font-weight: 800;
+}
 
-  box-shadow:
-    0 5px 18px
-    rgba(0, 0, 0, 0.035);
+
+.loading-box span {
+  display: block;
+
+  margin-top: 2px;
+
+  color: var(--text-soft);
+
+  font-size: 11px;
 }
 
 
 .loading-spinner {
-  width: 19px;
-  height: 19px;
+  width: 21px;
+  height: 21px;
 
-  border:
-    3px solid
-    rgba(17, 17, 17, 0.12);
+  flex-shrink: 0;
 
-  border-top-color:
-    var(--color-primary);
+  border: 3px solid #eeeeec;
+  border-top-color: var(--yellow);
 
   border-radius: 50%;
 
-  animation:
-    spin 0.8s linear infinite;
+  animation: spin 0.7s linear infinite;
 }
 
 
 @keyframes spin {
 
   to {
-    transform:
-      rotate(360deg);
+    transform: rotate(360deg);
   }
 
 }
 
 
-.calculation-loading {
-  max-width: 1350px;
+/* ======================================
+   HİÇ SONUÇ YOK
+====================================== */
 
-  margin:
-    22px auto 0;
+.empty-result {
+  display: flex;
+
+  align-items: flex-start;
+
+  gap: 14px;
+
+  margin-top: 28px;
+
+  padding: 20px 22px;
+
+  border: 1px solid #e5d78f;
+
+  border-radius: 13px;
+
+  background: #fffbea;
+}
+
+
+.empty-icon {
+  width: 30px;
+  height: 30px;
+
+  flex-shrink: 0;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: var(--yellow);
+
+  color: #292929;
+
+  font-size: 14px;
+  font-weight: 900;
+}
+
+
+.empty-content {
+  flex: 1;
+}
+
+
+.empty-content > strong {
+  display: block;
+
+  color: #3f3500;
+
+  font-size: 17px;
+  font-weight: 850;
+}
+
+
+.empty-content p {
+  margin: 7px 0 0;
+
+  color: #706000;
+
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+
+.empty-content small {
+  display: block;
+
+  margin-top: 10px;
+
+  color: #8a7b3c;
+
+  font-size: 11px;
+}
+
+
+/* ======================================
+   BANKA BADGE
+====================================== */
+
+.selected-bank-list {
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 8px;
+
+  margin-top: 13px;
+}
+
+
+.selected-bank-badge {
+  display: inline-flex;
+
+  align-items: center;
+
+  padding: 6px 11px;
+
+  border: 1px solid #e3d276;
+
+  border-radius: 20px;
+
+  background: #ffffff;
+
+  color: #635100;
+
+  font-size: 11px;
+  font-weight: 850;
 }
 
 
@@ -221,236 +409,346 @@
 ====================================== */
 
 .results-section {
-  max-width: 1350px;
-
-  margin:
-    38px auto 0;
+  margin-top: 42px;
 
   padding:
-    26px;
+    28px 30px
+    30px;
 
-  border:
-    1px solid var(--color-border);
+  border: 1px solid var(--border);
 
-  border-radius: 18px;
+  border-radius: 16px;
 
-  background:
-    var(--color-light);
+  background: var(--surface);
 
   box-shadow:
-    0 10px 32px
-    rgba(0, 0, 0, 0.055);
+    0 10px 30px
+    rgba(0, 0, 0, 0.045);
+
+  scroll-margin-top: 25px;
 }
 
 
 .results-heading {
   display: flex;
-  align-items: flex-end;
+
+  align-items: center;
   justify-content: space-between;
 
-  gap: 18px;
+  gap: 20px;
 
-  margin-bottom: 20px;
+  margin-bottom: 22px;
 
-  padding-bottom: 17px;
+  padding-bottom: 18px;
 
   border-bottom:
-    1px solid #eeeeee;
+    1px solid #ececeb;
 }
 
 
 .section-label {
   display: block;
 
-  margin-bottom: 4px;
+  margin-bottom: 5px;
 
-  color: #a27f00;
+  color: #9b7a00;
 
   font-size: 10px;
-  font-weight: 850;
+  font-weight: 900;
 
   letter-spacing: 1.5px;
 }
 
 
-.results-heading h3 {
+.results-heading h2 {
   margin: 0;
 
-  color: var(--color-dark);
+  color: var(--text-dark);
 
-  font-size: 20px;
+  font-size: 21px;
   font-weight: 850;
-
-  letter-spacing: -0.3px;
 }
 
 
-.result-count {
-  padding:
-    7px 12px;
+.results-count {
+  flex-shrink: 0;
+
+  padding: 7px 13px;
+
+  border: 1px solid #e3d68e;
 
   border-radius: 20px;
 
-  background:
-    var(--color-dark);
+  background: var(--yellow-soft);
 
-  color:
-    var(--color-primary);
+  color: #756000;
 
   font-size: 11px;
-  font-weight: 800;
+  font-weight: 850;
+}
 
+
+/* ======================================
+   HESAPLAMA
+====================================== */
+
+.calculation-loading {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 10px;
+
+  margin-top: 20px;
+
+  padding: 15px;
+
+  color: var(--text-soft);
+
+  font-size: 13px;
+  font-weight: 600;
+}
+
+
+/* ======================================
+   TOAST CONTAINER
+   EKRANIN ÜST-ORTASI
+====================================== */
+
+.toast-container {
+  position: fixed;
+
+  top: 24px;
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  z-index: 10000;
+
+  width: 390px;
+  max-width: calc(100% - 30px);
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 10px;
+
+  pointer-events: none;
+}
+
+
+/* ======================================
+   BANKA TOAST
+====================================== */
+
+.bank-toast {
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 15px 17px;
+
+  border: 1px solid #e5d78f;
+  border-top: 4px solid var(--yellow);
+
+  border-radius: 11px;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 14px 38px
+    rgba(0, 0, 0, 0.14);
+
+  animation:
+    toast-in 0.28s ease;
+}
+
+
+.toast-icon {
+  width: 31px;
+  height: 31px;
+
+  flex-shrink: 0;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: var(--yellow);
+
+  color: #292a2e;
+
+  font-size: 14px;
+  font-weight: 900;
+}
+
+
+.toast-content {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 3px;
+}
+
+
+.toast-content strong {
+  overflow: hidden;
+
+  color: #292a2e;
+
+  font-size: 14px;
+  font-weight: 850;
+
+  text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 
-/* ======================================
-   GENEL BUTON TEMASI
-   Gerekirse child componentlerde kullanılabilir
-====================================== */
+.toast-content span {
+  color: #74767c;
 
-.btn-theme-primary {
-  border: none;
+  font-size: 12px;
 
-  border-radius: 10px;
-
-  padding:
-    12px 18px;
-
-  background:
-    var(--color-primary);
-
-  color:
-    var(--color-dark);
-
-  font-weight: 800;
-
-  cursor: pointer;
-
-  transition:
-    transform 0.2s ease,
-    background 0.2s ease,
-    box-shadow 0.2s ease;
+  line-height: 1.45;
 }
 
 
-.btn-theme-primary:hover:not(:disabled) {
-  transform:
-    translateY(-1px);
+/* Sağdan değil yukarıdan gelsin */
 
-  background:
-    var(--color-primary-hover);
+@keyframes toast-in {
 
-  box-shadow:
-    0 8px 20px
-    rgba(255, 196, 0, 0.24);
-}
+  from {
+    opacity: 0;
 
+    transform:
+      translateY(-18px);
+  }
 
-.btn-theme-primary:disabled {
-  opacity: 0.55;
+  to {
+    opacity: 1;
 
-  cursor: not-allowed;
-}
+    transform:
+      translateY(0);
+  }
 
-
-.btn-theme-outline {
-  padding:
-    11px 17px;
-
-  border:
-    1px solid #cccccc;
-
-  border-radius: 10px;
-
-  background:
-    transparent;
-
-  color:
-    var(--color-dark);
-
-  font-weight: 700;
-
-  cursor: pointer;
-
-  transition:
-    0.2s ease;
-}
-
-
-.btn-theme-outline:hover:not(:disabled) {
-  border-color:
-    var(--color-primary);
-
-  background:
-    #fff9dd;
 }
 
 
 /* ======================================
-   RESPONSIVE
+   TABLET
 ====================================== */
 
-@media (max-width: 992px) {
+@media (max-width: 1050px) {
 
-  .theme-page {
+  .calculator-layout {
+    grid-template-columns:
+      260px minmax(0, 1fr);
+
+    gap: 20px;
+  }
+
+}
+
+
+/* ======================================
+   MOBİL
+====================================== */
+
+@media (max-width: 768px) {
+
+  .loan-page {
     padding:
-      30px 24px
+      25px 15px
       50px;
   }
 
 
-  .filters-column {
-    position: static;
-  }
-
-}
-
-
-@media (max-width: 768px) {
-
-  .theme-page {
-    padding:
-      25px 16px
-      40px;
+  .page-header h1 {
+    font-size: 26px;
   }
 
 
-  .theme-page h2 {
-    font-size: 29px;
+  .calculator-layout {
+    grid-template-columns: 1fr;
+  }
+
+
+  .filter-intro p {
+    max-width: 100%;
   }
 
 
   .results-section {
+    margin-top: 28px;
+
     padding:
-      19px;
+      20px 16px;
   }
 
 
   .results-heading {
     align-items: flex-start;
+
     flex-direction: column;
+
+    gap: 12px;
+  }
+
+
+  .toast-container {
+    top: 15px;
+    left: 50%;
+    right: auto;
+
+    width: calc(100% - 30px);
+    max-width: 390px;
+
+    transform:
+      translateX(-50%);
   }
 
 }
 
 
+/* ======================================
+   TELEFON
+====================================== */
+
 @media (max-width: 480px) {
 
-  .theme-page {
+  .loan-page {
     padding:
-      20px 12px
-      35px;
+      20px 10px
+      40px;
   }
 
 
-  .theme-page h2 {
-    font-size: 25px;
+  .page-header h1 {
+    font-size: 23px;
   }
 
 
-  .results-section {
-    border-radius: 14px;
+  .bank-toast {
+    padding:
+      13px 14px;
+  }
+
+
+  .toast-content strong {
+    font-size: 13px;
+  }
+
+
+  .toast-content span {
+    font-size: 11px;
   }
 
 }

@@ -12,12 +12,17 @@
         1
       </div>
 
+
       <div>
-        <h3>Kredi Türü</h3>
+
+        <h3>
+          Kredi Türü
+        </h3>
 
         <p>
           Hesaplamak istediğiniz kredi türünü seçin.
         </p>
+
       </div>
 
     </div>
@@ -25,12 +30,17 @@
 
     <div class="loan-type-grid">
 
-      @for (type of loanTypes(); track type.id) {
+      @for (
+        type of loanTypes();
+        track type.id
+      ) {
 
         <button
           type="button"
           class="loan-type-option"
-          [class.selected]="selectedLoanTypeId() === type.id"
+          [class.selected]="
+            selectedLoanTypeId() === type.id
+          "
           (click)="selectLoanType(type.id)">
 
           <span class="option-indicator"></span>
@@ -60,27 +70,42 @@
         2
       </div>
 
+
       <div>
-        <h3>Kredi Tutarı</h3>
+
+        <h3>
+          Kredi Tutarı
+        </h3>
 
         <p>
-          Kullanmak istediğiniz kredi tutarını belirleyin.
+          Tutarı yazabilir veya kaydırma çubuğunu kullanabilirsiniz.
         </p>
+
       </div>
 
     </div>
 
 
-    <div class="amount-area">
+    <div class="value-area">
 
-      <!-- SADECE GÖSTERİM -->
-      <!-- Kullanıcı buraya elle değer yazamaz -->
+      <!-- TUTAR INPUT -->
 
-      <div class="amount-display">
+      <div class="value-input">
 
-        <strong>
-          {{ loanAmount | number:'1.0-0' }}
-        </strong>
+        <input
+          type="number"
+
+          [(ngModel)]="loanAmount"
+
+          [min]="minAmount()"
+
+          [max]="maxAmount()"
+
+          step="1000"
+
+          (blur)="onAmountBlur()"
+        >
+
 
         <span>
           TL
@@ -89,45 +114,37 @@
       </div>
 
 
-      <!-- SLIDER -->
+      <!-- TUTAR SLIDER -->
 
       <input
         type="range"
-        class="amount-slider"
+
+        class="value-slider"
+
         [(ngModel)]="loanAmount"
-        [min]="
-          selectedLoanTypeId() !== null
-            ? minAmount()
-            : 1000
-        "
-        [max]="
-          selectedLoanTypeId() !== null
-            ? maxAmount()
-            : 1000000
-        "
+
+        [min]="minAmount()"
+
+        [max]="maxAmount()"
+
         step="1000"
+
+        (change)="onAmountSliderChange()"
       >
 
 
-      <!-- MIN / MAX -->
+      <!-- TUTAR SINIRLARI -->
 
       <div class="range-labels">
 
         <span>
-          {{
-            selectedLoanTypeId() !== null
-              ? (minAmount() | number:'1.0-0')
-              : '1.000'
-          }}
+          {{ minAmount() | number:'1.0-0' }}
           TL
         </span>
 
+
         <span>
-          {{
-            selectedLoanTypeId() !== null
-              ? (maxAmount() | number:'1.0-0')
-              : '1.000.000'
-          }}
+          {{ maxAmount() | number:'1.0-0' }}
           TL
         </span>
 
@@ -150,61 +167,85 @@
         3
       </div>
 
+
       <div>
-        <h3>Vade</h3>
+
+        <h3>
+          Vade
+        </h3>
 
         <p>
-          Size uygun ödeme süresini seçin.
+          Vadeyi ay olarak yazabilir veya kaydırma çubuğunu kullanabilirsiniz.
         </p>
+
       </div>
 
     </div>
 
 
-    <div class="term-grid">
+    <div class="value-area">
 
-      <!-- KREDİ TÜRÜ SEÇİLDİ -->
+      <!-- VADE INPUT -->
 
-      @if (selectedLoanTypeId() !== null) {
+      <div class="value-input term-input">
 
-        @for (term of termOptions(); track term) {
+        <input
+          type="number"
 
-          <button
-            type="button"
-            class="term-option"
-            [class.selected]="maturity === term"
-            (click)="maturity = term">
+          [(ngModel)]="maturity"
 
-            {{ term }} Ay
+          [min]="minTerm()"
 
-          </button>
+          [max]="maxTerm()"
 
-        }
+          step="1"
 
-      }
+          (blur)="onTermBlur()"
+        >
 
-      <!-- KREDİ TÜRÜ HENÜZ SEÇİLMEDİ -->
 
-      @else {
+        <span>
+          Ay
+        </span>
 
-        @for (
-          term of [3, 6, 9, 12, 18, 24, 36];
-          track term
-        ) {
+      </div>
 
-          <button
-            type="button"
-            class="term-option"
-            [class.selected]="maturity === term"
-            (click)="maturity = term">
 
-            {{ term }} Ay
+      <!-- VADE SLIDER -->
 
-          </button>
+      <input
+        type="range"
 
-        }
+        class="value-slider"
 
-      }
+        [(ngModel)]="maturity"
+
+        [min]="minTerm()"
+
+        [max]="maxTerm()"
+
+        step="1"
+
+        (change)="onTermSliderChange()"
+      >
+
+
+      <!-- VADE SINIRLARI -->
+
+      <div class="range-labels">
+
+        <span>
+          {{ minTerm() }}
+          Ay
+        </span>
+
+
+        <span>
+          {{ maxTerm() }}
+          Ay
+        </span>
+
+      </div>
 
     </div>
 
@@ -220,7 +261,9 @@
     <button
       type="button"
       class="search-button"
-      [disabled]="selectedLoanTypeId() === null"
+      [disabled]="
+        selectedLoanTypeId() === null
+      "
       (click)="search()">
 
       Uygun Kredileri Gör

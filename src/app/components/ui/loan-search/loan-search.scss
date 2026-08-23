@@ -10,13 +10,17 @@
 .loan-search-card {
   width: 100%;
 
-  padding: 28px 30px;
+  padding:
+    28px 30px;
 
-  border: 1px solid #e5e5e5;
+  border:
+    1px solid #e4e4e4;
 
-  border-radius: 16px;
+  border-radius:
+    16px;
 
-  background: #ffffff;
+  background:
+    #ffffff;
 
   box-shadow:
     0 8px 28px
@@ -29,73 +33,108 @@
 ====================================== */
 
 .form-section {
-  padding: 26px 0;
+  padding:
+    27px 0;
 
-  border-bottom: 1px solid #eeeeee;
+  border-bottom:
+    1px solid #eeeeee;
 }
 
 
 .form-section:first-child {
-  padding-top: 0;
+  padding-top:
+    0;
 }
 
 
 .form-section:last-of-type {
-  border-bottom: none;
+  border-bottom:
+    none;
 }
 
 
 /* ======================================
-   BÖLÜM BAŞLIKLARI
+   BÖLÜM BAŞLIĞI
 ====================================== */
 
 .section-header {
-  display: flex;
-  align-items: flex-start;
+  display:
+    flex;
 
-  gap: 13px;
+  align-items:
+    flex-start;
 
-  margin-bottom: 20px;
+  gap:
+    13px;
+
+  margin-bottom:
+    21px;
 }
 
 
 .step {
-  flex-shrink: 0;
+  flex-shrink:
+    0;
 
-  width: 32px;
-  height: 32px;
+  width:
+    32px;
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  height:
+    32px;
 
-  border-radius: 50%;
+  display:
+    flex;
 
-  background: #ffcc00;
+  align-items:
+    center;
 
-  color: #111111;
+  justify-content:
+    center;
 
-  font-size: 13px;
-  font-weight: 900;
+  border-radius:
+    50%;
+
+  background:
+    #ffcc00;
+
+  color:
+    #222222;
+
+  font-size:
+    13px;
+
+  font-weight:
+    900;
 }
 
 
 .section-header h3 {
-  margin: 0;
+  margin:
+    0;
 
-  color: #111111;
+  color:
+    #222222;
 
-  font-size: 19px;
-  font-weight: 800;
+  font-size:
+    19px;
+
+  font-weight:
+    800;
 }
 
 
 .section-header p {
-  margin: 4px 0 0;
+  margin:
+    4px 0 0;
 
-  color: #737373;
+  color:
+    #747474;
 
-  font-size: 12px;
+  font-size:
+    13px;
+
+  line-height:
+    1.5;
 }
 
 
@@ -104,39 +143,59 @@
 ====================================== */
 
 .loan-type-grid {
-  display: grid;
+  display:
+    grid;
 
   grid-template-columns:
-    repeat(4, minmax(0, 1fr));
+    repeat(
+      4,
+      minmax(0, 1fr)
+    );
 
-  gap: 11px;
+  gap:
+    11px;
 }
 
 
 .loan-type-option {
-  min-height: 54px;
+  min-height:
+    56px;
 
-  display: flex;
-  align-items: center;
+  display:
+    flex;
 
-  gap: 10px;
+  align-items:
+    center;
 
-  padding: 12px 14px;
+  gap:
+    10px;
 
-  border: 1px solid #d8d8d8;
+  padding:
+    12px 14px;
 
-  border-radius: 9px;
+  border:
+    1px solid #d8d8d8;
 
-  background: #ffffff;
+  border-radius:
+    9px;
 
-  color: #222222;
+  background:
+    #ffffff;
 
-  text-align: left;
+  color:
+    #2d2d2d;
 
-  font-size: 13px;
-  font-weight: 700;
+  text-align:
+    left;
 
-  cursor: pointer;
+  font-size:
+    14px;
+
+  font-weight:
+    700;
+
+  cursor:
+    pointer;
 
   transition:
     border-color 0.2s ease,
@@ -147,18 +206,23 @@
 
 
 .loan-type-option:hover {
-  border-color: #d6b000;
+  transform:
+    translateY(-1px);
 
-  background: #fffdf3;
+  border-color:
+    #d5ad00;
 
-  transform: translateY(-1px);
+  background:
+    #fffdf4;
 }
 
 
 .loan-type-option.selected {
-  border-color: #ffcc00;
+  border-color:
+    #ffcc00;
 
-  background: #fff9d9;
+  background:
+    #fff9dc;
 
   box-shadow:
     0 0 0 2px
@@ -169,24 +233,33 @@
 /* SEÇİM NOKTASI */
 
 .option-indicator {
-  width: 13px;
-  height: 13px;
+  width:
+    13px;
 
-  flex-shrink: 0;
+  height:
+    13px;
 
-  border: 2px solid #bcbcbc;
+  flex-shrink:
+    0;
 
-  border-radius: 50%;
+  border:
+    2px solid #bcbcbc;
 
-  background: #ffffff;
+  border-radius:
+    50%;
+
+  background:
+    #ffffff;
 }
 
 
 .loan-type-option.selected
 .option-indicator {
-  border-color: #111111;
+  border-color:
+    #565656;
 
-  background: #ffcc00;
+  background:
+    #ffcc00;
 
   box-shadow:
     inset 0 0 0 2px
@@ -195,53 +268,130 @@
 
 
 /* ======================================
-   KREDİ TUTARI
+   TUTAR + VADE ORTAK ALAN
 ====================================== */
 
-.amount-area {
-  width: 100%;
-  max-width: 760px;
+.value-area {
+  width:
+    100%;
+
+  max-width:
+    760px;
 }
 
 
-/* Kullanıcı buraya yazamaz.
-   Sadece seçilen tutarı gösterir. */
+/* ======================================
+   INPUT
+====================================== */
 
-.amount-display {
-  width: fit-content;
+.value-input {
+  width:
+    270px;
 
-  min-width: 240px;
+  display:
+    flex;
 
-  display: flex;
-  align-items: baseline;
+  align-items:
+    center;
 
-  gap: 7px;
+  overflow:
+    hidden;
 
-  padding: 14px 18px;
+  border:
+    1px solid #d8d8d8;
 
-  border: 1px solid #ffcc00;
+  border-radius:
+    10px;
 
-  border-radius: 10px;
+  background:
+    #ffffff;
 
-  background: #fffdf3;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 
-.amount-display strong {
-  color: #111111;
+.value-input:focus-within {
+  border-color:
+    #ffcc00;
 
-  font-size: 23px;
-  font-weight: 850;
-
-  letter-spacing: -0.5px;
+  box-shadow:
+    0 0 0 4px
+    rgba(255, 204, 0, 0.12);
 }
 
 
-.amount-display span {
-  color: #737373;
+.value-input input {
+  flex:
+    1;
 
-  font-size: 13px;
-  font-weight: 700;
+  min-width:
+    0;
+
+  padding:
+    14px 15px;
+
+  border:
+    none;
+
+  outline:
+    none;
+
+  background:
+    transparent;
+
+  color:
+    #222222;
+
+  font-size:
+    21px;
+
+  font-weight:
+    800;
+}
+
+
+/* NUMBER INPUT OKLARINI GİZLE */
+
+.value-input input::-webkit-outer-spin-button,
+.value-input input::-webkit-inner-spin-button {
+  margin:
+    0;
+
+  -webkit-appearance:
+    none;
+}
+
+
+.value-input input[type='number'] {
+  appearance:
+    textfield;
+  -moz-appearance:
+    textfield;
+}
+
+
+.value-input span {
+  padding-right:
+    15px;
+
+  color:
+    #747474;
+
+  font-size:
+    13px;
+
+  font-weight:
+    700;
+}
+
+
+/* VADE INPUT BİRAZ DAHA DAR */
+
+.term-input {
+  width:
+    210px;
 }
 
 
@@ -249,84 +399,43 @@
    SLIDER
 ====================================== */
 
-.amount-slider {
-  width: 100%;
+.value-slider {
+  width:
+    100%;
 
-  margin-top: 23px;
+  margin-top:
+    22px;
 
-  cursor: pointer;
+  cursor:
+    pointer;
 
-  accent-color: #ffcc00;
-}
-
-
-.range-labels {
-  display: flex;
-  justify-content: space-between;
-
-  margin-top: 7px;
-
-  color: #8c8c8c;
-
-  font-size: 11px;
-  font-weight: 500;
+  accent-color:
+    #ffcc00;
 }
 
 
 /* ======================================
-   VADE
+   MIN / MAX
 ====================================== */
 
-.term-grid {
-  display: flex;
+.range-labels {
+  display:
+    flex;
 
-  flex-wrap: wrap;
+  justify-content:
+    space-between;
 
-  gap: 9px;
-}
+  margin-top:
+    7px;
 
+  color:
+    #818181;
 
-.term-option {
-  min-width: 68px;
+  font-size:
+    12px;
 
-  padding: 10px 14px;
-
-  border: 1px solid #d8d8d8;
-
-  border-radius: 8px;
-
-  background: #ffffff;
-
-  color: #333333;
-
-  font-size: 12px;
-  font-weight: 700;
-
-  cursor: pointer;
-
-  transition:
-    background 0.2s ease,
-    border-color 0.2s ease,
-    color 0.2s ease,
-    transform 0.2s ease;
-}
-
-
-.term-option:hover {
-  border-color: #d2ae00;
-
-  background: #fffdf3;
-
-  transform: translateY(-1px);
-}
-
-
-.term-option.selected {
-  border-color: #ffcc00;
-
-  background: #ffcc00;
-
-  color: #111111;
+  font-weight:
+    600;
 }
 
 
@@ -335,37 +444,56 @@
 ====================================== */
 
 .search-action {
-  display: flex;
+  display:
+    flex;
 
-  justify-content: flex-end;
+  justify-content:
+    flex-end;
 
-  padding-top: 26px;
+  padding-top:
+    26px;
 }
 
 
 .search-button {
-  min-width: 225px;
+  min-width:
+    225px;
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display:
+    flex;
 
-  gap: 11px;
+  align-items:
+    center;
 
-  padding: 13px 22px;
+  justify-content:
+    center;
 
-  border: none;
+  gap:
+    11px;
 
-  border-radius: 9px;
+  padding:
+    13px 22px;
 
-  background: #ffcc00;
+  border:
+    none;
 
-  color: #111111;
+  border-radius:
+    9px;
 
-  font-size: 13px;
-  font-weight: 850;
+  background:
+    #ffcc00;
 
-  cursor: pointer;
+  color:
+    #252525;
+
+  font-size:
+    14px;
+
+  font-weight:
+    850;
+
+  cursor:
+    pointer;
 
   transition:
     transform 0.2s ease,
@@ -375,31 +503,39 @@
 
 
 .search-button:hover:not(:disabled) {
-  transform: translateY(-1px);
+  transform:
+    translateY(-1px);
 
-  background: #f2c200;
+  background:
+    #f0c000;
 
   box-shadow:
     0 8px 18px
-    rgba(255, 196, 0, 0.25);
+    rgba(255, 196, 0, 0.23);
 }
 
 
 .search-button:disabled {
-  background: #eeeeee;
+  background:
+    #eeeeec;
 
-  color: #999999;
+  color:
+    #999999;
 
-  cursor: not-allowed;
+  cursor:
+    not-allowed;
 
-  box-shadow: none;
+  box-shadow:
+    none;
 }
 
 
 .arrow {
-  font-size: 18px;
+  font-size:
+    18px;
 
-  line-height: 1;
+  line-height:
+    1;
 }
 
 
@@ -420,34 +556,39 @@
 @media (max-width: 600px) {
 
   .loan-search-card {
-    padding: 22px 18px;
+    padding:
+      22px 18px;
   }
 
 
   .loan-type-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns:
+      1fr;
   }
 
 
-  .amount-area {
-    max-width: 100%;
+  .value-area {
+    max-width:
+      100%;
   }
 
 
-  .amount-display {
-    width: 100%;
-
-    min-width: 0;
+  .value-input,
+  .term-input {
+    width:
+      100%;
   }
 
 
   .search-action {
-    padding-top: 20px;
+    padding-top:
+      20px;
   }
 
 
   .search-button {
-    width: 100%;
+    width:
+      100%;
   }
 
 }

@@ -1,8 +1,9 @@
 import {
   Component,
+  ElementRef,
   inject,
-  OnInit,
-  signal
+  signal,
+  viewChild
 } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
@@ -22,18 +23,14 @@ import {
 
 import { LoanApplication } from '../../services/loan-application/loan-application';
 
-import { LoginService } from '../../services/auth/login';
+import {
+  BankFilter,
+  SelectedBank
+} from './bank-filter/bank-filter';
 
-import { BankFilter } from './bank-filter/bank-filter';
 import { LoanSearch } from './loan-search/loan-search';
 import { LoanResults } from './loan-results/loan-results';
 import { PaymentPlan } from './payment-plan/payment-plan';
-
-
-interface PendingLoanApplication {
-  loanProductId: number;
-  loanCalculationId: number;
-}
 
 
 @Component({
@@ -50,11 +47,7 @@ interface PendingLoanApplication {
   templateUrl: './loan-calculator.html',
   styleUrl: './loan-calculator.scss',
 })
-export class LoanCalculator implements OnInit {
-
-  // ==========================================
-  // SERVICES
-  // ==========================================
+export class LoanCalculator {
 
   private loanProductService =
     inject(LoanProduct);
@@ -65,28 +58,62 @@ export class LoanCalculator implements OnInit {
   private loanApplicationService =
     inject(LoanApplication);
 
-  private loginService =
-    inject(LoginService);
-
   private router =
     inject(Router);
 
 
   // ==========================================
-  // FİLTRELER
+  // SCROLL ALANLARI
   // ==========================================
 
-  selectedBankIds =
-    signal<Set<number>>(new Set());
+  resultsSection =
+    viewChild<ElementRef<HTMLElement>>(
+      'resultsSection'
+    );
+
+  emptyResultSection =
+    viewChild<ElementRef<HTMLElement>>(
+      'emptyResultSection'
+    );
 
 
   // ==========================================
-  // ARAMA
+  // BANKALAR
   // ==========================================
+
+  selectedBanks =
+    signal<SelectedBank[]>([]);
+
+  missingBanks =
+    signal<SelectedBank[]>([]);
+
+
+  private missingBankToastTimer:
+    ReturnType<typeof setTimeout> | null = null;
+
+
+  // ==========================================
+  // SON ARAMA
+  // ==========================================
+
+  lastSearch =
+    signal<{
+      loanTypeId: number;
+      amount: number;
+      term: number;
+    } | null>(null);
+
+
+  // ==========================================
+  // ARAMA DURUMU
+  // ==========================================
+
+  hasSearched =
+    signal(false);
 
   loanAmount = 0;
 
-  maturity = 0;
+  maturity = 12;
 
 
   // ==========================================
@@ -102,16 +129,15 @@ export class LoanCalculator implements OnInit {
   errorMessage =
     signal('');
 
-  successMessage =
-    signal('');
-
 
   // ==========================================
   // SEÇİLEN ÜRÜN
   // ==========================================
 
   selectedProduct =
-    signal<ProductSearchResultDto | null>(null);
+    signal<ProductSearchResultDto | null>(
+      null
+    );
 
 
   // ==========================================
@@ -119,14 +145,16 @@ export class LoanCalculator implements OnInit {
   // ==========================================
 
   calculationResult =
-    signal<LoanCalculationResponseDto | null>(null);
+    signal<LoanCalculationResponseDto | null>(
+      null
+    );
 
   isCalculating =
     signal(false);
 
 
   // ==========================================
-  // ÖDEME PLANI
+  // MODAL
   // ==========================================
 
   isPaymentPlanOpen =
@@ -134,41 +162,42 @@ export class LoanCalculator implements OnInit {
 
 
   // ==========================================
-  // BAŞVURU
-  // ==========================================
-
-  isApplying =
-    signal(false);
-
-
-  // ==========================================
-  // INIT
-  // ==========================================
-
-  ngOnInit(): void {
-
-    this.resumePendingApplication();
-
-  }
-
-
-  // ==========================================
   // BANKA SEÇİMİ
   // ==========================================
 
   onBankSelectionChange(
-    bankIds: number[]
+    banks: SelectedBank[]
   ): void {
 
-    this.selectedBankIds.set(
-      new Set(bankIds)
+    this.selectedBanks.set(
+      banks
+    );
+
+
+    const lastSearch =
+      this.lastSearch();
+
+
+    // İlk arama henüz yapılmadıysa
+    // sadece seçimi kaydet
+    if (!lastSearch) {
+      return;
+    }
+
+
+    // Daha önce arama yapıldıysa
+    // banka filtresi dinamik çalışsın
+    // ve güncellenen sonuç alanına kaydırsın
+    this.searchLoanProducts(
+      lastSearch,
+      true
     );
 
   }
 
 
   // ==========================================
-  // KREDİ ÜRÜNÜ ARA
+  // KREDİ ÜRÜNLERİNİ ARA
   // ==========================================
 
   searchLoanProducts(
@@ -176,15 +205,58 @@ export class LoanCalculator implements OnInit {
       loanTypeId: number;
       amount: number;
       term: number;
-    }
+    },
+
+    scrollToResults: boolean = true
+
   ): void {
 
-    if (
-      data.amount <= 0 ||
-      data.term <= 0
-    ) {
+    if (!data.loanTypeId) {
+
+      this.errorMessage.set(
+        'Lütfen bir kredi türü seçiniz.'
+      );
+
       return;
     }
+
+
+    if (data.amount <= 0) {
+
+      this.errorMessage.set(
+        'Lütfen geçerli bir kredi tutarı giriniz.'
+      );
+
+      return;
+    }
+
+
+    if (data.term <= 0) {
+
+      this.errorMessage.set(
+        'Lütfen geçerli bir vade giriniz.'
+      );
+
+      return;
+    }
+
+
+    // ==========================================
+    // SON ARAMA
+    // ==========================================
+
+    this.lastSearch.set({
+
+      loanTypeId:
+        data.loanTypeId,
+
+      amount:
+        data.amount,
+
+      term:
+        data.term
+
+    });
 
 
     this.loanAmount =
@@ -194,79 +266,277 @@ export class LoanCalculator implements OnInit {
       data.term;
 
 
-    // Önceki ekran durumlarını temizle
-    this.errorMessage.set('');
-    this.successMessage.set('');
+    // ==========================================
+    // DURUM TEMİZLE
+    // ==========================================
 
-    this.results.set([]);
+    this.hasSearched.set(
+      true
+    );
 
-    this.selectedProduct.set(null);
+    this.isLoading.set(
+      true
+    );
 
-    this.calculationResult.set(null);
+    this.errorMessage.set(
+      ''
+    );
 
-    this.isPaymentPlanOpen.set(false);
+    this.selectedProduct.set(
+      null
+    );
 
-    this.isLoading.set(true);
+    this.calculationResult.set(
+      null
+    );
 
+    this.isPaymentPlanOpen.set(
+      false
+    );
+
+    this.clearMissingBankToast();
+
+
+    // ==========================================
+    // BANKA ID'LERİ
+    // ==========================================
 
     const bankIds =
-      Array.from(
-        this.selectedBankIds()
-      );
-
-
-    this.loanProductService.search({
-
-      loanTypeId:
-        data.loanTypeId,
-
-      amount:
-        data.amount,
-
-      term:
-        data.term,
-
-      bankIds:
-        bankIds.length > 0
-          ? bankIds
-          : undefined
-
-    }).subscribe({
-
-      next: (products) => {
-
-        this.results.set(
-          products
+      this.selectedBanks()
+        .map(
+          bank => bank.id
         );
 
-        this.isLoading.set(false);
 
-      },
+    // ==========================================
+    // API
+    // ==========================================
+
+    this.loanProductService
+      .search({
+
+        loanTypeId:
+          data.loanTypeId,
+
+        amount:
+          data.amount,
+
+        term:
+          data.term,
+
+        bankIds:
+          bankIds.length > 0
+            ? bankIds
+            : undefined
+
+      })
+      .subscribe({
+
+        next: (products) => {
+
+          this.results.set(
+            products
+          );
+
+          this.isLoading.set(
+            false
+          );
 
 
-      error: (err) => {
+          // ======================================
+          // SONUÇ GELMEYEN BANKALARI BUL
+          // ======================================
 
-        console.error(
-          'Kredi ürünleri hatası:',
-          err
-        );
+          if (
+            this.selectedBanks().length > 0
+          ) {
 
-        this.errorMessage.set(
-          err.error?.message ??
-          'Kredi ürünleri getirilirken bir hata oluştu.'
-        );
+            const resultBankNames =
+              new Set(
+                products.map(
+                  product =>
+                    product.bankName
+                      .trim()
+                      .toLocaleLowerCase(
+                        'tr-TR'
+                      )
+                )
+              );
 
-        this.isLoading.set(false);
 
-      }
+            const missing =
+              this.selectedBanks()
+                .filter(bank => {
 
-    });
+                  const normalizedBankName =
+                    bank.name
+                      .trim()
+                      .toLocaleLowerCase(
+                        'tr-TR'
+                      );
+
+
+                  return !resultBankNames.has(
+                    normalizedBankName
+                  );
+
+                });
+
+
+            if (
+              missing.length > 0
+            ) {
+
+              this.showMissingBankToast(
+                missing
+              );
+
+            }
+
+          }
+
+
+          // ======================================
+          // SONUÇ ALANINA KAYDIR
+          // ======================================
+
+          if (scrollToResults) {
+
+            setTimeout(() => {
+
+              // Ürün varsa sonuç tablosuna git
+              if (
+                products.length > 0
+              ) {
+
+                this.resultsSection()
+                  ?.nativeElement
+                  .scrollIntoView({
+
+                    behavior:
+                      'smooth',
+
+                    block:
+                      'start'
+
+                  });
+
+              }
+
+              // Ürün yoksa boş sonuç alanına git
+              else {
+
+                this.emptyResultSection()
+                  ?.nativeElement
+                  .scrollIntoView({
+
+                    behavior:
+                      'smooth',
+
+                    block:
+                      'center'
+
+                  });
+
+              }
+
+            }, 100);
+
+          }
+
+        },
+
+
+        error: (err) => {
+
+          console.error(
+            'Kredi ürünleri hatası:',
+            err
+          );
+
+
+          this.errorMessage.set(
+            err.error?.message ??
+            'Kredi ürünleri getirilirken hata oluştu.'
+          );
+
+
+          this.isLoading.set(
+            false
+          );
+
+
+          this.clearMissingBankToast();
+
+        }
+
+      });
 
   }
 
 
   // ==========================================
-  // ÜRÜN SEÇ / HESAPLA
+  // TOAST GÖSTER
+  // ==========================================
+
+  private showMissingBankToast(
+    banks: SelectedBank[]
+  ): void {
+
+    this.clearMissingBankToast();
+
+
+    this.missingBanks.set(
+      banks
+    );
+
+
+    this.missingBankToastTimer =
+      setTimeout(() => {
+
+        this.missingBanks.set(
+          []
+        );
+
+
+        this.missingBankToastTimer =
+          null;
+
+      }, 4000);
+
+  }
+
+
+  // ==========================================
+  // TOAST TEMİZLE
+  // ==========================================
+
+  private clearMissingBankToast(): void {
+
+    if (
+      this.missingBankToastTimer
+    ) {
+
+      clearTimeout(
+        this.missingBankToastTimer
+      );
+
+
+      this.missingBankToastTimer =
+        null;
+
+    }
+
+
+    this.missingBanks.set(
+      []
+    );
+
+  }
+
+
+  // ==========================================
+  // ÜRÜN SEÇ
   // ==========================================
 
   selectProduct(
@@ -277,63 +547,83 @@ export class LoanCalculator implements OnInit {
       product
     );
 
-    this.calculationResult.set(null);
 
-    this.errorMessage.set('');
-    this.successMessage.set('');
-
-    this.isCalculating.set(true);
+    this.calculationResult.set(
+      null
+    );
 
 
-    this.loanCalculationService.calculate({
-
-      loanProductId:
-        product.loanProductId,
-
-      amount:
-        this.loanAmount,
-
-      term:
-        this.maturity
-
-    }).subscribe({
-
-      next: (calculation) => {
-
-        this.calculationResult.set(
-          calculation
-        );
-
-        this.isCalculating.set(false);
-
-        this.isPaymentPlanOpen.set(true);
-
-      },
+    this.isCalculating.set(
+      true
+    );
 
 
-      error: (err) => {
+    this.errorMessage.set(
+      ''
+    );
 
-        console.error(
-          'Hesaplama hatası:',
-          err
-        );
 
-        this.errorMessage.set(
-          err.error?.message ??
-          'Kredi hesaplaması sırasında bir hata oluştu.'
-        );
+    this.loanCalculationService
+      .calculate({
 
-        this.isCalculating.set(false);
+        loanProductId:
+          product.loanProductId,
 
-      }
+        amount:
+          this.loanAmount,
 
-    });
+        term:
+          this.maturity
+
+      })
+      .subscribe({
+
+        next: (data) => {
+
+          this.calculationResult.set(
+            data
+          );
+
+
+          this.isCalculating.set(
+            false
+          );
+
+
+          this.isPaymentPlanOpen.set(
+            true
+          );
+
+        },
+
+
+        error: (err) => {
+
+          console.error(
+            'Hesaplama hatası:',
+            err
+          );
+
+
+          this.errorMessage.set(
+            err.error?.message ??
+            'Hesaplama sırasında hata oluştu.'
+          );
+
+
+          this.isCalculating.set(
+            false
+          );
+
+        }
+
+      });
 
   }
 
 
   // ==========================================
-  // ÖDEME PLANINI KAPAT
+  // MODAL KAPAT
   // ==========================================
 
   closePaymentPlan(): void {
@@ -346,13 +636,14 @@ export class LoanCalculator implements OnInit {
 
 
   // ==========================================
-  // BAŞVUR
+  // BAŞVURU
   // ==========================================
 
   applyForLoan(): void {
 
     const product =
       this.selectedProduct();
+
 
     const calculation =
       this.calculationResult();
@@ -364,41 +655,34 @@ export class LoanCalculator implements OnInit {
     ) {
 
       this.errorMessage.set(
-        'Başvuru yapmak için önce bir kredi ürünü seçmelisiniz.'
+        'Başvuru yapmak için önce kredi hesaplaması yapmalısınız.'
       );
 
       return;
     }
 
 
-    const application: PendingLoanApplication = {
-
-      loanProductId:
-        product.loanProductId,
-
-      loanCalculationId:
-        calculation.id
-
-    };
+    const token =
+      localStorage.getItem(
+        'token'
+      );
 
 
-    // ------------------------------------------
-    // Kullanıcı giriş yapmamışsa
-    // ------------------------------------------
-
-    if (
-      !this.loginService.isLoggedIn()
-    ) {
-
-      /*
-       * Login/Register sırasında kullanıcının
-       * seçtiği krediyi kaybetmemek için
-       * başvuruyu geçici olarak saklıyoruz.
-       */
+    // Giriş yapılmamış
+    if (!token) {
 
       sessionStorage.setItem(
         'pendingLoanApplication',
-        JSON.stringify(application)
+
+        JSON.stringify({
+
+          loanProductId:
+            product.loanProductId,
+
+          loanCalculationId:
+            calculation.id
+
+        })
       );
 
 
@@ -411,40 +695,25 @@ export class LoanCalculator implements OnInit {
         '/login'
       ]);
 
+
       return;
     }
 
 
-    // Kullanıcı giriş yaptıysa
-    // doğrudan başvuruyu oluştur.
-    this.createLoanApplication(
-      application
-    );
-
-  }
-
-
-  // ==========================================
-  // BAŞVURU OLUŞTUR
-  // ==========================================
-
-  private createLoanApplication(
-    application: PendingLoanApplication
-  ): void {
-
-    if (this.isApplying()) {
-      return;
-    }
-
-
-    this.isApplying.set(true);
-
-    this.errorMessage.set('');
-    this.successMessage.set('');
-
+    // ==========================================
+    // BAŞVURU OLUŞTUR
+    // ==========================================
 
     this.loanApplicationService
-      .create(application)
+      .create({
+
+        loanProductId:
+          product.loanProductId,
+
+        loanCalculationId:
+          calculation.id
+
+      })
       .subscribe({
 
         next: (response) => {
@@ -454,8 +723,6 @@ export class LoanCalculator implements OnInit {
             response
           );
 
-
-          this.isApplying.set(false);
 
           this.isPaymentPlanOpen.set(
             false
@@ -467,7 +734,7 @@ export class LoanCalculator implements OnInit {
           );
 
 
-          this.successMessage.set(
+          alert(
             'Kredi başvurunuz başarıyla oluşturuldu.'
           );
 
@@ -482,18 +749,27 @@ export class LoanCalculator implements OnInit {
           );
 
 
-          this.isApplying.set(false);
+          if (
+            err.status === 401
+          ) {
 
-
-          // Token geçersiz / süresi dolmuş
-          if (err.status === 401) {
-
-            this.loginService.logout();
+            localStorage.removeItem(
+              'token'
+            );
 
 
             sessionStorage.setItem(
               'pendingLoanApplication',
-              JSON.stringify(application)
+
+              JSON.stringify({
+
+                loanProductId:
+                  product.loanProductId,
+
+                loanCalculationId:
+                  calculation.id
+
+              })
             );
 
 
@@ -505,6 +781,7 @@ export class LoanCalculator implements OnInit {
             this.router.navigate([
               '/login'
             ]);
+
 
             return;
           }
@@ -518,68 +795,6 @@ export class LoanCalculator implements OnInit {
         }
 
       });
-
-  }
-
-
-  // ==========================================
-  // LOGIN / REGISTER SONRASI
-  // BEKLEYEN BAŞVURUYA DEVAM ET
-  // ==========================================
-
-  private resumePendingApplication(): void {
-
-    if (
-      !this.loginService.isLoggedIn()
-    ) {
-      return;
-    }
-
-
-    const pending =
-      sessionStorage.getItem(
-        'pendingLoanApplication'
-      );
-
-
-    if (!pending) {
-      return;
-    }
-
-
-    try {
-
-      const application =
-        JSON.parse(
-          pending
-        ) as PendingLoanApplication;
-
-
-      if (
-        !application.loanProductId ||
-        !application.loanCalculationId
-      ) {
-
-        sessionStorage.removeItem(
-          'pendingLoanApplication'
-        );
-
-        return;
-      }
-
-
-      this.createLoanApplication(
-        application
-      );
-
-    }
-    catch {
-
-      sessionStorage.removeItem(
-        'pendingLoanApplication'
-      );
-
-    }
 
   }
 

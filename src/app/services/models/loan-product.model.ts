@@ -53,6 +53,8 @@ export interface ProductSearchRequestDto {
 
 export interface ProductSearchResultDto {
   loanProductId: number;
+  
+  bankId : number;
 
   loanProductName: string;
 

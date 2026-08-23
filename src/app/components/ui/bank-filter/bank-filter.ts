@@ -11,6 +11,11 @@ import { CommonModule } from '@angular/common';
 import { BankService } from '../../../services/bank/bank';
 import { Bank } from '../../../services/models/bank.model';
 
+export interface SelectedBank {
+  id: number;
+  name: string;
+}
+
 @Component({
   selector: 'app-bank-filter',
   imports: [
@@ -24,31 +29,15 @@ export class BankFilter implements OnInit {
   private bankService =
     inject(BankService);
 
-
-  // -----------------------------
-  // BANKALAR
-  // -----------------------------
-
   banks =
     signal<Bank[]>([]);
-
-
-  // -----------------------------
-  // SEÇİLİ BANKALAR
-  // -----------------------------
 
   selectedBankIds =
     signal<Set<number>>(new Set());
 
-
-  // Parent component'e gönderilecek banka ID'leri
   bankSelectionChange =
-    output<number[]>();
+    output<SelectedBank[]>();
 
-
-  // -----------------------------
-  // INIT
-  // -----------------------------
 
   ngOnInit(): void {
 
@@ -81,10 +70,6 @@ export class BankFilter implements OnInit {
   }
 
 
-  // -----------------------------
-  // BANKA SEÇ / KALDIR
-  // -----------------------------
-
   toggleBank(
     bankId: number
   ): void {
@@ -95,45 +80,28 @@ export class BankFilter implements OnInit {
       );
 
     if (current.has(bankId)) {
-
       current.delete(bankId);
-
     }
     else {
-
       current.add(bankId);
-
     }
 
     this.selectedBankIds.set(
       current
     );
 
-    this.bankSelectionChange.emit(
-      Array.from(current)
-    );
-
+    this.emitSelectedBanks();
   }
 
-
-  // -----------------------------
-  // BANKA SEÇİLİ Mİ?
-  // -----------------------------
 
   isBankSelected(
     bankId: number
   ): boolean {
 
-    return this
-      .selectedBankIds()
+    return this.selectedBankIds()
       .has(bankId);
-
   }
 
-
-  // -----------------------------
-  // FİLTRE TEMİZLE
-  // -----------------------------
 
   clearBankFilter(): void {
 
@@ -145,6 +113,25 @@ export class BankFilter implements OnInit {
       []
     );
 
+  }
+
+
+  private emitSelectedBanks(): void {
+
+    const selectedBanks =
+      this.banks()
+        .filter(bank =>
+          this.selectedBankIds()
+            .has(bank.id)
+        )
+        .map(bank => ({
+          id: bank.id,
+          name: bank.name
+        }));
+
+    this.bankSelectionChange.emit(
+      selectedBanks
+    );
   }
 
 }

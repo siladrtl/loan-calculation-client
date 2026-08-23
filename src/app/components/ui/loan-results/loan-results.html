@@ -1,77 +1,119 @@
 <div
-  class="mt-5"
-  *ngIf="results.length > 0">
+  class="loan-results"
+  *ngIf="results().length > 0">
 
-  <h4 class="mb-3">
-    Uygun Kredi Ürünleri
-  </h4>
+  <div class="table-wrapper">
 
+    <table class="result-table">
 
-  <table class="table theme-table">
+      <thead>
 
-    <thead>
+        <tr>
+          <th>Banka</th>
+          <th>Kredi Ürünü</th>
+          <th>Müşteri Tipi</th>
+          <th>Faiz Oranı</th>
+          <th>Aylık Taksit</th>
+          <th>Toplam Ödeme</th>
+          <th class="action-header">
+            İşlem
+          </th>
+        </tr>
 
-      <tr>
+      </thead>
 
-        <th>Banka</th>
+      <tbody>
 
-        <th>Ürün</th>
+        <tr
+          *ngFor="let r of results()">
 
-        <th>Faiz Oranı</th>
+          <td class="bank-cell">
+            {{ r.bankName }}
+          </td>
 
-        <th>Aylık Taksit</th>
+          <td>
+            <div class="product-cell">
 
-        <th>Toplam Ödeme</th>
+              <strong>
+                {{ r.loanProductName }}
+              </strong>
 
-        <th></th>
+              <span>
+                {{ r.loanTypeName }}
+              </span>
 
-      </tr>
+            </div>
+          </td>
 
-    </thead>
+          <td>
 
+            <span
+              class="customer-badge"
+              [class.student]="r.customerType === 1"
+              [class.tradesman]="r.customerType === 2"
+              [class.retired]="r.customerType === 3">
 
-    <tbody>
+              @switch (r.customerType) {
 
-      <tr
-        *ngFor="let r of results">
+                @case (1) {
+                  Öğrenci
+                }
 
-        <td>
-          {{ r.bankName }}
-        </td>
+                @case (2) {
+                  Esnaf
+                }
 
-        <td>
-          {{ r.loanTypeName }}
-        </td>
+                @case (3) {
+                  Emekli
+                }
 
-        <td>
-          %{{ r.interestRate }}
-        </td>
+                @default {
+                  -
+                }
 
-        <td>
-          {{ r.monthlyInstallment | number:'1.2-2' }}
-        </td>
+              }
 
-        <td>
-          {{ r.totalPayment | number:'1.2-2' }}
-        </td>
+            </span>
 
-        <td>
+          </td>
 
-          <button
-            type="button"
-            class="btn btn-sm btn-theme-outline"
-            (click)="selectProduct(r)">
+          <td class="rate-cell">
+            %{{ r.interestRate | number:'1.2-2' }}
+          </td>
 
-            Ödeme Planı
+          <td class="money-cell strong">
+            {{ r.monthlyInstallment | number:'1.2-2' }}
+            <span class="currency">TL</span>
+          </td>
 
-          </button>
+          <td class="money-cell">
+            {{ r.totalPayment | number:'1.2-2' }}
+            <span class="currency">TL</span>
+          </td>
 
-        </td>
+          <td class="action-cell">
 
-      </tr>
+            <button
+              type="button"
+              class="payment-button"
+              (click)="selectProduct(r)">
 
-    </tbody>
+              Ödeme Planı
 
-  </table>
+              <span class="button-arrow">
+                →
+              </span>
+
+            </button>
+
+          </td>
+
+        </tr>
+
+      </tbody>
+
+    </table>
+
+  </div>
 
 </div>

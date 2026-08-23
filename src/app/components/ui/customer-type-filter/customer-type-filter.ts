@@ -6,14 +6,17 @@ import {
 
 import { CommonModule } from '@angular/common';
 
-import { CustomerType } from '../../../services/models/customer-type.model';
-
+import {
+  CustomerType
+} from '../../../services/models/customer-type.model';
 
 @Component({
   selector: 'app-customer-type-filter',
+
   imports: [
     CommonModule
   ],
+
   templateUrl: './customer-type-filter.html',
   styleUrl: './customer-type-filter.scss',
 })
@@ -36,7 +39,9 @@ export class CustomerTypeFilter {
 
 
   selectedCustomerType =
-    signal<CustomerType | null>(null);
+    signal<CustomerType | undefined>(
+      undefined
+    );
 
 
   customerTypeSelectionChange =
@@ -47,14 +52,13 @@ export class CustomerTypeFilter {
     customerType: CustomerType
   ): void {
 
-    // Aynı tipe tekrar basarsa seçimi kaldır
     if (
       this.selectedCustomerType() ===
       customerType
     ) {
 
       this.selectedCustomerType.set(
-        null
+        undefined
       );
 
       this.customerTypeSelectionChange.emit(
@@ -72,17 +76,20 @@ export class CustomerTypeFilter {
     this.customerTypeSelectionChange.emit(
       customerType
     );
+
   }
 
 
   clearCustomerType(): void {
 
     this.selectedCustomerType.set(
-      null
+      undefined
     );
 
     this.customerTypeSelectionChange.emit(
       undefined
     );
+
   }
+
 }
