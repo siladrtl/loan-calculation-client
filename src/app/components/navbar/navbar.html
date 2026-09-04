@@ -1,31 +1,164 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <div class="container">
+<nav class="main-navbar">
 
-    <a class="navbar-brand" href="#">
-      Kredi Hesaplama Uygulaması
+  <div class="navbar-container">
+
+
+    <!-- ====================================== -->
+    <!-- LOGO -->
+    <!-- ====================================== -->
+
+    <a
+      class="navbar-brand"
+      routerLink="/">
+
+      Kredi Uygulaması
+
     </a>
 
-    <div class="navbar-nav ms-auto">
 
-     
+    <div class="navbar-menu">
 
-      <a class="nav-link" href="#">
-        Kredi Hesapla
-      </a>
 
-      <a class="nav-link" href="#">
-        Kredi Başvurusu
-      </a>
+      <!-- ====================================== -->
+      <!-- GUEST -->
+      <!-- ====================================== -->
 
-      <a class="nav-link" href="#">
-        Banka Müşterisi Ol
-      </a>
+      @if (!auth.token()) {
 
-      <a class="nav-link" href="#">
-       Giriş Yap
-      </a>
+        <a
+          class="nav-link"
+          routerLink="/">
+
+          Kredi Hesapla
+
+        </a>
+
+
+        <a
+          class="nav-link"
+          routerLink="/register">
+
+          Müşteri Ol
+
+        </a>
+
+
+        <a
+          class="nav-link"
+          routerLink="/login">
+
+          Giriş Yap
+
+        </a>
+
+      }
+
+
+      <!-- ====================================== -->
+      <!-- CUSTOMER -->
+      <!-- ====================================== -->
+
+      @if (
+        auth.token() &&
+        auth.role() === 'Customer'
+      ) {
+
+        <div class="user-info">
+
+          <div class="user-avatar">
+
+            {{
+              auth.firstName()?.charAt(0) ?? ''
+            }}
+
+            {{
+              auth.lastName()?.charAt(0) ?? ''
+            }}
+
+          </div>
+
+
+          <div class="user-details">
+
+            <span class="welcome-label">
+              Hoş Geldiniz
+            </span>
+
+            <strong class="user-name">
+              {{ auth.getFullName() }}
+            </strong>
+
+          </div>
+
+        </div>
+
+
+        <a
+          class="nav-link"
+          routerLink="/">
+
+          Kredi Hesapla
+
+        </a>
+
+
+        <a
+          class="nav-link"
+          routerLink="/my-applications">
+
+          Başvurularım
+
+        </a>
+
+
+        <button
+          type="button"
+          class="logout-button"
+          (click)="logout()">
+
+          Çıkış Yap
+
+        </button>
+
+      }
+
+
+      <!-- ====================================== -->
+      <!-- ADMIN -->
+      <!-- ====================================== -->
+
+      @if (
+        auth.token() &&
+        auth.role() === 'Admin'
+      ) {
+
+        <span class="welcome-text">
+          Admin Paneli
+        </span>
+
+
+        <a
+          class="nav-link"
+          routerLink="/admin/applications">
+
+          Başvurular
+
+        </a>
+
+
+        <button
+          type="button"
+          class="logout-button"
+          (click)="logout()">
+
+          Çıkış Yap
+
+        </button>
+
+      }
 
     </div>
 
   </div>
+
 </nav>

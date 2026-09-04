@@ -4,11 +4,14 @@ import {
   output
 } from '@angular/core';
 
-import { CommonModule } from '@angular/common';
+import {
+  CommonModule
+} from '@angular/common';
 
 import {
   LoanCalculationResponseDto
 } from '../../../services/models/loan-calculation.model';
+
 
 @Component({
   selector: 'app-payment-plan',
@@ -23,18 +26,46 @@ import {
 export class PaymentPlan {
 
   calculationResult =
-    input<LoanCalculationResponseDto | null>(null);
+    input<LoanCalculationResponseDto | null>(
+      null
+    );
+
 
   bankName =
-    input<string>('');
+    input<string>(
+      ''
+    );
 
 
-  // Modal kapat
+  // ==========================================
+  // MÜŞTERİ UYGUNLUĞU
+  // ==========================================
+
+  isCustomerEligible =
+    input<boolean>(
+      true
+    );
+
+
+  eligibilityMessage =
+    input<string>(
+      ''
+    );
+
+
+  // ==========================================
+  // MODAL KAPAT
+  // ==========================================
+
   close =
     output<void>();
 
 
-  // Başvuru
+  // ==========================================
+  // BAŞVURU
+  // ==========================================
+
   apply =
     output<void>();
+
 }

@@ -50,7 +50,6 @@
 
       <div class="payment-modal-body">
 
-
         <!-- KREDİ BİLGİLERİ -->
 
         <section class="loan-info">
@@ -246,37 +245,14 @@
 
                 <tr>
 
-                  <th>
-                    Taksit
-                  </th>
-
-                  <th>
-                    Tarih
-                  </th>
-
-                  <th>
-                    Taksit Tutarı
-                  </th>
-
-                  <th>
-                    Faiz
-                  </th>
-
-                  <th>
-                    KKDF
-                  </th>
-
-                  <th>
-                    BSMV
-                  </th>
-
-                  <th>
-                    Anapara
-                  </th>
-
-                  <th>
-                    Kalan Anapara
-                  </th>
+                  <th>Taksit</th>
+                  <th>Tarih</th>
+                  <th>Taksit Tutarı</th>
+                  <th>Faiz</th>
+                  <th>KKDF</th>
+                  <th>BSMV</th>
+                  <th>Anapara</th>
+                  <th>Kalan Anapara</th>
 
                 </tr>
 
@@ -360,9 +336,45 @@
 
       <div class="footer-info">
 
-        <span class="secure-dot"></span>
+        @if (isCustomerEligible()) {
 
-        Başvuru sırasında müşteri uygunluğunuz kontrol edilir.
+          <div class="eligibility-success">
+
+            <span class="secure-dot"></span>
+
+            <span>
+              Bu kredi ürünü için başvuru yapabilirsiniz.
+            </span>
+
+          </div>
+
+        }
+        @else {
+
+          <div class="eligibility-warning">
+
+            <span class="warning-icon">
+              !
+            </span>
+
+
+            <div class="warning-content">
+
+              <strong>
+                Bu kredi ürünü müşteri tipinize uygun değildir.
+              </strong>
+
+
+              <span>
+                Ödeme planını inceleyebilirsiniz ancak
+                bu ürün için başvuru oluşturamazsınız.
+              </span>
+
+            </div>
+
+          </div>
+
+        }
 
       </div>
 
@@ -382,6 +394,7 @@
         <button
           type="button"
           class="apply-button"
+          [disabled]="!isCustomerEligible()"
           (click)="apply.emit()">
 
           Başvur

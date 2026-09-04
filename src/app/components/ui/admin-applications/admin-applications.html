@@ -1,0 +1,597 @@
+<div class="admin-page">
+
+  <div class="admin-container">
+
+    <!-- ====================================== -->
+    <!-- HEADER -->
+    <!-- ====================================== -->
+
+    <header class="page-header">
+
+      <span class="page-label">
+        YÖNETİM PANELİ
+      </span>
+
+      <h1>
+        Kredi Başvuruları
+      </h1>
+
+      <p>
+        Müşteri kredi başvurularını inceleyebilir,
+        onaylayabilir veya reddedebilirsiniz.
+      </p>
+
+    </header>
+
+
+    <!-- ====================================== -->
+    <!-- SUMMARY CARDS -->
+    <!-- ====================================== -->
+
+    <div class="summary-grid">
+
+      <div class="summary-card">
+
+        <span class="summary-label">
+          TOPLAM BAŞVURU
+        </span>
+
+        <strong>
+          {{ totalApplications() }}
+        </strong>
+
+      </div>
+
+
+      <div class="summary-card pending">
+
+        <span class="summary-label">
+          BEKLEYEN
+        </span>
+
+        <strong>
+          {{ pendingApplications() }}
+        </strong>
+
+      </div>
+
+
+      <div class="summary-card approved">
+
+        <span class="summary-label">
+          ONAYLANAN
+        </span>
+
+        <strong>
+          {{ approvedApplications() }}
+        </strong>
+
+      </div>
+
+
+      <div class="summary-card rejected">
+
+        <span class="summary-label">
+          REDDEDİLEN
+        </span>
+
+        <strong>
+          {{ rejectedApplications() }}
+        </strong>
+
+      </div>
+
+    </div>
+
+
+    <!-- ====================================== -->
+    <!-- SUCCESS -->
+    <!-- ====================================== -->
+
+    @if (successMessage()) {
+
+      <div class="success-box">
+
+        {{ successMessage() }}
+
+      </div>
+
+    }
+
+
+    <!-- ====================================== -->
+    <!-- ERROR -->
+    <!-- ====================================== -->
+
+    @if (errorMessage()) {
+
+      <div class="error-box">
+
+        {{ errorMessage() }}
+
+      </div>
+
+    }
+
+
+    <!-- ====================================== -->
+    <!-- LOADING -->
+    <!-- ====================================== -->
+
+    @if (isLoading()) {
+
+      <div class="loading-box">
+
+        <span class="spinner"></span>
+
+        <span>
+          Başvurular yükleniyor...
+        </span>
+
+      </div>
+
+    }
+
+
+    <!-- ====================================== -->
+    <!-- EMPTY -->
+    <!-- ====================================== -->
+
+    @if (
+      !isLoading() &&
+      applications().length === 0
+    ) {
+
+      <div class="empty-state">
+
+        <div class="empty-icon">
+          ₺
+        </div>
+
+        <h3>
+          Henüz kredi başvurusu yok
+        </h3>
+
+        <p>
+          Yeni başvurular oluşturulduğunda
+          burada görüntülenecektir.
+        </p>
+
+      </div>
+
+    }
+
+
+    <!-- ====================================== -->
+    <!-- TABLE -->
+    <!-- ====================================== -->
+
+    @if (
+      !isLoading() &&
+      applications().length > 0
+    ) {
+
+      <div class="applications-card">
+
+        <div class="table-header">
+
+          <div>
+
+            <span class="section-label">
+              TÜM BAŞVURULAR
+            </span>
+
+            <h2>
+              Başvuru Yönetimi
+            </h2>
+
+          </div>
+
+
+          <span class="application-count">
+
+            {{ applications().length }}
+            başvuru
+
+          </span>
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+          <table class="applications-table">
+
+            <thead>
+
+              <tr>
+
+                <th>
+                  Başvuru No
+                </th>
+
+                <th>
+                  Müşteri
+                </th>
+
+                <th>
+                  Banka
+                </th>
+
+                <th>
+                  Kredi Ürünü
+                </th>
+
+                <th>
+                  Tutar
+                </th>
+
+                <th>
+                  Vade
+                </th>
+
+                <th>
+                  Aylık Taksit
+                </th>
+
+                <th>
+                  Başvuru Tarihi
+                </th>
+
+                <th>
+                  Durum
+                </th>
+
+                <th>
+                  Karar Tarihi
+                </th>
+
+                <th>
+                  İşlem
+                </th>
+
+              </tr>
+
+            </thead>
+
+
+            <tbody>
+
+              @for (
+                application of applications();
+                track application.id
+              ) {
+
+                <tr>
+
+                  <!-- BAŞVURU NO -->
+
+                  <td class="application-id">
+
+                    #{{ application.id }}
+
+                  </td>
+
+
+                  <!-- MÜŞTERİ -->
+
+                  <td>
+
+                    <strong>
+                      {{ application.customerName }}
+                    </strong>
+
+                  </td>
+
+
+                  <!-- BANKA -->
+
+                  <td>
+
+                    {{ application.bankName }}
+
+                  </td>
+
+
+                  <!-- KREDİ ÜRÜNÜ -->
+
+                  <td>
+
+                    {{ application.loanProductName }}
+
+                  </td>
+
+
+                  <!-- TUTAR -->
+
+                  <td class="money-cell">
+
+                    {{
+                      application.amount
+                        | number:'1.2-2'
+                    }}
+                    ₺
+
+                  </td>
+
+
+                  <!-- VADE -->
+
+                  <td>
+
+                    {{ application.term }}
+                    Ay
+
+                  </td>
+
+
+                  <!-- AYLIK TAKSİT -->
+
+                  <td class="money-cell">
+
+                    {{
+                      application.monthlyInstallment
+                        | number:'1.2-2'
+                    }}
+                    ₺
+
+                  </td>
+
+
+                  <!-- BAŞVURU TARİHİ -->
+
+                  <td>
+
+                    {{
+                      application.applicationDate
+                        | date:'dd.MM.yyyy HH:mm'
+                    }}
+
+                  </td>
+
+
+                  <!-- DURUM -->
+
+                  <td>
+
+                    <span
+                      class="status-badge"
+                      [ngClass]="
+                        getStatusClass(
+                          application.status
+                        )
+                      ">
+
+                      {{
+                        getStatusText(
+                          application.status
+                        )
+                      }}
+
+                    </span>
+
+                  </td>
+
+
+                  <!-- KARAR TARİHİ -->
+
+                  <td>
+
+                    @if (
+                      application.decisionDate
+                    ) {
+
+                      {{
+                        application.decisionDate
+                          | date:'dd.MM.yyyy HH:mm'
+                      }}
+
+                    }
+                    @else {
+
+                      <span class="empty-value">
+                        —
+                      </span>
+
+                    }
+
+                  </td>
+
+
+                  <!-- İŞLEM -->
+
+                  <td>
+
+                    @if (
+                      isPending(
+                        application.status
+                      )
+                    ) {
+
+                      <div class="action-buttons">
+
+                        <button
+                          type="button"
+                          class="approve-button"
+                          (click)="
+                            openDecision(
+                              application.id,
+                              'approve'
+                            )
+                          ">
+
+                          Onayla
+
+                        </button>
+
+
+                        <button
+                          type="button"
+                          class="reject-button"
+                          (click)="
+                            openDecision(
+                              application.id,
+                              'reject'
+                            )
+                          ">
+
+                          Reddet
+
+                        </button>
+
+                      </div>
+
+                    }
+                    @else {
+
+                      <span class="completed-text">
+
+                        İşlem tamamlandı
+
+                      </span>
+
+                    }
+
+                  </td>
+
+                </tr>
+
+              }
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    }
+
+  </div>
+
+</div>
+
+
+<!-- ====================================== -->
+<!-- KARAR MODAL -->
+<!-- ====================================== -->
+
+@if (
+  selectedApplicationId() !== null
+) {
+
+  <div class="modal-overlay">
+
+    <div class="decision-modal">
+
+      <div class="modal-header">
+
+        <div>
+
+          <span class="modal-label">
+
+            @if (
+              decisionType() === 'approve'
+            ) {
+
+              BAŞVURU ONAYI
+
+            }
+            @else {
+
+              BAŞVURU REDDİ
+
+            }
+
+          </span>
+
+
+          <h3>
+
+            Başvuru
+            #{{ selectedApplicationId() }}
+
+          </h3>
+
+        </div>
+
+
+        <button
+          type="button"
+          class="close-button"
+          (click)="closeDecision()">
+
+          ×
+
+        </button>
+
+      </div>
+
+
+      <div class="modal-body">
+
+        <label>
+          Karar Notu
+        </label>
+
+
+        <textarea
+          [(ngModel)]="decisionNote"
+          rows="4"
+          placeholder="Karar ile ilgili açıklama yazabilirsiniz...">
+        </textarea>
+
+      </div>
+
+
+      <div class="modal-footer">
+
+        <button
+          type="button"
+          class="cancel-button"
+          (click)="closeDecision()">
+
+          Vazgeç
+
+        </button>
+
+
+        <button
+          type="button"
+          [class.approve-button]="
+            decisionType() === 'approve'
+          "
+          [class.reject-button]="
+            decisionType() === 'reject'
+          "
+          [disabled]="isProcessing()"
+          (click)="submitDecision()">
+
+          @if (isProcessing()) {
+
+            İşleniyor...
+
+          }
+          @else if (
+            decisionType() === 'approve'
+          ) {
+
+            Başvuruyu Onayla
+
+          }
+          @else {
+
+            Başvuruyu Reddet
+
+          }
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+}

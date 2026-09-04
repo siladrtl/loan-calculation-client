@@ -1,5 +1,6 @@
 import {
   ApplicationConfig,
+  LOCALE_ID,
   provideBrowserGlobalErrorListeners
 } from '@angular/core';
 
@@ -8,11 +9,30 @@ import {
   withInterceptors
 } from '@angular/common/http';
 
-import { provideRouter } from '@angular/router';
+import {
+  provideRouter
+} from '@angular/router';
 
-import { authInterceptor } from './services/auth/auth.interceptor';
+import {
+  registerLocaleData
+} from '@angular/common';
 
-import { routes } from './app.routes';
+import localeTr
+  from '@angular/common/locales/tr';
+
+import {
+  authInterceptor
+} from './services/auth/auth.interceptor';
+
+import {
+  routes
+} from './app.routes';
+
+
+registerLocaleData(
+  localeTr
+);
+
 
 export const appConfig: ApplicationConfig = {
 
@@ -20,13 +40,20 @@ export const appConfig: ApplicationConfig = {
 
     provideBrowserGlobalErrorListeners(),
 
-    provideRouter(routes),
+    provideRouter(
+      routes
+    ),
 
     provideHttpClient(
       withInterceptors([
         authInterceptor
       ])
-    )
+    ),
+
+    {
+      provide: LOCALE_ID,
+      useValue: 'tr-TR'
+    }
 
   ]
 

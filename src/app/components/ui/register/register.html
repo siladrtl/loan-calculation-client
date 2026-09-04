@@ -1,37 +1,67 @@
 <div class="register-page">
 
-  <div class="register-shell">
+  <div class="register-container">
 
-    <header class="register-header">
+    <!-- ==================================== -->
+    <!-- BAŞLIK -->
+    <!-- ==================================== -->
 
-      <div class="brand-logo">
-        ₺
-      </div>
+    <div class="register-header">
+      <h1>Müşteri Ol</h1>
 
-      <div>
-
-        <span class="eyebrow">
-          YENİ HESAP
-        </span>
-
-        <h1>
-          Hesabınızı oluşturun
-        </h1>
-
-        <p>
-          Kredi başvurularınızı güvenli şekilde
-          yönetmek için bilgilerinizi tamamlayın.
-        </p>
-
-      </div>
-
-    </header>
+      <p>
+        Bilgilerinizi doldurarak hesabınızı oluşturabilirsiniz.
+      </p>
+    </div>
 
 
     <form
-      class="register-form"
-      (ngSubmit)="register()">
+      [formGroup]="registerForm"
+      (ngSubmit)="register()"
+    >
 
+      <!-- ==================================== -->
+      <!-- GENEL HATALAR -->
+      <!-- ==================================== -->
+
+      @if (formErrors().length > 0) {
+
+        <div class="error-box">
+
+          @for (error of formErrors(); track error) {
+            <div>{{ error }}</div>
+          }
+
+        </div>
+
+      }
+
+
+      @if (validationErrors().length > 0) {
+
+        <div class="error-box">
+
+          @for (error of validationErrors(); track error) {
+            <div>{{ error }}</div>
+          }
+
+        </div>
+
+      }
+
+
+      @if (errorMessage()) {
+
+        <div class="error-box">
+          {{ errorMessage() }}
+        </div>
+
+      }
+
+
+      <!-- ==================================== -->
+      <!-- 1 - KİŞİSEL BİLGİLER -->
+      <!-- ==================================== -->
 
       <section class="form-section">
 
@@ -43,8 +73,9 @@
 
           <div>
             <h3>Kişisel Bilgiler</h3>
+
             <p>
-              Temel bilgilerinizi girin.
+              Kimlik bilgilerinizi eksiksiz olarak girin.
             </p>
           </div>
 
@@ -53,70 +84,156 @@
 
         <div class="form-grid">
 
+          <!-- AD -->
+
           <div class="form-group">
 
-            <label>
-              Ad
-            </label>
+            <label>Ad</label>
 
             <input
               type="text"
-              name="firstName"
-              [(ngModel)]="firstName"
-              placeholder="Adınız"
-              required
+              formControlName="firstName"
+              placeholder="Adınızı girin"
+              maxlength="50"
+              autocomplete="given-name"
+              (input)="onLetterInput($event, 'firstName')"
             >
+
+            @if (
+              registerForm.controls.firstName.touched &&
+              registerForm.controls.firstName.invalid
+            ) {
+
+              <div class="field-error">
+
+                @if (
+                  registerForm.controls.firstName.errors?.['required']
+                ) {
+                  Ad alanı zorunludur.
+                }
+
+                @else {
+                  Geçerli bir ad giriniz.
+                }
+
+              </div>
+
+            }
 
           </div>
 
 
+          <!-- SOYAD -->
+
           <div class="form-group">
 
-            <label>
-              Soyad
-            </label>
+            <label>Soyad</label>
 
             <input
               type="text"
-              name="lastName"
-              [(ngModel)]="lastName"
-              placeholder="Soyadınız"
-              required
+              formControlName="lastName"
+              placeholder="Soyadınızı girin"
+              maxlength="50"
+              autocomplete="family-name"
+              (input)="onLetterInput($event, 'lastName')"
             >
+
+            @if (
+              registerForm.controls.lastName.touched &&
+              registerForm.controls.lastName.invalid
+            ) {
+
+              <div class="field-error">
+
+                @if (
+                  registerForm.controls.lastName.errors?.['required']
+                ) {
+                  Soyad alanı zorunludur.
+                }
+
+                @else {
+                  Geçerli bir soyad giriniz.
+                }
+
+              </div>
+
+            }
 
           </div>
 
 
+          <!-- DOĞUM TARİHİ -->
+
           <div class="form-group">
 
-            <label>
-              Doğum Tarihi
-            </label>
+            <label>Doğum Tarihi</label>
 
             <input
               type="date"
-              name="birthDate"
-              [(ngModel)]="birthDate"
-              required
+              formControlName="birthDate"
+              autocomplete="bday"
             >
+
+            @if (
+              registerForm.controls.birthDate.touched &&
+              registerForm.controls.birthDate.invalid
+            ) {
+
+              <div class="field-error">
+
+                @if (
+                  registerForm.controls.birthDate.errors?.['required']
+                ) {
+                  Doğum tarihi zorunludur.
+                }
+
+                @else {
+                  Kayıt olabilmek için en az 18 yaşında olmalısınız.
+                }
+
+              </div>
+
+            }
 
           </div>
 
 
+          <!-- TC -->
+
           <div class="form-group">
 
-            <label>
-              T.C. Kimlik No
-            </label>
+            <label>TC Kimlik Numarası</label>
 
             <input
               type="text"
-              name="nationalId"
-              [(ngModel)]="nationalId"
-              placeholder="11 haneli kimlik numarası"
+              inputmode="numeric"
+              formControlName="nationalId"
+              placeholder="11 haneli TC Kimlik Numaranız"
               maxlength="11"
-              required
+              autocomplete="off"
+              (input)="onNationalIdInput($event)"
             >
+
+            @if (
+              registerForm.controls.nationalId.touched &&
+              registerForm.controls.nationalId.invalid
+            ) {
+
+              <div class="field-error">
+
+                @if (
+                  registerForm.controls.nationalId.errors?.['required']
+                ) {
+                  TC Kimlik Numarası zorunludur.
+                }
+
+                @else {
+                  Geçerli bir TC Kimlik Numarası giriniz.
+                }
+
+              </div>
+
+            }
 
           </div>
 
@@ -124,6 +241,10 @@
 
       </section>
 
+
+      <!-- ==================================== -->
+      <!-- 2 - İLETİŞİM BİLGİLERİ -->
+      <!-- ==================================== -->
 
       <section class="form-section">
 
@@ -137,7 +258,7 @@
             <h3>İletişim Bilgileri</h3>
 
             <p>
-              Size ulaşabileceğimiz bilgileri girin.
+              Size ulaşabilmemiz için iletişim bilgilerinizi girin.
             </p>
           </div>
 
@@ -146,70 +267,158 @@
 
         <div class="form-grid">
 
+          <!-- E-POSTA -->
+
           <div class="form-group">
 
-            <label>
-              E-posta
-            </label>
+            <label>E-posta</label>
 
             <input
               type="email"
-              name="email"
-              [(ngModel)]="email"
-              placeholder="ornek@mail.com"
-              required
+              formControlName="email"
+              placeholder="ornek@email.com"
+              maxlength="150"
+              autocomplete="email"
             >
+
+            @if (
+              registerForm.controls.email.touched &&
+              registerForm.controls.email.invalid
+            ) {
+
+              <div class="field-error">
+
+                @if (
+                  registerForm.controls.email.errors?.['required']
+                ) {
+                  E-posta alanı zorunludur.
+                }
+
+                @else {
+                  Geçerli bir e-posta adresi giriniz.
+                }
+
+              </div>
+
+            }
 
           </div>
 
 
-          <div class="form-group">
-
-            <label>
-              Telefon
-            </label>
-
-            <input
-              type="tel"
-              name="phoneNumber"
-              [(ngModel)]="phoneNumber"
-              placeholder="05xx xxx xx xx"
-              required
-            >
-
-          </div>
-
+          <!-- TELEFON -->
 
           <div class="form-group">
 
-            <label>
-              Şehir
-            </label>
-
-            <input
-              type="text"
-              name="city"
-              [(ngModel)]="city"
-              placeholder="İstanbul"
-              required
-            >
-
-          </div>
-
-
-          <div class="form-group">
-
-            <label>
-              İlçe
-            </label>
+            <label>Telefon</label>
 
             <input
               type="text"
-              name="district"
-              [(ngModel)]="district"
-              placeholder="Kadıköy"
-              required
+              inputmode="numeric"
+              formControlName="phoneNumber"
+              placeholder="5XXXXXXXXX"
+              maxlength="10"
+              autocomplete="tel"
+              (input)="onPhoneInput($event)"
             >
+
+            @if (
+              registerForm.controls.phoneNumber.touched &&
+              registerForm.controls.phoneNumber.invalid
+            ) {
+
+              <div class="field-error">
+
+                @if (
+                  registerForm.controls.phoneNumber.errors?.['required']
+                ) {
+                  Telefon numarası zorunludur.
+                }
+
+                @else {
+                  Telefon numarası 5 ile başlayan 10 haneli bir numara olmalıdır.
+                }
+
+              </div>
+
+            }
+
+          </div>
+
+
+          <!-- ŞEHİR -->
+
+          <div class="form-group">
+
+            <label>Şehir</label>
+
+            <input
+              type="text"
+              formControlName="city"
+              placeholder="Şehir"
+              maxlength="50"
+              autocomplete="address-level1"
+              (input)="onLetterInput($event, 'city')"
+            >
+
+            @if (
+              registerForm.controls.city.touched &&
+              registerForm.controls.city.invalid
+            ) {
+
+              <div class="field-error">
+
+                @if (
+                  registerForm.controls.city.errors?.['required']
+                ) {
+                  Şehir alanı zorunludur.
+                }
+
+                @else {
+                  Geçerli bir şehir giriniz.
+                }
+
+              </div>
+
+            }
+
+          </div>
+
+
+          <!-- İLÇE -->
+
+          <div class="form-group">
+
+            <label>İlçe</label>
+
+            <input
+              type="text"
+              formControlName="district"
+              placeholder="İlçe"
+              maxlength="50"
+              autocomplete="address-level2"
+              (input)="onLetterInput($event, 'district')"
+            >
+
+            @if (
+              registerForm.controls.district.touched &&
+              registerForm.controls.district.invalid
+            ) {
+
+              <div class="field-error">
+
+                @if (
+                  registerForm.controls.district.errors?.['required']
+                ) {
+                  İlçe alanı zorunludur.
+                }
+
+                @else {
+                  Geçerli bir ilçe giriniz.
+                }
+
+              </div>
+
+            }
 
           </div>
 
@@ -218,25 +427,24 @@
       </section>
 
 
-      <section class="customer-type-section">
+      <!-- ==================================== -->
+      <!-- 3 - MÜŞTERİ TİPİ -->
+      <!-- ==================================== -->
 
-        <div class="section-header dark">
+      <section class="form-section">
+
+        <div class="section-header">
 
           <span class="section-number">
             3
           </span>
 
           <div>
-
-            <h3>
-              Müşteri Tipiniz
-            </h3>
+            <h3>Müşteri Tipiniz</h3>
 
             <p>
-              Size uygun kredi ürünlerini
-              belirleyebilmek için seçim yapın.
+              Size uygun kredi ürünlerini belirleyebilmek için seçim yapın.
             </p>
-
           </div>
 
         </div>
@@ -244,23 +452,18 @@
 
         <div class="customer-type-grid">
 
-          @for (
-            type of customerTypes;
-            track type.id
-          ) {
+          @for (type of customerTypes; track type.id) {
 
             <button
               type="button"
               class="customer-type-card"
               [class.selected]="
-                customerType === type.id
+                registerForm.controls.customerType.value === type.id
               "
-              (click)="
-                selectCustomerType(type.id)
-              ">
+              (click)="selectCustomerType(type.id)"
+            >
 
-              <span class="radio-dot">
-              </span>
+              <span class="radio-dot"></span>
 
               <span>
                 {{ type.name }}
@@ -272,8 +475,24 @@
 
         </div>
 
+
+        @if (
+          registerForm.controls.customerType.touched &&
+          registerForm.controls.customerType.invalid
+        ) {
+
+          <div class="field-error customer-type-error">
+            Lütfen müşteri tipinizi seçiniz.
+          </div>
+
+        }
+
       </section>
 
+
+      <!-- ==================================== -->
+      <!-- 4 - DOĞRULAMA BELGESİ -->
+      <!-- ==================================== -->
 
       <section class="form-section">
 
@@ -281,6 +500,154 @@
 
           <span class="section-number">
             4
+          </span>
+
+          <div>
+            <h3>Doğrulama Belgesi</h3>
+
+            <p>
+              Müşteri tipinize uygun doğrulama belgesini yükleyin.
+            </p>
+          </div>
+
+        </div>
+
+
+        <!-- BELGE TÜRLERİ -->
+
+        <div class="document-type-grid">
+
+          <!-- ÖĞRENCİ -->
+
+          <div
+            class="document-type-card"
+            [class.selected]="
+              registerForm.controls.customerType.value ===
+              CustomerType.Ogrenci
+            "
+          >
+
+            <div class="document-title">
+              Öğrenci Belgesi
+            </div>
+
+            <div class="document-description">
+              Güncel öğrenci belgenizi yükleyiniz.
+            </div>
+
+          </div>
+
+
+          <!-- ESNAF -->
+
+          <div
+            class="document-type-card"
+            [class.selected]="
+              registerForm.controls.customerType.value ===
+              CustomerType.Esnaf
+            "
+          >
+
+            <div class="document-title">
+              Esnaf / Vergi Belgesi
+            </div>
+
+            <div class="document-description">
+              Vergi levhası veya esnaf sicil belgenizi yükleyiniz.
+            </div>
+
+          </div>
+
+
+          <!-- EMEKLİ -->
+
+          <div
+            class="document-type-card"
+            [class.selected]="
+              registerForm.controls.customerType.value ===
+              CustomerType.Emekli
+            "
+          >
+
+            <div class="document-title">
+              Emeklilik Belgesi
+            </div>
+
+            <div class="document-description">
+              Emeklilik durumunuzu gösteren belgenizi yükleyiniz.
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- DOSYA YÜKLEME -->
+
+        <div class="verification-upload">
+
+          <input
+            #verificationFile
+            class="verification-file-input"
+            type="file"
+            accept=".pdf,.jpg,.jpeg,.png"
+            (change)="onFileSelected($event)"
+          >
+
+
+          <button
+            type="button"
+            class="file-select-button"
+            (click)="verificationFile.click()"
+          >
+            Belge Seç
+          </button>
+
+
+          <div class="selected-file-info">
+
+            @if (selectedVerificationDocument) {
+
+              <span class="selected-file-name">
+                {{ selectedVerificationDocument.name }}
+              </span>
+
+              <span class="selected-file-size">
+                {{ (selectedVerificationDocument.size / 1024).toFixed(1) }} KB
+              </span>
+
+            }
+
+            @else {
+
+              <span class="no-file">
+                Henüz belge seçilmedi
+              </span>
+
+            }
+
+          </div>
+
+        </div>
+
+
+        <div class="file-info">
+          PDF, JPG, JPEG veya PNG formatında, en fazla 5 MB.
+        </div>
+
+      </section>
+
+
+      <!-- ==================================== -->
+      <!-- 5 - HESAP GÜVENLİĞİ -->
+      <!-- ==================================== -->
+
+      <section class="form-section">
+
+        <div class="section-header">
+
+          <span class="section-number">
+            5
           </span>
 
           <div>
@@ -296,80 +663,105 @@
 
         <div class="form-group">
 
-          <label>
-            Şifre
-          </label>
+          <label>Şifre</label>
 
           <input
             type="password"
-            name="password"
-            [(ngModel)]="password"
+            formControlName="password"
             placeholder="Şifrenizi oluşturun"
+            maxlength="64"
             autocomplete="new-password"
-            required
           >
+
+
+          <div class="password-info">
+            En az 8 karakter, bir büyük harf,
+            bir küçük harf ve bir rakam kullanın.
+          </div>
+
+
+          @if (
+            registerForm.controls.password.touched &&
+            registerForm.controls.password.invalid
+          ) {
+
+            <div class="field-error">
+
+              @if (
+                registerForm.controls.password.errors?.['required']
+              ) {
+                Şifre alanı zorunludur.
+              }
+
+              @else if (
+                registerForm.controls.password.errors?.['minlength']
+              ) {
+                Şifre en az 8 karakter olmalıdır.
+              }
+
+              @else if (
+                registerForm.controls.password.errors?.['maxlength']
+              ) {
+                Şifre en fazla 64 karakter olabilir.
+              }
+
+              @else if (
+                registerForm.controls.password.errors?.['pattern']
+              ) {
+                Şifre en az bir büyük harf,
+                bir küçük harf ve bir rakam içermelidir.
+              }
+
+            </div>
+
+          }
 
         </div>
 
       </section>
 
 
-      @if (errorMessage) {
+      <!-- ==================================== -->
+      <!-- KAYIT -->
+      <!-- ==================================== -->
 
-        <div class="error-message">
+      <div class="register-actions">
+
+        <button
+          type="submit"
+          class="register-button"
+          [disabled]="isLoading()"
+        >
+
+          @if (isLoading()) {
+            Kayıt oluşturuluyor...
+          }
+
+          @else {
+            Müşteri Ol
+          }
+
+        </button>
+
+
+        <div class="login-link">
 
           <span>
-            !
+            Zaten hesabınız var mı?
           </span>
 
-          {{ errorMessage }}
+          <button
+            type="button"
+            (click)="goToLogin()"
+          >
+            Giriş Yap
+          </button>
 
         </div>
 
-      }
-
-
-      <button
-        type="submit"
-        class="register-button"
-        [disabled]="isLoading">
-
-        @if (isLoading) {
-
-          <span class="spinner"></span>
-
-          Hesap oluşturuluyor...
-
-        } @else {
-
-          Hesabımı Oluştur
-
-          <span>
-            →
-          </span>
-
-        }
-
-      </button>
+      </div>
 
     </form>
-
-
-    <div class="login-footer">
-
-      <span>
-        Zaten hesabınız var mı?
-      </span>
-
-      <button
-        type="button"
-        (click)="goToLogin()">
-
-        Giriş Yap
-
-      </button>
-
-    </div>
 
   </div>
 

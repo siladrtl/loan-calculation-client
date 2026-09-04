@@ -93,17 +93,27 @@
       <div class="value-input">
 
         <input
-          type="number"
+          type="text"
+          inputmode="numeric"
+          autocomplete="off"
 
-          [(ngModel)]="loanAmount"
+          [value]="
+            formatAmount(
+              loanAmount
+            )
+          "
 
-          [min]="minAmount()"
+          (input)="
+            onAmountInput(
+              $event
+            )
+          "
 
-          [max]="maxAmount()"
-
-          step="1000"
-
-          (blur)="onAmountBlur()"
+          (blur)="
+            onAmountBlur(
+              $event
+            )
+          "
         >
 
 
@@ -129,7 +139,9 @@
 
         step="1000"
 
-        (change)="onAmountSliderChange()"
+        (input)="
+          onAmountSliderChange()
+        "
       >
 
 
@@ -138,14 +150,24 @@
       <div class="range-labels">
 
         <span>
-          {{ minAmount() | number:'1.0-0' }}
+
+          {{
+            minAmount()
+              | number:'1.0-0'
+          }}
           TL
+
         </span>
 
 
         <span>
-          {{ maxAmount() | number:'1.0-0' }}
+
+          {{
+            maxAmount()
+              | number:'1.0-0'
+          }}
           TL
+
         </span>
 
       </div>
@@ -190,17 +212,23 @@
       <div class="value-input term-input">
 
         <input
-          type="number"
+          type="text"
+          inputmode="numeric"
+          autocomplete="off"
 
-          [(ngModel)]="maturity"
+          [value]="maturity"
 
-          [min]="minTerm()"
+          (input)="
+            onTermInput(
+              $event
+            )
+          "
 
-          [max]="maxTerm()"
-
-          step="1"
-
-          (blur)="onTermBlur()"
+          (blur)="
+            onTermBlur(
+              $event
+            )
+          "
         >
 
 
@@ -226,7 +254,9 @@
 
         step="1"
 
-        (change)="onTermSliderChange()"
+        (input)="
+          onTermSliderChange()
+        "
       >
 
 
@@ -235,14 +265,18 @@
       <div class="range-labels">
 
         <span>
+
           {{ minTerm() }}
           Ay
+
         </span>
 
 
         <span>
+
           {{ maxTerm() }}
           Ay
+
         </span>
 
       </div>
@@ -261,9 +295,11 @@
     <button
       type="button"
       class="search-button"
+
       [disabled]="
         selectedLoanTypeId() === null
       "
+
       (click)="search()">
 
       Uygun Kredileri Gör

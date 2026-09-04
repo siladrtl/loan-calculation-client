@@ -1,0 +1,358 @@
+<div class="applications-page">
+
+  <div class="applications-container">
+
+    <!-- ====================================== -->
+    <!-- PAGE HEADER -->
+    <!-- ====================================== -->
+
+    <header class="page-header">
+
+      <span class="page-label">
+        KREDİ BAŞVURULARIM
+      </span>
+
+      <h1>
+        Başvurularım
+      </h1>
+
+      <p>
+        Kredi başvurularınızı, ödeme bilgilerinizi
+        ve güncel durumlarını buradan takip edebilirsiniz.
+      </p>
+
+    </header>
+
+
+    <!-- ====================================== -->
+    <!-- ERROR -->
+    <!-- ====================================== -->
+
+    @if (errorMessage()) {
+
+      <div class="error-box">
+        {{ errorMessage() }}
+      </div>
+
+    }
+
+
+    <!-- ====================================== -->
+    <!-- LOADING -->
+    <!-- ====================================== -->
+
+    @if (isLoading()) {
+
+      <div class="loading-box">
+
+        <span class="spinner"></span>
+
+        <span>
+          Başvurularınız yükleniyor...
+        </span>
+
+      </div>
+
+    }
+
+
+    <!-- ====================================== -->
+    <!-- EMPTY STATE -->
+    <!-- ====================================== -->
+
+    @if (
+      !isLoading() &&
+      !errorMessage() &&
+      applications().length === 0
+    ) {
+
+      <div class="empty-state">
+
+        <div class="empty-icon">
+          ₺
+        </div>
+
+        <h3>
+          Henüz kredi başvurunuz bulunmuyor
+        </h3>
+
+        <p>
+          Kredi hesaplama ekranından size uygun
+          bir kredi ürünü seçerek başvuru oluşturabilirsiniz.
+        </p>
+
+      </div>
+
+    }
+
+
+    <!-- ====================================== -->
+    <!-- APPLICATION LIST -->
+    <!-- ====================================== -->
+
+    @if (
+      !isLoading() &&
+      !errorMessage() &&
+      applications().length > 0
+    ) {
+
+      <div class="applications-card">
+
+        <!-- TABLE HEADER -->
+
+        <div class="table-header">
+
+          <div>
+
+            <span class="section-label">
+              BAŞVURU GEÇMİŞİ
+            </span>
+
+            <h2>
+              Kredi Başvurularınız
+            </h2>
+
+          </div>
+
+
+          <span class="application-count">
+
+            {{ applications().length }}
+            başvuru
+
+          </span>
+
+        </div>
+
+
+        <!-- TABLE -->
+
+        <div class="table-wrapper">
+
+          <table class="applications-table">
+
+            <thead>
+
+              <tr>
+
+                <th>
+                  Başvuru No
+                </th>
+
+                <th>
+                  Banka
+                </th>
+
+                <th>
+                  Kredi Ürünü
+                </th>
+
+                <th>
+                  Tutar
+                </th>
+
+                <th>
+                  Vade
+                </th>
+
+                <th>
+                  Aylık Taksit
+                </th>
+
+                <th>
+                  Başvuru Tarihi
+                </th>
+
+                <th>
+                  Durum
+                </th>
+
+                <th>
+                  Karar Tarihi
+                </th>
+
+                <th>
+                  Açıklama
+                </th>
+
+              </tr>
+
+            </thead>
+
+
+            <tbody>
+
+              @for (
+                application of applications();
+                track application.id
+              ) {
+
+                <tr>
+
+                  <!-- BAŞVURU NO -->
+
+                  <td class="application-id">
+
+                    #{{ application.id }}
+
+                  </td>
+
+
+                  <!-- BANKA -->
+
+                  <td>
+
+                    <strong>
+                      {{ application.bankName }}
+                    </strong>
+
+                  </td>
+
+
+                  <!-- KREDİ ÜRÜNÜ -->
+
+                  <td>
+
+                    {{ application.loanProductName }}
+
+                  </td>
+
+
+                  <!-- TUTAR -->
+
+                  <td class="money-cell">
+
+                    {{
+                      application.amount
+                        | number:'1.2-2'
+                    }}
+                    ₺
+
+                  </td>
+
+
+                  <!-- VADE -->
+
+                  <td>
+
+                    {{ application.term }}
+                    Ay
+
+                  </td>
+
+
+                  <!-- AYLIK TAKSİT -->
+
+                  <td class="money-cell">
+
+                    {{
+                      application.monthlyInstallment
+                        | number:'1.2-2'
+                    }}
+                    ₺
+
+                  </td>
+
+
+                  <!-- BAŞVURU TARİHİ -->
+
+                  <td>
+
+                    {{
+                      application.applicationDate
+                        | date:'dd.MM.yyyy HH:mm'
+                    }}
+
+                  </td>
+
+
+                  <!-- DURUM -->
+
+                  <td>
+
+                    <span
+                      class="status-badge"
+                      [ngClass]="
+                        getStatusClass(
+                          application.status
+                        )
+                      ">
+
+                      {{
+                        getStatusText(
+                          application.status
+                        )
+                      }}
+
+                    </span>
+
+                  </td>
+
+
+                  <!-- KARAR TARİHİ -->
+
+                  <td>
+
+                    @if (
+                      application.decisionDate
+                    ) {
+
+                      {{
+                        application.decisionDate
+                          | date:'dd.MM.yyyy HH:mm'
+                      }}
+
+                    }
+                    @else {
+
+                      <span class="empty-value">
+                        —
+                      </span>
+
+                    }
+
+                  </td>
+
+
+                  <!-- AÇIKLAMA -->
+
+                  <td class="decision-note">
+
+                    @if (
+                      application.decisionNote
+                    ) {
+
+                      {{
+                        application.decisionNote
+                      }}
+
+                    }
+                    @else {
+
+                      <span class="empty-value">
+
+                        Henüz açıklama yok
+
+                      </span>
+
+                    }
+
+                  </td>
+
+                </tr>
+
+              }
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    }
+
+  </div>
+
+</div>

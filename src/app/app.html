@@ -1,3 +1,30 @@
 <app-navbar></app-navbar>
 
+
+@if (notificationMessage()) {
+
+  <div class="global-notification">
+
+    <div class="notification-icon">
+      ✓
+    </div>
+
+
+    <div class="notification-content">
+
+      <span class="notification-label">
+        KREDİ BİLDİRİMİ
+      </span>
+
+      <strong>
+        {{ notificationMessage() }}
+      </strong>
+
+    </div>
+
+  </div>
+
+}
+
+
 <router-outlet></router-outlet>

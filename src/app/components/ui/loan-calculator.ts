@@ -15,13 +15,21 @@ import {
   ProductSearchResultDto
 } from '../../services/models/loan-product.model';
 
-import { LoanCalculation } from '../../services/loan-calculation/loan-calculation';
+import {
+  LoanCalculation
+} from '../../services/loan-calculation/loan-calculation';
 
 import {
   LoanCalculationResponseDto
 } from '../../services/models/loan-calculation.model';
 
-import { LoanApplication } from '../../services/loan-application/loan-application';
+import {
+  LoanApplication
+} from '../../services/loan-application/loan-application';
+
+import {
+  LoginService
+} from '../../services/auth/login';
 
 import {
   BankFilter,
@@ -58,8 +66,22 @@ export class LoanCalculator {
   private loanApplicationService =
     inject(LoanApplication);
 
+  private loginService =
+    inject(LoginService);
+
   private router =
     inject(Router);
+
+
+  // ==========================================
+  // CONSTRUCTOR
+  // ==========================================
+
+  constructor() {
+
+    this.restorePendingLoanApplication();
+
+  }
 
 
   // ==========================================
@@ -87,9 +109,9 @@ export class LoanCalculator {
   missingBanks =
     signal<SelectedBank[]>([]);
 
-
   private missingBankToastTimer:
-    ReturnType<typeof setTimeout> | null = null;
+    ReturnType<typeof setTimeout> | null =
+      null;
 
 
   // ==========================================
@@ -111,9 +133,11 @@ export class LoanCalculator {
   hasSearched =
     signal(false);
 
-  loanAmount = 0;
+  loanAmount =
+    0;
 
-  maturity = 12;
+  maturity =
+    12;
 
 
   // ==========================================
@@ -154,10 +178,29 @@ export class LoanCalculator {
 
 
   // ==========================================
-  // MODAL
+  // MÜŞTERİ UYGUNLUĞU
+  // ==========================================
+
+  isCustomerEligible =
+    signal(true);
+
+  eligibilityMessage =
+    signal('');
+
+
+  // ==========================================
+  // ÖDEME PLANI MODALI
   // ==========================================
 
   isPaymentPlanOpen =
+    signal(false);
+
+
+  // ==========================================
+  // BAŞVURU BAŞARI MODALI
+  // ==========================================
+
+  applicationSuccess =
     signal(false);
 
 
@@ -178,16 +221,13 @@ export class LoanCalculator {
       this.lastSearch();
 
 
-    // İlk arama henüz yapılmadıysa
-    // sadece seçimi kaydet
     if (!lastSearch) {
+
       return;
+
     }
 
 
-    // Daha önce arama yapıldıysa
-    // banka filtresi dinamik çalışsın
-    // ve güncellenen sonuç alanına kaydırsın
     this.searchLoanProducts(
       lastSearch,
       true
@@ -206,9 +246,7 @@ export class LoanCalculator {
       amount: number;
       term: number;
     },
-
     scrollToResults: boolean = true
-
   ): void {
 
     if (!data.loanTypeId) {
@@ -218,6 +256,7 @@ export class LoanCalculator {
       );
 
       return;
+
     }
 
 
@@ -228,6 +267,7 @@ export class LoanCalculator {
       );
 
       return;
+
     }
 
 
@@ -238,12 +278,9 @@ export class LoanCalculator {
       );
 
       return;
+
     }
 
-
-    // ==========================================
-    // SON ARAMA
-    // ==========================================
 
     this.lastSearch.set({
 
@@ -265,10 +302,6 @@ export class LoanCalculator {
     this.maturity =
       data.term;
 
-
-    // ==========================================
-    // DURUM TEMİZLE
-    // ==========================================
 
     this.hasSearched.set(
       true
@@ -294,12 +327,17 @@ export class LoanCalculator {
       false
     );
 
+    this.isCustomerEligible.set(
+      true
+    );
+
+    this.eligibilityMessage.set(
+      ''
+    );
+
+
     this.clearMissingBankToast();
 
-
-    // ==========================================
-    // BANKA ID'LERİ
-    // ==========================================
 
     const bankIds =
       this.selectedBanks()
@@ -307,10 +345,6 @@ export class LoanCalculator {
           bank => bank.id
         );
 
-
-    // ==========================================
-    // API
-    // ==========================================
 
     this.loanProductService
       .search({
@@ -344,7 +378,7 @@ export class LoanCalculator {
 
 
           // ======================================
-          // SONUÇ GELMEYEN BANKALARI BUL
+          // SEÇİLİ BANKALARDA SONUÇ BULUNAMADI MI?
           // ======================================
 
           if (
@@ -397,14 +431,13 @@ export class LoanCalculator {
 
 
           // ======================================
-          // SONUÇ ALANINA KAYDIR
+          // SONUÇLARA SCROLL
           // ======================================
 
           if (scrollToResults) {
 
             setTimeout(() => {
 
-              // Ürün varsa sonuç tablosuna git
               if (
                 products.length > 0
               ) {
@@ -422,8 +455,6 @@ export class LoanCalculator {
                   });
 
               }
-
-              // Ürün yoksa boş sonuç alanına git
               else {
 
                 this.emptyResultSection()
@@ -563,6 +594,20 @@ export class LoanCalculator {
     );
 
 
+    this.isCustomerEligible.set(
+      true
+    );
+
+
+    this.eligibilityMessage.set(
+      ''
+    );
+
+
+    // ======================================
+    // ÖDEME PLANI HESAPLA
+    // ======================================
+
     this.loanCalculationService
       .calculate({
 
@@ -585,14 +630,127 @@ export class LoanCalculator {
           );
 
 
-          this.isCalculating.set(
-            false
-          );
+          // ======================================
+          // GİRİŞ YAPMAMIŞ KULLANICI
+          // ======================================
+
+          if (
+            !this.loginService.isLoggedIn()
+          ) {
+
+            this.isCustomerEligible.set(
+              true
+            );
+
+            this.isCalculating.set(
+              false
+            );
+
+            this.isPaymentPlanOpen.set(
+              true
+            );
+
+            return;
+
+          }
 
 
-          this.isPaymentPlanOpen.set(
-            true
-          );
+          // ======================================
+          // CUSTOMER DEĞİLSE
+          // ======================================
+
+          if (
+            !this.loginService.isCustomer()
+          ) {
+
+            this.isCustomerEligible.set(
+              false
+            );
+
+            this.eligibilityMessage.set(
+              'Kredi başvurusu yalnızca müşteri hesabıyla yapılabilir.'
+            );
+
+            this.isCalculating.set(
+              false
+            );
+
+            this.isPaymentPlanOpen.set(
+              true
+            );
+
+            return;
+
+          }
+
+
+          // ======================================
+          // CUSTOMER UYGUNLUK KONTROLÜ
+          // ======================================
+
+          this.loanApplicationService
+            .checkEligibility(
+              product.loanProductId
+            )
+            .subscribe({
+
+              next: (eligibility) => {
+
+                this.isCustomerEligible.set(
+                  eligibility.isEligible
+                );
+
+
+                this.eligibilityMessage.set(
+                  eligibility.isEligible
+                    ? ''
+                    : eligibility.message
+                );
+
+
+                this.isCalculating.set(
+                  false
+                );
+
+
+                this.isPaymentPlanOpen.set(
+                  true
+                );
+
+              },
+
+
+              error: (err) => {
+
+                console.error(
+                  'Müşteri uygunluk kontrolü hatası:',
+                  err
+                );
+
+
+                this.isCustomerEligible.set(
+                  false
+                );
+
+
+                this.eligibilityMessage.set(
+                  err.error?.message ??
+                  'Müşteri uygunluğu kontrol edilemedi.'
+                );
+
+
+                this.isCalculating.set(
+                  false
+                );
+
+
+                this.isPaymentPlanOpen.set(
+                  true
+                );
+
+              }
+
+            });
 
         },
 
@@ -623,7 +781,203 @@ export class LoanCalculator {
 
 
   // ==========================================
-  // MODAL KAPAT
+  // BEKLEYEN KREDİ İŞLEMİNİ GERİ YÜKLE
+  // ==========================================
+
+  private restorePendingLoanApplication(): void {
+
+    if (
+      !this.loginService.isLoggedIn() ||
+      !this.loginService.isCustomer()
+    ) {
+
+      return;
+
+    }
+
+
+    const pendingJson =
+      sessionStorage.getItem(
+        'pendingLoanApplication'
+      );
+
+
+    if (!pendingJson) {
+
+      return;
+
+    }
+
+
+    try {
+
+      const pending =
+        JSON.parse(
+          pendingJson
+        );
+
+
+      if (
+        !pending.product ||
+        !pending.calculation
+      ) {
+
+        sessionStorage.removeItem(
+          'pendingLoanApplication'
+        );
+
+        return;
+
+      }
+
+
+      const product =
+        pending.product as ProductSearchResultDto;
+
+
+      const calculation =
+        pending.calculation as LoanCalculationResponseDto;
+
+
+      // ======================================
+      // SEÇİLEN ÜRÜN
+      // ======================================
+
+      this.selectedProduct.set(
+        product
+      );
+
+
+      // ======================================
+      // HESAPLAMA
+      // ======================================
+
+      this.calculationResult.set(
+        calculation
+      );
+
+
+      // ======================================
+      // TUTAR / VADE
+      // ======================================
+
+      this.loanAmount =
+        calculation.amount;
+
+
+      this.maturity =
+        calculation.term;
+
+
+      this.errorMessage.set(
+        ''
+      );
+
+
+      this.eligibilityMessage.set(
+        ''
+      );
+
+
+      this.isCustomerEligible.set(
+        true
+      );
+
+
+      this.isCalculating.set(
+        true
+      );
+
+
+      // ======================================
+      // LOGIN SONRASI UYGUNLUK KONTROLÜ
+      // ======================================
+
+      this.loanApplicationService
+        .checkEligibility(
+          product.loanProductId
+        )
+        .subscribe({
+
+          next: (eligibility) => {
+
+            this.isCustomerEligible.set(
+              eligibility.isEligible
+            );
+
+
+            this.eligibilityMessage.set(
+              eligibility.isEligible
+                ? ''
+                : eligibility.message
+            );
+
+
+            this.isCalculating.set(
+              false
+            );
+
+
+            // Aynı ödeme planını tekrar aç
+            this.isPaymentPlanOpen.set(
+              true
+            );
+
+          },
+
+
+          error: (err) => {
+
+            console.error(
+              'Bekleyen başvuru uygunluk kontrolü hatası:',
+              err
+            );
+
+
+            this.isCustomerEligible.set(
+              false
+            );
+
+
+            this.eligibilityMessage.set(
+              err.error?.message ??
+              'Müşteri uygunluğu kontrol edilemedi.'
+            );
+
+
+            this.isCalculating.set(
+              false
+            );
+
+
+            this.isPaymentPlanOpen.set(
+              true
+            );
+
+          }
+
+        });
+
+    }
+    catch (error) {
+
+      console.error(
+        'Bekleyen kredi işlemi okunamadı:',
+        error
+      );
+
+
+      sessionStorage.removeItem(
+        'pendingLoanApplication'
+      );
+
+    }
+
+  }
+
+
+  // ==========================================
+  // ÖDEME PLANI MODALINI KAPAT
   // ==========================================
 
   closePaymentPlan(): void {
@@ -659,17 +1013,17 @@ export class LoanCalculator {
       );
 
       return;
+
     }
 
 
-    const token =
-      localStorage.getItem(
-        'token'
-      );
+    // ==========================================
+    // LOGIN KONTROLÜ
+    // ==========================================
 
-
-    // Giriş yapılmamış
-    if (!token) {
+    if (
+      !this.loginService.isLoggedIn()
+    ) {
 
       sessionStorage.setItem(
         'pendingLoanApplication',
@@ -680,7 +1034,13 @@ export class LoanCalculator {
             product.loanProductId,
 
           loanCalculationId:
-            calculation.id
+            calculation.id,
+
+          product:
+            product,
+
+          calculation:
+            calculation
 
         })
       );
@@ -697,6 +1057,37 @@ export class LoanCalculator {
 
 
       return;
+
+    }
+
+
+    // ==========================================
+    // SADECE CUSTOMER BAŞVURABİLİR
+    // ==========================================
+
+    if (
+      !this.loginService.isCustomer()
+    ) {
+
+      this.errorMessage.set(
+        'Kredi başvurusu yalnızca müşteri hesabıyla yapılabilir.'
+      );
+
+      return;
+
+    }
+
+
+    // ==========================================
+    // MÜŞTERİ UYGUN DEĞİLSE BAŞVURU YAPMA
+    // ==========================================
+
+    if (
+      !this.isCustomerEligible()
+    ) {
+
+      return;
+
     }
 
 
@@ -724,18 +1115,21 @@ export class LoanCalculator {
           );
 
 
+          // Ödeme planını kapat
           this.isPaymentPlanOpen.set(
             false
           );
 
 
+          // Bekleyen kredi bilgisini temizle
           sessionStorage.removeItem(
             'pendingLoanApplication'
           );
 
 
-          alert(
-            'Kredi başvurunuz başarıyla oluşturuldu.'
+          // Başarı modalını aç
+          this.applicationSuccess.set(
+            true
           );
 
         },
@@ -749,13 +1143,16 @@ export class LoanCalculator {
           );
 
 
+          // ======================================
+          // TOKEN SÜRESİ DOLMUŞSA
+          // ======================================
+
           if (
             err.status === 401
           ) {
 
-            localStorage.removeItem(
-              'token'
-            );
+            this.loginService
+              .logout();
 
 
             sessionStorage.setItem(
@@ -767,7 +1164,13 @@ export class LoanCalculator {
                   product.loanProductId,
 
                 loanCalculationId:
-                  calculation.id
+                  calculation.id,
+
+                product:
+                  product,
+
+                calculation:
+                  calculation
 
               })
             );
@@ -784,6 +1187,7 @@ export class LoanCalculator {
 
 
             return;
+
           }
 
 
@@ -795,6 +1199,37 @@ export class LoanCalculator {
         }
 
       });
+
+  }
+
+
+  // ==========================================
+  // BAŞARI MODALINI KAPAT
+  // ==========================================
+
+  closeApplicationSuccess(): void {
+
+    this.applicationSuccess.set(
+      false
+    );
+
+  }
+
+
+  // ==========================================
+  // BAŞVURULARIMA GİT
+  // ==========================================
+
+  goToMyApplications(): void {
+
+    this.applicationSuccess.set(
+      false
+    );
+
+
+    this.router.navigate([
+      '/my-applications'
+    ]);
 
   }
 

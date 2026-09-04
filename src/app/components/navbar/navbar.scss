@@ -1,0 +1,275 @@
+:host {
+  display: block;
+}
+
+
+/* ======================================
+   NAVBAR
+====================================== */
+
+.main-navbar {
+  width: 100%;
+
+  background: #2c2f31;
+
+  border-bottom: 3px solid #ffcc00;
+}
+
+
+.navbar-container {
+  width: 100%;
+  max-width: 1610px;
+
+  min-height: 64px;
+
+  margin: 0 auto;
+
+  padding: 0 30px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  box-sizing: border-box;
+}
+
+
+/* ======================================
+   BRAND
+====================================== */
+
+.navbar-brand {
+  color: #ffffff;
+
+  font-size: 20px;
+  font-weight: 700;
+
+  text-decoration: none;
+
+  transition: color 0.2s;
+}
+
+
+.navbar-brand:hover {
+  color: #ffcc00;
+}
+
+
+/* ======================================
+   MENU
+====================================== */
+
+.navbar-menu {
+  display: flex;
+  align-items: center;
+
+  gap: 24px;
+}
+
+
+/* ======================================
+   USER INFO
+====================================== */
+
+.user-info {
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  padding-right: 4px;
+}
+
+
+.user-avatar {
+  width: 36px;
+  height: 36px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  border: 1px solid rgba(255, 204, 0, 0.55);
+
+  border-radius: 50%;
+
+  background: rgba(255, 204, 0, 0.1);
+
+  color: #ffcc00;
+
+  font-size: 12px;
+  font-weight: 850;
+
+  text-transform: uppercase;
+}
+
+
+.user-details {
+  display: flex;
+  flex-direction: column;
+
+  gap: 1px;
+}
+
+
+.welcome-label {
+  color: #9fa1a4;
+
+  font-size: 10px;
+  font-weight: 600;
+}
+
+
+.user-name {
+  color: #ffffff;
+
+  font-size: 13px;
+  font-weight: 750;
+
+  white-space: nowrap;
+}
+
+
+/* ======================================
+   ADMIN
+====================================== */
+
+.welcome-text {
+  color: #ffffff;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  white-space: nowrap;
+}
+
+
+/* ======================================
+   LINKS
+====================================== */
+
+.nav-link {
+  position: relative;
+
+  padding: 21px 0;
+
+  color: #d0d0d0;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  text-decoration: none;
+
+  transition:
+    color 0.2s ease;
+}
+
+
+.nav-link:hover {
+  color: #ffffff;
+}
+
+
+.nav-link::after {
+  content: '';
+
+  position: absolute;
+
+  left: 0;
+  right: 0;
+  bottom: 15px;
+
+  height: 2px;
+
+  background: #ffcc00;
+
+  transform: scaleX(0);
+
+  transition:
+    transform 0.2s ease;
+}
+
+
+.nav-link:hover::after {
+  transform: scaleX(1);
+}
+
+
+/* ======================================
+   LOGOUT
+====================================== */
+
+.logout-button {
+  padding: 9px 15px;
+
+  border: 1px solid #ffcc00;
+
+  border-radius: 7px;
+
+  background: transparent;
+
+  color: #ffcc00;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s,
+    color 0.2s;
+}
+
+
+.logout-button:hover {
+  background: #ffcc00;
+
+  color: #222222;
+}
+
+
+/* ======================================
+   MOBILE
+====================================== */
+
+@media (max-width: 800px) {
+
+  .navbar-container {
+    align-items: flex-start;
+
+    flex-direction: column;
+
+    gap: 10px;
+
+    padding: 14px 20px;
+  }
+
+
+  .navbar-menu {
+    width: 100%;
+
+    flex-wrap: wrap;
+
+    gap: 15px;
+  }
+
+
+  .user-info {
+    width: 100%;
+
+    padding-bottom: 5px;
+  }
+
+
+  .nav-link {
+    padding: 8px 0;
+  }
+
+
+  .nav-link::after {
+    bottom: 2px;
+  }
+
+}

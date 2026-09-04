@@ -30,8 +30,6 @@
 
     <div class="calculator-layout">
 
-      <!-- SOL: BANKA -->
-
       <aside class="filters-column">
 
         <div class="filter-intro">
@@ -59,8 +57,6 @@
       </aside>
 
 
-      <!-- SAĞ: KREDİ ARAMA -->
-
       <main class="calculator-column">
 
         <app-loan-search
@@ -68,7 +64,9 @@
         </app-loan-search>
 
 
+        <!-- ====================================== -->
         <!-- HATA -->
+        <!-- ====================================== -->
 
         <div
           class="message-box error-message"
@@ -81,13 +79,16 @@
         </div>
 
 
+        <!-- ====================================== -->
         <!-- LOADING -->
+        <!-- ====================================== -->
 
         <div
           class="loading-box"
           *ngIf="isLoading()">
 
           <div class="loading-spinner"></div>
+
 
           <div>
 
@@ -232,7 +233,7 @@
 
 
     <!-- ====================================== -->
-    <!-- HESAPLAMA -->
+    <!-- HESAPLAMA LOADING -->
     <!-- ====================================== -->
 
     <div
@@ -255,35 +256,19 @@
 <!-- ====================================== -->
 <!-- BANKA BİLDİRİMİ -->
 <!-- ====================================== -->
-
-<div
-  class="toast-container"
-  *ngIf="missingBanks().length > 0">
-
-  <div
-    class="bank-toast"
-    *ngFor="let bank of missingBanks()">
-
-    <div class="toast-icon">
-      !
-    </div>
-
-
-    <div class="toast-content">
-
-      <strong>
-        {{ bank.name }}
-      </strong>
-
-      <span>
-        Seçtiğiniz kriterlere uygun kredi ürünü bulunamadı.
-      </span>
-
-    </div>
-
+@if (missingBanks().length > 0) {
+  <div class="toast-container">
+    @for (bank of missingBanks(); track bank.id) {
+      <div class="bank-toast">
+        <div class="toast-icon">!</div>
+        <div class="toast-content">
+          <strong>{{ bank.name }}</strong>
+          <span>Seçtiğiniz kriterlere uygun kredi ürünü bulunamadı.</span>
+        </div>
+      </div>
+    }
   </div>
-
-</div>
+}
 
 
 <!-- ====================================== -->
@@ -292,8 +277,87 @@
 
 <app-payment-plan
   *ngIf="isPaymentPlanOpen()"
+
   [calculationResult]="calculationResult()"
+
   [bankName]="selectedProduct()?.bankName ?? ''"
+
+  [isCustomerEligible]="isCustomerEligible()"
+
+  [eligibilityMessage]="eligibilityMessage()"
+
   (close)="closePaymentPlan()"
+
   (apply)="applyForLoan()">
 </app-payment-plan>
+
+
+<!-- ====================================== -->
+<!-- BAŞVURU BAŞARILI -->
+<!-- ====================================== -->
+
+@if (applicationSuccess()) {
+
+  <div class="success-overlay">
+
+    <div class="success-modal">
+
+      <div class="success-icon">
+        ✓
+      </div>
+
+
+      <div class="success-content">
+
+        <span class="success-label">
+          BAŞVURU TAMAMLANDI
+        </span>
+
+
+        <h2>
+          Başvurunuz Alındı
+        </h2>
+
+
+        <p>
+          Kredi başvurunuz başarıyla oluşturuldu.
+          Başvurunuzun durumunu
+          <strong>Başvurularım</strong>
+          sayfasından takip edebilirsiniz.
+        </p>
+
+      </div>
+
+
+      <div class="success-actions">
+
+        <button
+          type="button"
+          class="success-secondary-button"
+          (click)="closeApplicationSuccess()">
+
+          Kapat
+
+        </button>
+
+
+        <button
+          type="button"
+          class="success-primary-button"
+          (click)="goToMyApplications()">
+
+          Başvurularıma Git
+
+          <span>
+            →
+          </span>
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+}

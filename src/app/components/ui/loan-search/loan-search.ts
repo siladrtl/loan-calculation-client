@@ -7,14 +7,29 @@ import {
   signal
 } from '@angular/core';
 
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import {
+  CommonModule
+} from '@angular/common';
 
-import { LoanType } from '../../../services/loan-type/loan-type';
-import { LoanProduct } from '../../../services/loan-product/loan-product';
+import {
+  FormsModule
+} from '@angular/forms';
 
-import { LoanTypeDto } from '../../../services/models/loan-type.model';
-import { LoanProductDto } from '../../../services/models/loan-product.model';
+import {
+  LoanType
+} from '../../../services/loan-type/loan-type';
+
+import {
+  LoanProduct
+} from '../../../services/loan-product/loan-product';
+
+import {
+  LoanTypeDto
+} from '../../../services/models/loan-type.model';
+
+import {
+  LoanProductDto
+} from '../../../services/models/loan-product.model';
 
 
 @Component({
@@ -191,7 +206,6 @@ export class LoanSearch implements OnInit {
     12;
 
 
-  // İlk arama yapıldı mı?
   private hasPerformedInitialSearch =
     false;
 
@@ -348,7 +362,6 @@ export class LoanSearch implements OnInit {
       );
 
 
-    // Tutar yeni kredi türünün aralığında değilse düzelt
     if (
       this.loanAmount < minAmount ||
       this.loanAmount > maxAmount
@@ -360,7 +373,6 @@ export class LoanSearch implements OnInit {
     }
 
 
-    // Vade yeni kredi türünün aralığında değilse düzelt
     if (
       this.maturity < minTerm ||
       this.maturity > maxTerm
@@ -372,8 +384,6 @@ export class LoanSearch implements OnInit {
     }
 
 
-    // İlk arama daha önce yapılmışsa
-    // kredi türü değişince otomatik yenile
     if (
       this.hasPerformedInitialSearch
     ) {
@@ -381,6 +391,93 @@ export class LoanSearch implements OnInit {
       this.emitCurrentSearch();
 
     }
+
+  }
+
+
+  // ==========================================
+  // TUTAR INPUT
+  // ==========================================
+
+  onAmountInput(
+    event: Event
+  ): void {
+
+    const input =
+      event.target as HTMLInputElement;
+
+
+    let rawValue =
+      input.value
+        .replace(/\./g, '')
+        .replace(/\D/g, '');
+
+
+    if (!rawValue) {
+
+      this.loanAmount =
+        0;
+
+      input.value =
+        '';
+
+      return;
+
+    }
+
+
+    let value =
+      Number(rawValue);
+
+
+    const max =
+      this.maxAmount();
+
+
+    if (value > max) {
+
+      value =
+        max;
+
+    }
+
+
+    this.loanAmount =
+      value;
+
+
+    input.value =
+      this.formatAmount(
+        value
+      );
+
+  }
+
+
+  // ==========================================
+  // TUTAR FORMATLA
+  // ==========================================
+
+  formatAmount(
+    value: number
+  ): string {
+
+    if (
+      value === null ||
+      Number.isNaN(value)
+    ) {
+      return '';
+    }
+
+
+    return new Intl.NumberFormat(
+      'tr-TR',
+      {
+        maximumFractionDigits: 0
+      }
+    ).format(
+      value
+    );
 
   }
 
@@ -400,13 +497,15 @@ export class LoanSearch implements OnInit {
 
     if (
       this.loanAmount === null ||
-      Number.isNaN(this.loanAmount)
+      Number.isNaN(this.loanAmount) ||
+      this.loanAmount === 0
     ) {
 
       this.loanAmount =
         min;
 
       return;
+
     }
 
 
@@ -433,6 +532,64 @@ export class LoanSearch implements OnInit {
 
 
   // ==========================================
+  // VADE INPUT
+  // ==========================================
+
+  onTermInput(
+    event: Event
+  ): void {
+
+    const input =
+      event.target as HTMLInputElement;
+
+
+    let rawValue =
+      input.value.replace(
+        /\D/g,
+        ''
+      );
+
+
+    if (!rawValue) {
+
+      this.maturity =
+        0;
+
+      input.value =
+        '';
+
+      return;
+
+    }
+
+
+    let value =
+      Number(rawValue);
+
+
+    const max =
+      this.maxTerm();
+
+
+    if (value > max) {
+
+      value =
+        max;
+
+    }
+
+
+    this.maturity =
+      value;
+
+
+    input.value =
+      value.toString();
+
+  }
+
+
+  // ==========================================
   // VADE SINIRLA
   // ==========================================
 
@@ -447,13 +604,15 @@ export class LoanSearch implements OnInit {
 
     if (
       this.maturity === null ||
-      Number.isNaN(this.maturity)
+      Number.isNaN(this.maturity) ||
+      this.maturity === 0
     ) {
 
       this.maturity =
         min;
 
       return;
+
     }
 
 
@@ -489,9 +648,25 @@ export class LoanSearch implements OnInit {
   // TUTAR INPUT BLUR
   // ==========================================
 
-  onAmountBlur(): void {
+  onAmountBlur(
+    event?: Event
+  ): void {
 
     this.normalizeAmount();
+
+
+    if (event) {
+
+      const input =
+        event.target as HTMLInputElement;
+
+
+      input.value =
+        this.formatAmount(
+          this.loanAmount
+        );
+
+    }
 
 
     if (
@@ -509,9 +684,23 @@ export class LoanSearch implements OnInit {
   // VADE INPUT BLUR
   // ==========================================
 
-  onTermBlur(): void {
+  onTermBlur(
+    event?: Event
+  ): void {
 
     this.normalizeTerm();
+
+
+    if (event) {
+
+      const input =
+        event.target as HTMLInputElement;
+
+
+      input.value =
+        this.maturity.toString();
+
+    }
 
 
     if (
@@ -526,11 +715,14 @@ export class LoanSearch implements OnInit {
 
 
   // ==========================================
-  // TUTAR SLIDER DEĞİŞTİ
+  // TUTAR SLIDER
   // ==========================================
 
   onAmountSliderChange(): void {
 
+    this.normalizeAmount();
+
+
     if (
       !this.hasPerformedInitialSearch
     ) {
@@ -544,11 +736,14 @@ export class LoanSearch implements OnInit {
 
 
   // ==========================================
-  // VADE SLIDER DEĞİŞTİ
+  // VADE SLIDER
   // ==========================================
 
   onTermSliderChange(): void {
 
+    this.normalizeTerm();
+
+
     if (
       !this.hasPerformedInitialSearch
     ) {
@@ -562,7 +757,7 @@ export class LoanSearch implements OnInit {
 
 
   // ==========================================
-  // İLK ARAMA BUTONU
+  // ARAMA
   // ==========================================
 
   search(): void {
@@ -583,8 +778,6 @@ export class LoanSearch implements OnInit {
     this.normalizeTerm();
 
 
-    // Artık bundan sonraki değişiklikler
-    // dinamik çalışabilir.
     this.hasPerformedInitialSearch =
       true;
 
@@ -595,7 +788,7 @@ export class LoanSearch implements OnInit {
 
 
   // ==========================================
-  // MEVCUT FORMU PARENT'A GÖNDER
+  // PARENT'A GÖNDER
   // ==========================================
 
   private emitCurrentSearch(): void {
