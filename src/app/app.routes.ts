@@ -1,10 +1,18 @@
 import { Routes } from '@angular/router';
 
 import { Login } from './components/ui/login/login';
+
 import { Register } from './components/ui/register/register';
+
 import { LoanCalculator } from './components/ui/loan-calculator';
+
 import { MyApplications } from './components/ui/my-applications/my-applications';
+
 import { AdminApplications } from './components/ui/admin-applications/admin-applications';
+
+import {
+  AdminCustomerVerifications
+} from './components/ui/admin-customer-verifications/admin-customer-verifications';
 
 
 export const routes: Routes = [
@@ -40,12 +48,22 @@ export const routes: Routes = [
 
 
   // ==========================================
-  // ADMIN - BAŞVURULAR
+  // ADMIN - KREDİ BAŞVURULARI
   // ==========================================
 
   {
     path: 'admin/applications',
     component: AdminApplications
+  },
+
+
+  // ==========================================
+  // ADMIN - MÜŞTERİ BAŞVURULARI
+  // ==========================================
+
+  {
+    path: 'admin/customer-verifications',
+    component: AdminCustomerVerifications
   },
 
 

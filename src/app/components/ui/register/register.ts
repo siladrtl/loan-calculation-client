@@ -11,7 +11,6 @@ import {
 import { Router } from '@angular/router';
 
 import { RegisterService } from '../../../services/auth/register';
-import { LoginService } from '../../../services/auth/login';
 import { CustomerType } from '../../../services/models/customer-type.model';
 
 
@@ -35,9 +34,6 @@ export class Register {
 
   private registerService =
     inject(RegisterService);
-
-  private loginService =
-    inject(LoginService);
 
   private router =
     inject(Router);
@@ -183,6 +179,9 @@ export class Register {
   // ==========================================
 
   errorMessage =
+    signal('');
+
+  successMessage =
     signal('');
 
   validationErrors =
@@ -334,7 +333,6 @@ export class Register {
 
     this.errorMessage.set('');
 
-
     if (
       !input.files ||
       input.files.length === 0
@@ -346,12 +344,8 @@ export class Register {
       return;
     }
 
-
     const file =
       input.files[0];
-
-
-    // Dosya uzantısı kontrolü
 
     const allowedExtensions = [
       '.pdf',
@@ -360,14 +354,12 @@ export class Register {
       '.png'
     ];
 
-
     const extension =
       '.' +
       file.name
         .split('.')
         .pop()
         ?.toLowerCase();
-
 
     if (
       !allowedExtensions.includes(extension)
@@ -385,12 +377,8 @@ export class Register {
       return;
     }
 
-
-    // Dosya boyutu kontrolü - 5 MB
-
     const maxFileSize =
       5 * 1024 * 1024;
-
 
     if (
       file.size > maxFileSize
@@ -408,7 +396,6 @@ export class Register {
       return;
     }
 
-
     this.selectedVerificationDocument =
       file;
   }
@@ -421,9 +408,9 @@ export class Register {
   register(): void {
 
     this.errorMessage.set('');
+    this.successMessage.set('');
     this.validationErrors.set([]);
     this.formErrors.set([]);
-
 
     if (
       this.registerForm.invalid
@@ -439,7 +426,6 @@ export class Register {
       return;
     }
 
-
     if (
       !this.selectedVerificationDocument
     ) {
@@ -451,13 +437,10 @@ export class Register {
       return;
     }
 
-
     this.isLoading.set(true);
-
 
     const form =
       this.registerForm.getRawValue();
-
 
     this.registerService
       .register(
@@ -497,18 +480,37 @@ export class Register {
       )
       .subscribe({
 
-        next: (response) => {
-
-          this.loginService
-            .saveToken(
-              response.token
-            );
+        next: () => {
 
           this.isLoading.set(false);
 
-          this.router.navigate([
-            '/'
-          ]);
+          this.successMessage.set(
+            'Başvurunuz başarıyla alınmıştır.'
+          );
+
+          this.registerForm.reset({
+            firstName: '',
+            lastName: '',
+            birthDate: '',
+            nationalId: '',
+            email: '',
+            phoneNumber: '',
+            city: '',
+            district: '',
+            customerType: 0 as CustomerType,
+            password: ''
+          });
+
+          this.selectedVerificationDocument =
+            null;
+
+          setTimeout(() => {
+
+            this.router.navigate([
+              '/login'
+            ]);
+
+          }, 4000);
         },
 
 
@@ -518,7 +520,6 @@ export class Register {
             'Register hatası:',
             err
           );
-
 
           if (
             Array.isArray(
@@ -534,10 +535,9 @@ export class Register {
 
             this.errorMessage.set(
               err.error?.message ??
-              'Kayıt işlemi gerçekleştirilemedi.'
+              'Başvuru işlemi gerçekleştirilemedi.'
             );
           }
-
 
           this.isLoading.set(false);
         }
@@ -559,7 +559,6 @@ export class Register {
     const controls =
       this.registerForm.controls;
 
-
     if (
       controls.firstName.invalid
     ) {
@@ -571,7 +570,6 @@ export class Register {
           : 'Ad alanını kontrol ediniz.'
       );
     }
-
 
     if (
       controls.lastName.invalid
@@ -585,7 +583,6 @@ export class Register {
       );
     }
 
-
     if (
       controls.birthDate.invalid
     ) {
@@ -597,7 +594,6 @@ export class Register {
           : 'Doğum tarihinizi kontrol ediniz.'
       );
     }
-
 
     if (
       controls.nationalId.invalid
@@ -611,7 +607,6 @@ export class Register {
       );
     }
 
-
     if (
       controls.email.invalid
     ) {
@@ -623,7 +618,6 @@ export class Register {
           : 'E-posta adresinizi kontrol ediniz.'
       );
     }
-
 
     if (
       controls.phoneNumber.invalid
@@ -637,7 +631,6 @@ export class Register {
       );
     }
 
-
     if (
       controls.city.invalid
     ) {
@@ -649,7 +642,6 @@ export class Register {
           : 'Şehir alanını kontrol ediniz.'
       );
     }
-
 
     if (
       controls.district.invalid
@@ -663,7 +655,6 @@ export class Register {
       );
     }
 
-
     if (
       controls.customerType.invalid
     ) {
@@ -672,7 +663,6 @@ export class Register {
         'Müşteri tipinizi seçiniz.'
       );
     }
-
 
     if (
       controls.password.invalid
@@ -685,7 +675,6 @@ export class Register {
           : 'Şifrenizi kontrol ediniz.'
       );
     }
-
 
     return errors;
   }
@@ -716,7 +705,6 @@ export class Register {
         control.value ?? ''
       ).trim();
 
-
     if (
       nationalId.length !== 11 ||
       !/^\d{11}$/.test(
@@ -730,12 +718,10 @@ export class Register {
       };
     }
 
-
     const digits =
       nationalId
         .split('')
         .map(Number);
-
 
     const oddSum =
       digits[0] +
@@ -744,18 +730,15 @@ export class Register {
       digits[6] +
       digits[8];
 
-
     const evenSum =
       digits[1] +
       digits[3] +
       digits[5] +
       digits[7];
 
-
     let tenthDigit =
       ((oddSum * 7) - evenSum)
       % 10;
-
 
     if (
       tenthDigit < 0
@@ -763,7 +746,6 @@ export class Register {
 
       tenthDigit += 10;
     }
-
 
     if (
       digits[9] !==
@@ -775,7 +757,6 @@ export class Register {
       };
     }
 
-
     const firstTenSum =
       digits
         .slice(0, 10)
@@ -784,7 +765,6 @@ export class Register {
             sum + digit,
           0
         );
-
 
     if (
       digits[10] !==
@@ -795,7 +775,6 @@ export class Register {
         invalidTc: true
       };
     }
-
 
     return null;
   }
@@ -820,12 +799,10 @@ export class Register {
         return null;
       }
 
-
       const birthDate =
         new Date(
           control.value
         );
-
 
       if (
         Number.isNaN(
@@ -838,10 +815,8 @@ export class Register {
         };
       }
 
-
       const today =
         new Date();
-
 
       const minimumBirthDate =
         new Date(
@@ -850,7 +825,6 @@ export class Register {
           today.getMonth(),
           today.getDate()
         );
-
 
       return birthDate <=
         minimumBirthDate
@@ -875,7 +849,6 @@ export class Register {
         control.value
       );
 
-
     const valid =
       value ===
         CustomerType.Ogrenci ||
@@ -885,7 +858,6 @@ export class Register {
 
       value ===
         CustomerType.Emekli;
-
 
     return valid
       ? null

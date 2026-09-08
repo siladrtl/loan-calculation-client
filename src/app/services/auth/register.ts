@@ -7,9 +7,12 @@ import {
   RegisterRequestDto
 } from '../models/register.model';
 
-import {
-  LoginResponseDto
-} from '../models/login.model';
+
+export interface RegisterResponseDto {
+  email: string;
+  customerId: number | null;
+  token: string;
+}
 
 
 @Injectable({
@@ -89,7 +92,7 @@ export class RegisterService {
     );
 
 
-    return this.http.post<LoginResponseDto>(
+    return this.http.post<RegisterResponseDto>(
       `${this.baseUrl}/register`,
       formData
     );

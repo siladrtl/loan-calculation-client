@@ -7,11 +7,19 @@
     <!-- ==================================== -->
 
     <div class="register-header">
-      <h1>Müşteri Ol</h1>
+
+      <span class="register-label">
+        MÜŞTERİ BAŞVURUSU
+      </span>
+
+      <h1>
+        Müşteri Ol
+      </h1>
 
       <p>
-        Bilgilerinizi doldurarak hesabınızı oluşturabilirsiniz.
+        Bilgilerinizi doldurarak müşteri olma başvurunuzu oluşturabilirsiniz.
       </p>
+
     </div>
 
 
@@ -72,19 +80,21 @@
           </span>
 
           <div>
-            <h3>Kişisel Bilgiler</h3>
+
+            <h3>
+              Kişisel Bilgiler
+            </h3>
 
             <p>
               Kimlik bilgilerinizi eksiksiz olarak girin.
             </p>
+
           </div>
 
         </div>
 
 
         <div class="form-grid">
-
-          <!-- AD -->
 
           <div class="form-group">
 
@@ -123,8 +133,6 @@
           </div>
 
 
-          <!-- SOYAD -->
-
           <div class="form-group">
 
             <label>Soyad</label>
@@ -162,8 +170,6 @@
           </div>
 
 
-          <!-- DOĞUM TARİHİ -->
-
           <div class="form-group">
 
             <label>Doğum Tarihi</label>
@@ -198,11 +204,11 @@
           </div>
 
 
-          <!-- TC -->
-
           <div class="form-group">
 
-            <label>TC Kimlik Numarası</label>
+            <label>
+              TC Kimlik Numarası
+            </label>
 
             <input
               type="text"
@@ -255,11 +261,15 @@
           </span>
 
           <div>
-            <h3>İletişim Bilgileri</h3>
+
+            <h3>
+              İletişim Bilgileri
+            </h3>
 
             <p>
               Size ulaşabilmemiz için iletişim bilgilerinizi girin.
             </p>
+
           </div>
 
         </div>
@@ -267,11 +277,11 @@
 
         <div class="form-grid">
 
-          <!-- E-POSTA -->
-
           <div class="form-group">
 
-            <label>E-posta</label>
+            <label>
+              E-posta
+            </label>
 
             <input
               type="email"
@@ -305,11 +315,11 @@
           </div>
 
 
-          <!-- TELEFON -->
-
           <div class="form-group">
 
-            <label>Telefon</label>
+            <label>
+              Telefon
+            </label>
 
             <input
               type="text"
@@ -345,11 +355,11 @@
           </div>
 
 
-          <!-- ŞEHİR -->
-
           <div class="form-group">
 
-            <label>Şehir</label>
+            <label>
+              Şehir
+            </label>
 
             <input
               type="text"
@@ -384,11 +394,11 @@
           </div>
 
 
-          <!-- İLÇE -->
-
           <div class="form-group">
 
-            <label>İlçe</label>
+            <label>
+              İlçe
+            </label>
 
             <input
               type="text"
@@ -440,11 +450,15 @@
           </span>
 
           <div>
-            <h3>Müşteri Tipiniz</h3>
+
+            <h3>
+              Müşteri Tipiniz
+            </h3>
 
             <p>
               Size uygun kredi ürünlerini belirleyebilmek için seçim yapın.
             </p>
+
           </div>
 
         </div>
@@ -503,21 +517,21 @@
           </span>
 
           <div>
-            <h3>Doğrulama Belgesi</h3>
+
+            <h3>
+              Doğrulama Belgesi
+            </h3>
 
             <p>
-              Müşteri tipinize uygun doğrulama belgesini yükleyin.
+              Seçtiğiniz müşteri tipini doğrulayan belgenizi yükleyin.
             </p>
+
           </div>
 
         </div>
 
 
-        <!-- BELGE TÜRLERİ -->
-
         <div class="document-type-grid">
-
-          <!-- ÖĞRENCİ -->
 
           <div
             class="document-type-card"
@@ -526,6 +540,10 @@
               CustomerType.Ogrenci
             "
           >
+
+            <span class="document-label">
+              ÖĞRENCİ
+            </span>
 
             <div class="document-title">
               Öğrenci Belgesi
@@ -538,8 +556,6 @@
           </div>
 
 
-          <!-- ESNAF -->
-
           <div
             class="document-type-card"
             [class.selected]="
@@ -547,6 +563,10 @@
               CustomerType.Esnaf
             "
           >
+
+            <span class="document-label">
+              ESNAF
+            </span>
 
             <div class="document-title">
               Esnaf / Vergi Belgesi
@@ -559,8 +579,6 @@
           </div>
 
 
-          <!-- EMEKLİ -->
-
           <div
             class="document-type-card"
             [class.selected]="
@@ -568,6 +586,10 @@
               CustomerType.Emekli
             "
           >
+
+            <span class="document-label">
+              EMEKLİ
+            </span>
 
             <div class="document-title">
               Emeklilik Belgesi
@@ -581,8 +603,6 @@
 
         </div>
 
-
-        <!-- DOSYA YÜKLEME -->
 
         <div class="verification-upload">
 
@@ -651,19 +671,25 @@
           </span>
 
           <div>
-            <h3>Hesap Güvenliği</h3>
+
+            <h3>
+              Hesap Güvenliği
+            </h3>
 
             <p>
-              Hesabınız için güçlü bir şifre oluşturun.
+              Başvurunuz onaylandığında kullanacağınız şifreyi oluşturun.
             </p>
+
           </div>
 
         </div>
 
 
-        <div class="form-group">
+        <div class="form-group password-group">
 
-          <label>Şifre</label>
+          <label>
+            Şifre
+          </label>
 
           <input
             type="password"
@@ -722,7 +748,7 @@
 
 
       <!-- ==================================== -->
-      <!-- KAYIT -->
+      <!-- BAŞVURU -->
       <!-- ==================================== -->
 
       <div class="register-actions">
@@ -730,11 +756,11 @@
         <button
           type="submit"
           class="register-button"
-          [disabled]="isLoading()"
+          [disabled]="isLoading() || !!successMessage()"
         >
 
           @if (isLoading()) {
-            Kayıt oluşturuluyor...
+            Başvuru gönderiliyor...
           }
 
           @else {
@@ -764,5 +790,55 @@
     </form>
 
   </div>
+
+
+  <!-- ==================================== -->
+  <!-- BAŞVURU BAŞARILI MODALI -->
+  <!-- ==================================== -->
+
+  @if (successMessage()) {
+
+    <div class="success-overlay">
+
+      <div
+        class="success-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="success-title"
+      >
+
+        <div class="success-icon">
+          ✓
+        </div>
+
+
+        <div class="success-content">
+
+          <span class="success-label">
+            BAŞVURU TAMAMLANDI
+          </span>
+
+          <h2 id="success-title">
+            Başvurunuz Alındı
+          </h2>
+
+          <p>
+            Müşteri olma başvurunuz başarıyla alınmıştır.
+            Doğrulama belgeniz admin tarafından incelenecektir.
+            Başvurunuz onaylandığında hesabınız aktif hale gelecektir.
+          </p>
+
+        </div>
+
+
+        <div class="redirect-info">
+          Giriş sayfasına yönlendiriliyorsunuz...
+        </div>
+
+      </div>
+
+    </div>
+
+  }
 
 </div>

@@ -1,0 +1,661 @@
+<div class="admin-page">
+
+  <div class="admin-container">
+
+    <!-- ====================================== -->
+    <!-- HEADER -->
+    <!-- ====================================== -->
+
+    <header class="page-header">
+
+      <span class="page-label">
+        YÖNETİM PANELİ
+      </span>
+
+      <h1>
+        Müşteri Başvuruları
+      </h1>
+
+      <p>
+        Müşteri olma başvurularını ve doğrulama belgelerini
+        inceleyebilir, başvuruları onaylayabilir veya reddedebilirsiniz.
+      </p>
+
+    </header>
+
+
+    <!-- ====================================== -->
+    <!-- SUMMARY -->
+    <!-- ====================================== -->
+
+    <div class="summary-grid">
+
+      <div class="summary-card">
+
+        <span class="summary-label">
+          TOPLAM BAŞVURU
+        </span>
+
+        <strong>
+          {{ totalApplications() }}
+        </strong>
+
+      </div>
+
+
+      <div class="summary-card pending">
+
+        <span class="summary-label">
+          BEKLEYEN
+        </span>
+
+        <strong>
+          {{ pendingApplications() }}
+        </strong>
+
+      </div>
+
+
+      <div class="summary-card approved">
+
+        <span class="summary-label">
+          ONAYLANAN
+        </span>
+
+        <strong>
+          {{ approvedApplications() }}
+        </strong>
+
+      </div>
+
+
+      <div class="summary-card rejected">
+
+        <span class="summary-label">
+          REDDEDİLEN
+        </span>
+
+        <strong>
+          {{ rejectedApplications() }}
+        </strong>
+
+      </div>
+
+    </div>
+
+
+    <!-- ====================================== -->
+    <!-- SUCCESS -->
+    <!-- ====================================== -->
+
+    @if (successMessage()) {
+
+      <div class="success-box">
+        {{ successMessage() }}
+      </div>
+
+    }
+
+
+    <!-- ====================================== -->
+    <!-- ERROR -->
+    <!-- ====================================== -->
+
+    @if (errorMessage()) {
+
+      <div class="error-box">
+        {{ errorMessage() }}
+      </div>
+
+    }
+
+
+    <!-- ====================================== -->
+    <!-- LOADING -->
+    <!-- ====================================== -->
+
+    @if (isLoading()) {
+
+      <div class="loading-box">
+
+        <span class="spinner"></span>
+
+        <span>
+          Müşteri başvuruları yükleniyor...
+        </span>
+
+      </div>
+
+    }
+
+
+    <!-- ====================================== -->
+    <!-- EMPTY -->
+    <!-- ====================================== -->
+
+    @if (
+      !isLoading() &&
+      verifications().length === 0
+    ) {
+
+      <div class="empty-state">
+
+        <div class="empty-icon">
+          ✓
+        </div>
+
+        <h3>
+          Henüz müşteri başvurusu yok
+        </h3>
+
+        <p>
+          Yeni müşteri olma başvuruları oluşturulduğunda
+          burada görüntülenecektir.
+        </p>
+
+      </div>
+
+    }
+
+
+    <!-- ====================================== -->
+    <!-- TABLE -->
+    <!-- ====================================== -->
+
+    @if (
+      !isLoading() &&
+      verifications().length > 0
+    ) {
+
+      <div class="applications-card">
+
+        <div class="table-header">
+
+          <div>
+
+            <span class="section-label">
+              TÜM BAŞVURULAR
+            </span>
+
+            <h2>
+              Müşteri Doğrulama Yönetimi
+            </h2>
+
+          </div>
+
+
+          <span class="application-count">
+
+            {{ verifications().length }}
+            başvuru
+
+          </span>
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+          <table class="applications-table">
+
+            <thead>
+
+              <tr>
+
+                <th>
+                  Başvuru No
+                </th>
+
+                <th>
+                  Müşteri
+                </th>
+
+                <th>
+                  Müşteri Tipi
+                </th>
+
+                <th>
+                  Doğrulama Belgesi
+                </th>
+
+                <th>
+                  Dosya Boyutu
+                </th>
+
+                <th>
+                  Başvuru Tarihi
+                </th>
+
+                <th>
+                  Durum
+                </th>
+
+                <th>
+                  Karar Tarihi
+                </th>
+
+                <th>
+                  Karar Notu
+                </th>
+
+                <th>
+                  İşlem
+                </th>
+
+              </tr>
+
+            </thead>
+
+
+            <tbody>
+
+              @for (
+                verification of verifications();
+                track verification.id
+              ) {
+
+                <tr>
+
+                  <!-- BAŞVURU NO -->
+
+                  <td class="application-id">
+
+                    #{{ verification.customerRegistrationId }}
+
+                  </td>
+
+
+                  <!-- MÜŞTERİ -->
+
+                  <td>
+
+                    <strong>
+                      {{ verification.customerName }}
+                    </strong>
+
+                  </td>
+
+
+                  <!-- MÜŞTERİ TİPİ -->
+
+                  <td>
+
+                    <span class="customer-type-badge">
+
+                      {{
+                        getCustomerTypeText(
+                          verification.customerType
+                        )
+                      }}
+
+                    </span>
+
+                  </td>
+
+
+                  <!-- BELGE -->
+
+                  <td>
+
+                    <div class="document-cell">
+
+                      <span class="document-name">
+
+                        {{ verification.originalFileName }}
+
+                      </span>
+
+
+                      <button
+                        type="button"
+                        class="document-button"
+                        (click)="viewDocument(verification.id)"
+                      >
+
+                        Belgeyi Görüntüle
+
+                      </button>
+
+                    </div>
+
+                  </td>
+
+
+                  <!-- DOSYA BOYUTU -->
+
+                  <td>
+
+                    {{
+                      (verification.fileSize / 1024)
+                        | number:'1.0-1'
+                    }}
+                    KB
+
+                  </td>
+
+
+                  <!-- BAŞVURU TARİHİ -->
+
+                  <td>
+
+                    {{
+                      verification.uploadedAt
+                        | date:'dd.MM.yyyy HH:mm'
+                    }}
+
+                  </td>
+
+
+                  <!-- DURUM -->
+
+                  <td>
+
+                    <span
+                      class="status-badge"
+                      [ngClass]="
+                        getStatusClass(
+                          verification.status
+                        )
+                      "
+                    >
+
+                      {{
+                        getStatusText(
+                          verification.status
+                        )
+                      }}
+
+                    </span>
+
+                  </td>
+
+
+                  <!-- KARAR TARİHİ -->
+
+                  <td>
+
+                    @if (
+                      verification.verifiedAt
+                    ) {
+
+                      {{
+                        verification.verifiedAt
+                          | date:'dd.MM.yyyy HH:mm'
+                      }}
+
+                    }
+
+                    @else {
+
+                      <span class="empty-value">
+                        —
+                      </span>
+
+                    }
+
+                  </td>
+
+
+                  <!-- KARAR NOTU -->
+
+                  <td>
+
+                    @if (
+                      verification.verificationNote
+                    ) {
+
+                      <span
+                        class="verification-note"
+                        [title]="verification.verificationNote"
+                      >
+
+                        {{ verification.verificationNote }}
+
+                      </span>
+
+                    }
+
+                    @else {
+
+                      <span class="empty-value">
+                        —
+                      </span>
+
+                    }
+
+                  </td>
+
+
+                  <!-- İŞLEM -->
+
+                  <td>
+
+                    @if (
+                      isPending(
+                        verification.status
+                      )
+                    ) {
+
+                      <div class="action-buttons">
+
+                        <button
+                          type="button"
+                          class="approve-button"
+                          (click)="
+                            openDecision(
+                              verification.id,
+                              'approve'
+                            )
+                          "
+                        >
+
+                          Onayla
+
+                        </button>
+
+
+                        <button
+                          type="button"
+                          class="reject-button"
+                          (click)="
+                            openDecision(
+                              verification.id,
+                              'reject'
+                            )
+                          "
+                        >
+
+                          Reddet
+
+                        </button>
+
+                      </div>
+
+                    }
+
+                    @else {
+
+                      <span class="completed-text">
+
+                        İşlem tamamlandı
+
+                      </span>
+
+                    }
+
+                  </td>
+
+                </tr>
+
+              }
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    }
+
+  </div>
+
+</div>
+
+
+<!-- ====================================== -->
+<!-- KARAR MODALI -->
+<!-- ====================================== -->
+
+@if (
+  selectedVerificationId() !== null
+) {
+
+  <div class="modal-overlay">
+
+    <div class="decision-modal">
+
+      <div class="modal-header">
+
+        <div>
+
+          <span class="modal-label">
+
+            @if (
+              decisionType() === 'approve'
+            ) {
+
+              MÜŞTERİ ONAYI
+
+            }
+
+            @else {
+
+              MÜŞTERİ REDDİ
+
+            }
+
+          </span>
+
+
+          <h3>
+
+            Başvuru
+            #{{ selectedVerificationId() }}
+
+          </h3>
+
+        </div>
+
+
+        <button
+          type="button"
+          class="close-button"
+          (click)="closeDecision()"
+        >
+
+          ×
+
+        </button>
+
+      </div>
+
+
+      <div class="modal-body">
+
+        @if (
+          decisionType() === 'approve'
+        ) {
+
+          <div class="decision-info approve-info">
+
+            Bu başvuru onaylandığında kullanıcı
+            gerçek bir müşteri olarak oluşturulacak
+            ve müşteri hesabı aktif hale gelecektir.
+
+          </div>
+
+        }
+
+        @else {
+
+          <div class="decision-info reject-info">
+
+            Bu başvuru reddedildiğinde kullanıcı
+            müşteri olarak oluşturulmayacaktır.
+
+          </div>
+
+        }
+
+
+        <label>
+          Karar Notu
+        </label>
+
+
+        <textarea
+          [(ngModel)]="decisionNote"
+          rows="4"
+          placeholder="Karar ile ilgili açıklama yazabilirsiniz..."
+        >
+        </textarea>
+
+      </div>
+
+
+      <div class="modal-footer">
+
+        <button
+          type="button"
+          class="cancel-button"
+          (click)="closeDecision()"
+        >
+
+          Vazgeç
+
+        </button>
+
+
+        <button
+          type="button"
+          [class.approve-button]="
+            decisionType() === 'approve'
+          "
+          [class.reject-button]="
+            decisionType() === 'reject'
+          "
+          [disabled]="isProcessing()"
+          (click)="submitDecision()"
+        >
+
+          @if (isProcessing()) {
+
+            İşleniyor...
+
+          }
+
+          @else if (
+            decisionType() === 'approve'
+          ) {
+
+            Müşteriyi Onayla
+
+          }
+
+          @else {
+
+            Başvuruyu Reddet
+
+          }
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+}
