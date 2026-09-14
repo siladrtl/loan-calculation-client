@@ -24,11 +24,6 @@ export class LoanApplication {
   private baseUrl =
     `${environment.apiUrl}/LoanApplications`;
 
-
-  // ==========================================
-  // BAŞVURU OLUŞTUR
-  // ==========================================
-
   create(
     request: CreateLoanApplicationRequestDto
   ) {
@@ -40,11 +35,6 @@ export class LoanApplication {
 
   }
 
-
-  // ==========================================
-  // MÜŞTERİNİN BAŞVURULARINI GETİR
-  // ==========================================
-
   getMyApplications() {
 
     return this.http.get<LoanApplicationResponseDto[]>(
@@ -52,12 +42,7 @@ export class LoanApplication {
     );
 
   }
-
-
-  // ==========================================
-  // MÜŞTERİ UYGUNLUK KONTROLÜ
-  // ==========================================
-
+  
   checkEligibility(
     loanProductId: number
   ) {

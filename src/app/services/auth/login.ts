@@ -256,12 +256,14 @@ export class LoginService {
       }
 
 
+      // Base64Url -> Base64
       let base64 =
         payloadPart
           .replace(/-/g, '+')
           .replace(/_/g, '/');
 
 
+      // Base64 padding
       while (
         base64.length % 4
       ) {
@@ -271,9 +273,35 @@ export class LoginService {
       }
 
 
+      // ======================================
+      // BASE64 DECODE
+      // ======================================
+
+      const binaryString =
+        atob(base64);
+
+
+      // ======================================
+      // UTF-8 DECODE
+      // Türkçe karakterlerin düzgün okunması
+      // için byte dizisine dönüştürülür.
+      // ======================================
+
+      const bytes =
+        Uint8Array.from(
+          binaryString,
+          char => char.charCodeAt(0)
+        );
+
+
+      const decodedPayload =
+        new TextDecoder('utf-8')
+          .decode(bytes);
+
+
       const payload =
         JSON.parse(
-          atob(base64)
+          decodedPayload
         );
 
 

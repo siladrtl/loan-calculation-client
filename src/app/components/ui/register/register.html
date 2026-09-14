@@ -1,10 +1,27 @@
 <div class="register-page">
 
-  <div class="register-container">
+  @if (errorMessage()) {
+    <div class="error-toast">
+      <div class="error-toast-icon">!</div>
 
-    <!-- ==================================== -->
-    <!-- BAŞLIK -->
-    <!-- ==================================== -->
+      <div class="error-toast-content">
+        <span class="error-toast-title">Uyarı</span>
+
+        <span class="error-toast-message">
+          {{ errorMessage() }}
+        </span>
+      </div>
+
+      <button
+        type="button"
+        class="error-toast-close"
+        (click)="closeErrorToast()">
+        ×
+      </button>
+    </div>
+  }
+
+  <div class="register-container">
 
     <div class="register-header">
 
@@ -22,18 +39,12 @@
 
     </div>
 
-
     <form
       [formGroup]="registerForm"
       (ngSubmit)="register()"
     >
 
-      <!-- ==================================== -->
-      <!-- GENEL HATALAR -->
-      <!-- ==================================== -->
-
       @if (formErrors().length > 0) {
-
         <div class="error-box">
 
           @for (error of formErrors(); track error) {
@@ -41,12 +52,9 @@
           }
 
         </div>
-
       }
 
-
       @if (validationErrors().length > 0) {
-
         <div class="error-box">
 
           @for (error of validationErrors(); track error) {
@@ -54,22 +62,7 @@
           }
 
         </div>
-
       }
-
-
-      @if (errorMessage()) {
-
-        <div class="error-box">
-          {{ errorMessage() }}
-        </div>
-
-      }
-
-
-      <!-- ==================================== -->
-      <!-- 1 - KİŞİSEL BİLGİLER -->
-      <!-- ==================================== -->
 
       <section class="form-section">
 
@@ -80,7 +73,6 @@
           </span>
 
           <div>
-
             <h3>
               Kişisel Bilgiler
             </h3>
@@ -88,11 +80,9 @@
             <p>
               Kimlik bilgilerinizi eksiksiz olarak girin.
             </p>
-
           </div>
 
         </div>
-
 
         <div class="form-grid">
 
@@ -113,7 +103,6 @@
               registerForm.controls.firstName.touched &&
               registerForm.controls.firstName.invalid
             ) {
-
               <div class="field-error">
 
                 @if (
@@ -127,11 +116,9 @@
                 }
 
               </div>
-
             }
 
           </div>
-
 
           <div class="form-group">
 
@@ -150,7 +137,6 @@
               registerForm.controls.lastName.touched &&
               registerForm.controls.lastName.invalid
             ) {
-
               <div class="field-error">
 
                 @if (
@@ -164,11 +150,9 @@
                 }
 
               </div>
-
             }
 
           </div>
-
 
           <div class="form-group">
 
@@ -184,7 +168,6 @@
               registerForm.controls.birthDate.touched &&
               registerForm.controls.birthDate.invalid
             ) {
-
               <div class="field-error">
 
                 @if (
@@ -198,11 +181,9 @@
                 }
 
               </div>
-
             }
 
           </div>
-
 
           <div class="form-group">
 
@@ -224,7 +205,6 @@
               registerForm.controls.nationalId.touched &&
               registerForm.controls.nationalId.invalid
             ) {
-
               <div class="field-error">
 
                 @if (
@@ -238,7 +218,6 @@
                 }
 
               </div>
-
             }
 
           </div>
@@ -246,11 +225,6 @@
         </div>
 
       </section>
-
-
-      <!-- ==================================== -->
-      <!-- 2 - İLETİŞİM BİLGİLERİ -->
-      <!-- ==================================== -->
 
       <section class="form-section">
 
@@ -274,7 +248,6 @@
 
         </div>
 
-
         <div class="form-grid">
 
           <div class="form-group">
@@ -295,7 +268,6 @@
               registerForm.controls.email.touched &&
               registerForm.controls.email.invalid
             ) {
-
               <div class="field-error">
 
                 @if (
@@ -309,11 +281,9 @@
                 }
 
               </div>
-
             }
 
           </div>
-
 
           <div class="form-group">
 
@@ -335,7 +305,6 @@
               registerForm.controls.phoneNumber.touched &&
               registerForm.controls.phoneNumber.invalid
             ) {
-
               <div class="field-error">
 
                 @if (
@@ -349,11 +318,9 @@
                 }
 
               </div>
-
             }
 
           </div>
-
 
           <div class="form-group">
 
@@ -374,7 +341,6 @@
               registerForm.controls.city.touched &&
               registerForm.controls.city.invalid
             ) {
-
               <div class="field-error">
 
                 @if (
@@ -388,11 +354,9 @@
                 }
 
               </div>
-
             }
 
           </div>
-
 
           <div class="form-group">
 
@@ -413,7 +377,6 @@
               registerForm.controls.district.touched &&
               registerForm.controls.district.invalid
             ) {
-
               <div class="field-error">
 
                 @if (
@@ -427,7 +390,6 @@
                 }
 
               </div>
-
             }
 
           </div>
@@ -435,11 +397,6 @@
         </div>
 
       </section>
-
-
-      <!-- ==================================== -->
-      <!-- 3 - MÜŞTERİ TİPİ -->
-      <!-- ==================================== -->
 
       <section class="form-section">
 
@@ -462,7 +419,6 @@
           </div>
 
         </div>
-
 
         <div class="customer-type-grid">
 
@@ -489,7 +445,6 @@
 
         </div>
 
-
         @if (
           registerForm.controls.customerType.touched &&
           registerForm.controls.customerType.invalid
@@ -502,11 +457,6 @@
         }
 
       </section>
-
-
-      <!-- ==================================== -->
-      <!-- 4 - DOĞRULAMA BELGESİ -->
-      <!-- ==================================== -->
 
       <section class="form-section">
 
@@ -529,7 +479,6 @@
           </div>
 
         </div>
-
 
         <div class="document-type-grid">
 
@@ -555,7 +504,6 @@
 
           </div>
 
-
           <div
             class="document-type-card"
             [class.selected]="
@@ -577,7 +525,6 @@
             </div>
 
           </div>
-
 
           <div
             class="document-type-card"
@@ -603,7 +550,6 @@
 
         </div>
 
-
         <div class="verification-upload">
 
           <input
@@ -614,7 +560,6 @@
             (change)="onFileSelected($event)"
           >
 
-
           <button
             type="button"
             class="file-select-button"
@@ -622,7 +567,6 @@
           >
             Belge Seç
           </button>
-
 
           <div class="selected-file-info">
 
@@ -650,17 +594,11 @@
 
         </div>
 
-
         <div class="file-info">
           PDF, JPG, JPEG veya PNG formatında, en fazla 5 MB.
         </div>
 
       </section>
-
-
-      <!-- ==================================== -->
-      <!-- 5 - HESAP GÜVENLİĞİ -->
-      <!-- ==================================== -->
 
       <section class="form-section">
 
@@ -684,7 +622,6 @@
 
         </div>
 
-
         <div class="form-group password-group">
 
           <label>
@@ -699,12 +636,10 @@
             autocomplete="new-password"
           >
 
-
           <div class="password-info">
             En az 8 karakter, bir büyük harf,
             bir küçük harf ve bir rakam kullanın.
           </div>
-
 
           @if (
             registerForm.controls.password.touched &&
@@ -746,11 +681,6 @@
 
       </section>
 
-
-      <!-- ==================================== -->
-      <!-- BAŞVURU -->
-      <!-- ==================================== -->
-
       <div class="register-actions">
 
         <button
@@ -768,7 +698,6 @@
           }
 
         </button>
-
 
         <div class="login-link">
 
@@ -791,11 +720,6 @@
 
   </div>
 
-
-  <!-- ==================================== -->
-  <!-- BAŞVURU BAŞARILI MODALI -->
-  <!-- ==================================== -->
-
   @if (successMessage()) {
 
     <div class="success-overlay">
@@ -810,7 +734,6 @@
         <div class="success-icon">
           ✓
         </div>
-
 
         <div class="success-content">
 
@@ -829,7 +752,6 @@
           </p>
 
         </div>
-
 
         <div class="redirect-info">
           Giriş sayfasına yönlendiriliyorsunuz...

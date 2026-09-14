@@ -193,6 +193,49 @@ export class Register {
   isLoading =
     signal(false);
 
+  private errorToastTimeout:
+    ReturnType<typeof setTimeout> | null = null;
+
+
+  // ==========================================
+  // HATA BİLDİRİMİ
+  // ==========================================
+
+  private showErrorToast(
+    message: string
+  ): void {
+
+    this.errorMessage.set(message);
+
+    if (this.errorToastTimeout) {
+      clearTimeout(this.errorToastTimeout);
+    }
+
+    this.errorToastTimeout =
+      setTimeout(() => {
+
+        this.errorMessage.set('');
+
+        this.errorToastTimeout = null;
+
+      }, 5000);
+  }
+
+
+  closeErrorToast(): void {
+
+    this.errorMessage.set('');
+
+    if (this.errorToastTimeout) {
+
+      clearTimeout(
+        this.errorToastTimeout
+      );
+
+      this.errorToastTimeout = null;
+    }
+  }
+
 
   // ==========================================
   // DOĞRULAMA BELGESİ
@@ -331,7 +374,7 @@ export class Register {
     const input =
       event.target as HTMLInputElement;
 
-    this.errorMessage.set('');
+    this.closeErrorToast();
 
     if (
       !input.files ||
@@ -370,7 +413,7 @@ export class Register {
 
       input.value = '';
 
-      this.errorMessage.set(
+      this.showErrorToast(
         'Sadece PDF, JPG, JPEG veya PNG formatında belge yükleyebilirsiniz.'
       );
 
@@ -389,7 +432,7 @@ export class Register {
 
       input.value = '';
 
-      this.errorMessage.set(
+      this.showErrorToast(
         'Belge boyutu en fazla 5 MB olabilir.'
       );
 
@@ -407,7 +450,8 @@ export class Register {
 
   register(): void {
 
-    this.errorMessage.set('');
+    this.closeErrorToast();
+
     this.successMessage.set('');
     this.validationErrors.set([]);
     this.formErrors.set([]);
@@ -533,10 +577,11 @@ export class Register {
 
           } else {
 
-            this.errorMessage.set(
+            this.showErrorToast(
               err.error?.message ??
               'Başvuru işlemi gerçekleştirilemedi.'
             );
+
           }
 
           this.isLoading.set(false);

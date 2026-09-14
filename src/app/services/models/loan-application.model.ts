@@ -71,9 +71,8 @@ export interface LoanApplicationResponseDto {
 export interface LoanApplicationEligibilityResponseDto {
 
   isEligible: boolean;
-
   message: string;
-
+  nextApplicationDate: string | null;
 }
 
 

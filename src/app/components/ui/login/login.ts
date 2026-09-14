@@ -1,6 +1,12 @@
-import { Component, inject } from '@angular/core';
+import {
+  Component,
+  inject,
+  signal
+} from '@angular/core';
+
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+
 import { LoginService } from '../../../services/auth/login';
 import { NotificationService } from '../../../services/signalr/notification';
 
@@ -11,104 +17,147 @@ import { NotificationService } from '../../../services/signalr/notification';
   styleUrl: './login.scss'
 })
 export class Login {
+
   private loginService = inject(LoginService);
   private notificationService = inject(NotificationService);
   private router = inject(Router);
 
   email = '';
   password = '';
-  errorMessage = '';
-  isLoading = false;
+
+  errorMessage = signal('');
+  isLoading = signal(false);
+
 
   // ==========================================
   // LOGIN
   // ==========================================
-  login(): void { //sınıf içi fonksiyon, tanımı bu yüzden bu şekilde tanımlandı
+  login(): void {
+
     if (!this.email || !this.password) {
-      this.errorMessage = 'E-posta ve şifre alanlarını doldurunuz.';
+      this.errorMessage.set(
+        'E-posta ve şifre alanlarını doldurunuz.'
+      );
+
       return;
     }
 
-    this.errorMessage = '';
-    this.isLoading = true;
+    this.errorMessage.set('');
+    this.isLoading.set(true);
 
     this.loginService
-      .login({ 
+      .login({
         email: this.email,
         password: this.password
       })
       .subscribe({
+
         next: (response) => {
+
           // ======================================
           // TOKEN KAYDET
           // ======================================
-          this.loginService.saveToken(response.token);
-          this.isLoading = false;
+          this.loginService.saveToken(
+            response.token
+          );
+
+          this.isLoading.set(false);
+
 
           // ======================================
           // ADMIN
           // ======================================
           if (this.loginService.isAdmin()) {
-            // Admin için bekleyen müşteri başvurusu anlamlı değil
-            sessionStorage.removeItem('pendingLoanApplication');
-            this.router.navigate(['/admin/applications']);
+
+            sessionStorage.removeItem(
+              'pendingLoanApplication'
+            );
+
+            this.router.navigate([
+              '/admin/applications'
+            ]);
+
             return;
           }
+
 
           // ======================================
           // CUSTOMER
           // ======================================
           if (this.loginService.isCustomer()) {
+
             // SignalR bağlantısını başlat
-            this.notificationService.startConnection();
+            this.notificationService
+              .startConnection();
+
 
             // ====================================
             // BEKLEYEN KREDİ İŞLEMİ VAR MI?
             // ====================================
-            const pendingApplication = sessionStorage.getItem('pendingLoanApplication');
+            const pendingApplication =
+              sessionStorage.getItem(
+                'pendingLoanApplication'
+              );
 
             if (pendingApplication) {
-              /*
-               * Kullanıcı kredi hesaplama ekranından login'e geldiyse
-               * ana sayfaya geri gönderiyoruz.
-               * LoanCalculator açıldığında pendingLoanApplication bilgisini
-               * okuyup ödeme planını tekrar açacak.
-               */
+
               this.router.navigate(['/']);
+
               return;
             }
+
 
             // ====================================
             // NORMAL LOGIN
             // ====================================
             this.router.navigate(['/']);
+
             return;
           }
+
 
           // ======================================
           // ROL BULUNAMAZSA
           // ======================================
           this.router.navigate(['/']);
         },
+
+
         error: (err) => {
-          console.error('Login hatası:', err);
-          this.errorMessage = err.error?.message ?? 'E-posta veya şifre hatalı.';
-          this.isLoading = false;
+
+          console.error(
+            'Login hatası:',
+            err
+          );
+
+          this.errorMessage.set(
+            err.error?.message ??
+            'E-posta veya şifre hatalı.'
+          );
+
+          this.isLoading.set(false);
         }
+
       });
   }
+
 
   // ==========================================
   // REGISTER
   // ==========================================
   goToRegister(): void {
-    this.router.navigate(['/register']);
+
+    this.router.navigate([
+      '/register'
+    ]);
   }
+
 
   // ==========================================
   // HOME
   // ==========================================
   goHome(): void {
+
     this.router.navigate(['/']);
   }
 }

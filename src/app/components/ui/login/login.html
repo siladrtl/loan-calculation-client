@@ -6,7 +6,7 @@
     <section class="login-info">
 
       <button
-        type="button" //sadece bir buton 
+        type="button"
         class="back-button"
         (click)="goHome()">
 
@@ -47,25 +47,44 @@
         <div class="info-list">
 
           <div class="info-item">
-            <span class="check">✓</span>
+
+            <span class="check">
+              ✓
+            </span>
 
             <div>
-              <strong>Seçiminiz korunur</strong>
+
+              <strong>
+                Seçiminiz korunur
+              </strong>
+
               <p>
                 Hesapladığınız kredi ürünü kaybolmaz.
               </p>
+
             </div>
+
           </div>
 
+
           <div class="info-item">
-            <span class="check">✓</span>
+
+            <span class="check">
+              ✓
+            </span>
 
             <div>
-              <strong>Güvenli işlem</strong>
+
+              <strong>
+                Güvenli işlem
+              </strong>
+
               <p>
                 Başvurunuz hesabınızla ilişkilendirilir.
               </p>
+
             </div>
+
           </div>
 
         </div>
@@ -78,7 +97,7 @@
     <!-- FORM -->
     <section class="login-form-panel">
 
-      <div class="form-heading"> 
+      <div class="form-heading">
 
         <span class="small-title">
           HOŞ GELDİNİZ
@@ -89,7 +108,8 @@
         </h2>
 
         <p>
-          Başvurunuza devam etmek için hesabınıza giriş yapın.
+          Başvurunuza devam etmek için
+          hesabınıza giriş yapın.
         </p>
 
       </div>
@@ -99,6 +119,8 @@
         class="login-form"
         (ngSubmit)="login()">
 
+
+        <!-- EMAIL -->
         <div class="form-group">
 
           <label for="email">
@@ -118,6 +140,7 @@
         </div>
 
 
+        <!-- PASSWORD -->
         <div class="form-group">
 
           <label for="password">
@@ -137,7 +160,8 @@
         </div>
 
 
-        @if (errorMessage) {
+        <!-- ERROR -->
+        @if (errorMessage()) {
 
           <div class="error-message">
 
@@ -145,19 +169,20 @@
               !
             </span>
 
-            {{ errorMessage }}
+            {{ errorMessage() }}
 
           </div>
 
         }
 
 
+        <!-- LOGIN BUTTON -->
         <button
           type="submit"
           class="login-button"
-          [disabled]="isLoading">
+          [disabled]="isLoading()">
 
-          @if (isLoading) {
+          @if (isLoading()) {
 
             <span class="spinner"></span>
 

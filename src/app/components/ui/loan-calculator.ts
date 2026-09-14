@@ -838,28 +838,20 @@ export class LoanCalculator {
       const calculation =
         pending.calculation as LoanCalculationResponseDto;
 
+        sessionStorage.removeItem(
+  'pendingLoanApplication'
+);
 
-      // ======================================
-      // SEÇİLEN ÜRÜN
-      // ======================================
 
       this.selectedProduct.set(
         product
       );
 
 
-      // ======================================
-      // HESAPLAMA
-      // ======================================
-
       this.calculationResult.set(
         calculation
       );
 
-
-      // ======================================
-      // TUTAR / VADE
-      // ======================================
 
       this.loanAmount =
         calculation.amount;
@@ -918,7 +910,6 @@ export class LoanCalculator {
             );
 
 
-            // Aynı ödeme planını tekrar aç
             this.isPaymentPlanOpen.set(
               true
             );
@@ -1069,22 +1060,15 @@ export class LoanCalculator {
       !this.loginService.isCustomer()
     ) {
 
-      this.errorMessage.set(
+      this.isCustomerEligible.set(
+        false
+      );
+
+
+      this.eligibilityMessage.set(
         'Kredi başvurusu yalnızca müşteri hesabıyla yapılabilir.'
       );
 
-      return;
-
-    }
-
-
-    // ==========================================
-    // MÜŞTERİ UYGUN DEĞİLSE BAŞVURU YAPMA
-    // ==========================================
-
-    if (
-      !this.isCustomerEligible()
-    ) {
 
       return;
 
@@ -1092,17 +1076,94 @@ export class LoanCalculator {
 
 
     // ==========================================
-    // BAŞVURU OLUŞTUR
+    // BAŞVURU ÖNCESİ UYGUNLUK KONTROLÜ
     // ==========================================
+
+    this.loanApplicationService
+      .checkEligibility(
+        product.loanProductId
+      )
+      .subscribe({
+
+        next: (eligibility) => {
+
+          this.isCustomerEligible.set(
+            eligibility.isEligible
+          );
+
+
+          this.eligibilityMessage.set(
+            eligibility.isEligible
+              ? ''
+              : eligibility.message
+          );
+
+
+          // Uygun değilse başvuru oluşturma
+          if (
+            !eligibility.isEligible
+          ) {
+
+            return;
+
+          }
+
+
+          // Uygunsa başvuruyu oluştur
+          this.createLoanApplication(
+            product.loanProductId,
+            calculation.id,
+            product,
+            calculation
+          );
+
+        },
+
+
+        error: (err) => {
+
+          console.error(
+            'Başvuru uygunluk kontrolü hatası:',
+            err
+          );
+
+
+          this.isCustomerEligible.set(
+            false
+          );
+
+
+          this.eligibilityMessage.set(
+            err.error?.message ??
+            'Başvuru uygunluğu kontrol edilemedi.'
+          );
+
+        }
+
+      });
+
+  }
+
+
+  // ==========================================
+  // KREDİ BAŞVURUSUNU OLUŞTUR
+  // ==========================================
+
+  private createLoanApplication(
+    loanProductId: number,
+    loanCalculationId: number,
+    product: ProductSearchResultDto,
+    calculation: LoanCalculationResponseDto
+  ): void {
 
     this.loanApplicationService
       .create({
 
         loanProductId:
-          product.loanProductId,
+          loanProductId,
 
         loanCalculationId:
-          calculation.id
+          loanCalculationId
 
       })
       .subscribe({
@@ -1115,19 +1176,16 @@ export class LoanCalculator {
           );
 
 
-          // Ödeme planını kapat
           this.isPaymentPlanOpen.set(
             false
           );
 
 
-          // Bekleyen kredi bilgisini temizle
           sessionStorage.removeItem(
             'pendingLoanApplication'
           );
 
 
-          // Başarı modalını aç
           this.applicationSuccess.set(
             true
           );
@@ -1191,7 +1249,14 @@ export class LoanCalculator {
           }
 
 
-          this.errorMessage.set(
+          // Backend başvuruyu engellediyse
+          // mesajı ödeme planında göster.
+          this.isCustomerEligible.set(
+            false
+          );
+
+
+          this.eligibilityMessage.set(
             err.error?.message ??
             'Başvuru sırasında bir hata oluştu.'
           );
